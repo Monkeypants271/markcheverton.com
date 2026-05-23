@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
+import { FreeBooksForm, FreeBooksCovers } from "./FreeBooksForm";
 
 export const metadata = { title: "Free Books" };
 
@@ -23,30 +24,17 @@ export default function FreeBooksPage() {
     <>
       <PageHeader
         eyebrow="Free Books"
-        title="Two Minecraft stories — free when you join my email community."
+        title="Two Minecraft stories — free when you join the MVP Club."
       >
-        Get <em>Elytra Peril</em> and <em>The Virus</em> delivered through
-        BookFunnel. Plus occasional updates on new releases.
+        Get <em>The Virus</em> and <em>Elytra Perils</em> delivered through
+        BookFunnel. Plus occasional updates from Mark on new releases and
+        character-naming contests.
       </PageHeader>
 
       <Container className="py-16">
-        <div className="grid md:grid-cols-2 gap-12">
-          <div className="aspect-[4/3] rounded-2xl bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-soft)] shadow-xl flex items-center justify-center text-white/70 text-sm">
-            [Elytra Peril + The Virus covers]
-          </div>
-
-          <div className="rounded-2xl bg-[var(--color-surface)] border border-[var(--color-rule)] p-8">
-            <h2 className="font-display text-2xl font-semibold text-[var(--color-primary)]">
-              Sign up
-            </h2>
-            <p className="mt-2 text-sm text-[var(--color-muted)]">
-              [Brevo signup form + BookFunnel redirect will be wired up in
-              Phase 4. For now this is a visual placeholder.]
-            </p>
-            <p className="mt-6 text-xs text-[var(--color-muted)]">
-              Kids: please ask a parent before sharing any information online.
-            </p>
-          </div>
+        <div className="grid md:grid-cols-2 gap-12 items-start">
+          <FreeBooksCovers />
+          <FreeBooksForm />
         </div>
 
         <h2 className="mt-20 font-display text-3xl font-semibold text-[var(--color-primary)] text-center">
