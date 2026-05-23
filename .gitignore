@@ -17,6 +17,9 @@
 /.next/
 /out/
 
+# migration scraper cache (resumable HTML cache, not committed)
+/.cache/
+
 # production
 /build
 

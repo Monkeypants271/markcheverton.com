@@ -1,21 +1,18 @@
-import { PageHeader } from "@/components/PageHeader";
-import { Container } from "@/components/Container";
+import { PostListIndex } from "@/components/PostListIndex";
+import { getAllPosts } from "@/lib/content";
 
 export const metadata = { title: "Sensory Details" };
 
-export default function SensoryDetailsPage() {
+export default async function SensoryDetailsPage() {
+  const posts = await getAllPosts("sensory-details");
   return (
-    <>
-      <PageHeader eyebrow="Sensory Details" title="Don't just tell readers what's happening — help them feel it.">
-        28 emotion-by-emotion guides for showing rather than telling. From
-        anger to wonder to the small, specific kinds of dread.
-      </PageHeader>
-
-      <Container className="py-16">
-        <p className="text-[var(--color-muted)]">
-          Emotion library will be populated during content migration (Phase 2).
-        </p>
-      </Container>
-    </>
+    <PostListIndex
+      eyebrow="Sensory Details"
+      title="Don't just tell readers what's happening — help them feel it."
+      intro="Emotion-by-emotion guides for showing rather than telling. From anger to wonder to the small, specific kinds of dread."
+      emptyMessage="No entries yet."
+      posts={posts}
+      basePath="/writing-resources/sensory-details"
+    />
   );
 }

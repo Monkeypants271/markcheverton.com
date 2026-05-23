@@ -1,21 +1,18 @@
-import { PageHeader } from "@/components/PageHeader";
-import { Container } from "@/components/Container";
+import { PostListIndex } from "@/components/PostListIndex";
+import { getAllPosts } from "@/lib/content";
 
 export const metadata = { title: "Story Prompts" };
 
-export default function StoryPromptsPage() {
+export default async function StoryPromptsPage() {
+  const posts = await getAllPosts("prompts");
   return (
-    <>
-      <PageHeader eyebrow="Story Prompts" title="Every story starts with an idea. Sometimes you just need a nudge.">
-        30+ themed collections — from dragons and aliens to time travel and
-        Minecraft. Change them, twist them, ignore them. Just start.
-      </PageHeader>
-
-      <Container className="py-16">
-        <p className="text-[var(--color-muted)]">
-          Prompt library will be populated during content migration (Phase 2).
-        </p>
-      </Container>
-    </>
+    <PostListIndex
+      eyebrow="Story Prompts"
+      title="Every story starts with an idea. Sometimes you just need a nudge."
+      intro="Themed starting points — change them, twist them, ignore them. Just start."
+      emptyMessage="No prompts yet."
+      posts={posts}
+      basePath="/writing-resources/prompts"
+    />
   );
 }

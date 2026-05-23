@@ -1,21 +1,18 @@
-import { PageHeader } from "@/components/PageHeader";
-import { Container } from "@/components/Container";
+import { PostListIndex } from "@/components/PostListIndex";
+import { getAllPosts } from "@/lib/content";
 
 export const metadata = { title: "Blog" };
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await getAllPosts("blog");
   return (
-    <>
-      <PageHeader eyebrow="Blog" title="On writing and teaching.">
-        Short essays about creativity, classroom practice, and the long road
-        from rejection to becoming a New York Times bestselling author.
-      </PageHeader>
-
-      <Container className="py-16">
-        <p className="text-[var(--color-muted)]">
-          Post archive will be populated during content migration (Phase 2).
-        </p>
-      </Container>
-    </>
+    <PostListIndex
+      eyebrow="Blog"
+      title="On writing and teaching."
+      intro="Short essays about creativity, classroom practice, and the long road from rejection to becoming a New York Times bestselling author."
+      emptyMessage="No posts yet."
+      posts={posts}
+      basePath="/blog"
+    />
   );
 }

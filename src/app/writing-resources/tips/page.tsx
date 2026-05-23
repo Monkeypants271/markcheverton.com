@@ -1,21 +1,18 @@
-import { PageHeader } from "@/components/PageHeader";
-import { Container } from "@/components/Container";
+import { PostListIndex } from "@/components/PostListIndex";
+import { getAllPosts } from "@/lib/content";
 
 export const metadata = { title: "Writing Tips" };
 
-export default function WritingTipsPage() {
+export default async function WritingTipsPage() {
+  const posts = await getAllPosts("tips");
   return (
-    <>
-      <PageHeader eyebrow="Writing Tips" title="Writing isn't about following rules. It's about making choices.">
-        21 short essays on craft — from openings and dialogue to battle scenes
-        and the dark night of the soul.
-      </PageHeader>
-
-      <Container className="py-16">
-        <p className="text-[var(--color-muted)]">
-          Article index will be populated during content migration (Phase 2).
-        </p>
-      </Container>
-    </>
+    <PostListIndex
+      eyebrow="Writing Tips"
+      title="Writing isn't about following rules. It's about making choices."
+      intro="Short essays on craft — from openings and dialogue to battle scenes and the dark night of the soul."
+      emptyMessage="No tips yet."
+      posts={posts}
+      basePath="/writing-resources/tips"
+    />
   );
 }
