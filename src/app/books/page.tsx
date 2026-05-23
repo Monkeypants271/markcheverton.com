@@ -1,56 +1,93 @@
+import Image from "next/image";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
+import { series, type Book } from "@/data/books";
 
 export const metadata = { title: "Books" };
-
-const series = [
-  {
-    name: "Order of the Stones",
-    books: ["Facing the Beast Within"],
-  },
-  { name: "Spy-Girl Files", books: ["Spy-girl and the Family Secret"] },
-  { name: "The Giants of StoneHold", books: ["The Giant's Giant", "The Giant's Nightmare"] },
-  { name: "Gameknight999 (Minecraft Series #1)", books: ["3 books"] },
-  { name: "Mystery of Herobrine (Minecraft Series #2)", books: ["3 books"] },
-  { name: "Herobrine Reborn (Minecraft Series #3)", books: ["3 books"] },
-  { name: "Herobrine's Revenge (Minecraft Series #4)", books: ["3 books"] },
-  { name: "Birth of Herobrine (Minecraft Series #5)", books: ["3 books"] },
-  { name: "Mystery of Entity303 (Minecraft Series #6)", books: ["3 books"] },
-  { name: "Rise of the Warlords (Far Land Series #1)", books: ["3 books"] },
-  { name: "Wither War (Far Land Series #2)", books: ["3 books"] },
-];
 
 export default function BooksPage() {
   return (
     <>
-      <PageHeader eyebrow="Books" title="Series and stand-alone novels">
-        24 novels in print across 32 countries. Browse the full catalog below —
-        every book links to its Amazon page.
+      <PageHeader eyebrow="Books" title="Every book Mark has written.">
+        Click any cover to view that book on Amazon. 27 novels published across
+        31 countries, 27 languages, and 2 million+ copies in print.
       </PageHeader>
 
-      <Container className="py-16">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {series.map((s) => (
-            <div
-              key={s.name}
-              className="rounded-xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-6"
-            >
-              <h2 className="font-display text-xl font-semibold text-[var(--color-primary)]">
+      <Container className="py-16 space-y-20">
+        {series.map((s) => (
+          <section key={s.name}>
+            <header className="text-center max-w-2xl mx-auto">
+              <h2 className="font-display text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">
                 {s.name}
               </h2>
-              <ul className="mt-3 text-sm text-[var(--color-ink-soft)] space-y-1">
-                {s.books.map((b) => (
-                  <li key={b}>{b}</li>
-                ))}
-              </ul>
+              {s.tag && (
+                <p className="mt-2 text-sm uppercase tracking-wider text-[var(--color-accent)] font-semibold">
+                  {s.tag}
+                </p>
+              )}
+            </header>
+
+            <div
+              className={`mt-10 grid gap-6 ${
+                s.books.length === 1
+                  ? "grid-cols-1 max-w-xs mx-auto"
+                  : s.books.length === 2
+                  ? "sm:grid-cols-2 max-w-2xl mx-auto"
+                  : s.books.length === 3
+                  ? "sm:grid-cols-2 lg:grid-cols-3 max-w-4xl mx-auto"
+                  : "sm:grid-cols-2 lg:grid-cols-4"
+              }`}
+            >
+              {s.books.map((book) => (
+                <BookCard key={book.title} book={book} />
+              ))}
             </div>
-          ))}
-        </div>
-        <p className="mt-10 text-sm text-[var(--color-muted)]">
-          Note: this catalog will be wired up with cover images and direct Amazon
-          links during content migration.
-        </p>
+          </section>
+        ))}
       </Container>
     </>
+  );
+}
+
+function BookCard({ book }: { book: Book }) {
+  const content = (
+    <div className="group flex flex-col">
+      <div className="aspect-[3/4] rounded-lg bg-[var(--color-surface)] border border-[var(--color-rule)] overflow-hidden flex items-center justify-center p-4 group-hover:shadow-xl transition-shadow">
+        <Image
+          src={book.cover}
+          alt={book.title}
+          width={320}
+          height={420}
+          className="max-h-full w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+          unoptimized
+        />
+      </div>
+      <div className="mt-3 text-center">
+        <p className="font-display text-base text-[var(--color-ink)] leading-tight">
+          {book.title}
+        </p>
+        {book.comingSoon && (
+          <p className="mt-1 text-xs uppercase tracking-wider text-[var(--color-accent)] font-semibold">
+            Coming soon
+          </p>
+        )}
+      </div>
+    </div>
+  );
+
+  if (!book.amazon || book.comingSoon) {
+    return <div className="opacity-90">{content}</div>;
+  }
+
+  return (
+    <a
+      href={book.amazon}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="block"
+      aria-label={`Buy ${book.title} on Amazon`}
+    >
+      {content}
+    </a>
   );
 }

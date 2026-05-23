@@ -16,10 +16,14 @@ export default function AboutPage() {
           <p>
             My son introduced me to Minecraft. We played together on a server
             until cyber-bullying tore it apart. To help him understand what had
-            happened — and what to do about it — I wrote{" "}
-            <em>Invasion of the Overworld</em>. That book launched a series:
-            24 novels with Skyhorse Publishing, sold in 32 countries and 22
-            languages, more than 2 million copies in print.
+            happened — and what to do about it — I self-published{" "}
+            <em>Invasion of the Overworld</em> in 2013. I didn&apos;t expect
+            much. But when it reached <strong>#29 on Amazon&apos;s Top 100</strong>{" "}
+            and the publishers started calling, I knew I&apos;d hit a nerve with
+            kids. Ten years and <strong>27 novels</strong> later — published in{" "}
+            <strong>31 countries</strong>, translated into{" "}
+            <strong>27 languages</strong>, with over <strong>2 million copies</strong>{" "}
+            sold worldwide — I&apos;m still doing it.
           </p>
           <p>
             Before writing full-time I spent ten years teaching Physics and
