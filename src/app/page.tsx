@@ -191,8 +191,7 @@ export default function Home() {
         className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed"
         style={{ backgroundImage: "url('/images/home/dark-bookshelf.jpg')" }}
       >
-        <div className="absolute inset-0 bg-[var(--color-primary)]/50" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-primary)]/55 via-[var(--color-primary)]/50 to-[var(--color-primary)]/60" />
+        <div className="absolute inset-0 bg-[var(--color-primary)]/42" />
         <Container className="relative z-10">
           <h2 className="font-display text-4xl md:text-5xl font-semibold text-center">
             Other Books
