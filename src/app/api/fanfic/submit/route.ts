@@ -3,7 +3,15 @@ import { randomBytes } from "node:crypto";
 import nodemailer from "nodemailer";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+function getSiteUrl(req: Request): string {
+  const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
+  if (envUrl) return envUrl.replace(/\/$/, "");
+
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  const proto = req.headers.get("x-forwarded-proto") || "https";
+  if (host) return `${proto}://${host}`;
+  return "http://localhost:3000";
+}
 
 function escapeHtml(s: string): string {
   return s
@@ -93,6 +101,7 @@ export async function POST(req: Request) {
 
   const ip = clientIp(req);
   const actionToken = randomBytes(24).toString("hex");
+  const SITE_URL = getSiteUrl(req);
 
   // Insert into DB as pending (slug assigned at approval time)
   const { data: inserted, error: insertErr } = await supabase

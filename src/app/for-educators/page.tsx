@@ -41,12 +41,14 @@ export default function ForEducatorsPage() {
                 A practical guide for designing creative thinking opportunities
                 inside the lessons you already teach.
               </p>
-              <Link
-                href="/books"
+              <a
+                href="https://www.amazon.com/Creativity-Reclaimed-Creative-Thinking-Lessons-ebook/dp/B0GJN5DSW3"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-5 inline-flex rounded-full bg-[var(--color-accent)] text-white px-5 py-2 text-sm font-semibold hover:bg-[var(--color-accent-soft)]"
               >
                 Learn more
-              </Link>
+              </a>
             </div>
           </div>
         </div>
