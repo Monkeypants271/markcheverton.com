@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-
-const BREVO_ENDPOINT = "https://api.brevo.com/v3/smtp/email";
+import nodemailer from "nodemailer";
 
 function escapeHtml(s: string): string {
   return s
@@ -50,13 +49,13 @@ export async function POST(req: Request) {
       { status: 400 }
     );
 
-  const apiKey = process.env.BREVO_API_KEY;
-  const from = process.env.FANFIC_NOTIFY_FROM;
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailPass = process.env.GMAIL_APP_PASSWORD;
   const to = process.env.FANFIC_NOTIFY_TO;
 
-  if (!apiKey || !from || !to) {
+  if (!gmailUser || !gmailPass || !to) {
     console.error(
-      "Fan fic submission not configured. Set BREVO_API_KEY, FANFIC_NOTIFY_FROM, FANFIC_NOTIFY_TO in .env.local"
+      "Fan fic submission not configured. Set GMAIL_USER, GMAIL_APP_PASSWORD, FANFIC_NOTIFY_TO in .env.local"
     );
     return NextResponse.json(
       { error: "Submissions aren't configured yet. Please email Mark directly." },
@@ -78,25 +77,21 @@ export async function POST(req: Request) {
 <p style="color:#888;font-size:12px">Reply to this email to write back to ${escapeHtml(name)} directly. To publish, paste the story into a new MDX file at content/fanfic/ in the repo.</p>
 `.trim();
 
-  const brevoRes = await fetch(BREVO_ENDPOINT, {
-    method: "POST",
-    headers: {
-      accept: "application/json",
-      "content-type": "application/json",
-      "api-key": apiKey,
-    },
-    body: JSON.stringify({
-      sender: { email: from, name: "markcheverton.com" },
-      to: [{ email: to }],
-      replyTo: { email, name },
-      subject: `[Fan fic] ${title} — by ${name}`,
-      htmlContent: htmlBody,
-    }),
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: gmailUser, pass: gmailPass },
   });
 
-  if (!brevoRes.ok) {
-    const text = await brevoRes.text().catch(() => "");
-    console.error("Brevo transactional error", brevoRes.status, text);
+  try {
+    await transporter.sendMail({
+      from: `"markcheverton.com" <${gmailUser}>`,
+      to,
+      replyTo: `"${name}" <${email}>`,
+      subject: `[Fan fic] ${title} — by ${name}`,
+      html: htmlBody,
+    });
+  } catch (err) {
+    console.error("Gmail send error", err);
     return NextResponse.json(
       { error: "Couldn't send right now. Please try again in a moment." },
       { status: 502 }
