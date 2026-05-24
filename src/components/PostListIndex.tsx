@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
@@ -28,13 +29,24 @@ export function PostListIndex({
         {posts.length === 0 ? (
           <p className="text-[var(--color-muted)]">{emptyMessage}</p>
         ) : (
-          <ul className="space-y-4">
+          <ul className="grid gap-8 md:grid-cols-2 xl:grid-cols-3">
             {posts.map((p) => (
               <li key={p.slug}>
                 <Link
                   href={`${basePath}/${p.slug}`}
-                  className="group block rounded-xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-6 hover:border-[var(--color-accent)] hover:shadow-md transition-all"
+                  className="group block overflow-hidden rounded-xl border border-[var(--color-rule)] bg-[var(--color-surface)] shadow-[0_16px_36px_rgba(22,32,48,0.12)] transition-all hover:-translate-y-1 hover:border-[var(--color-accent)] hover:shadow-[0_24px_48px_rgba(22,32,48,0.18)]"
                 >
+                  {p.featuredImage ? (
+                    <div className="relative aspect-[16/10] overflow-hidden bg-[var(--color-rule)]">
+                      <Image
+                        src={p.featuredImage}
+                        alt={p.title}
+                        fill
+                        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                      />
+                    </div>
+                  ) : null}
+                  <div className="p-6">
                   <h2 className="font-display text-xl font-semibold text-[var(--color-primary)]">
                     {p.title}
                   </h2>
@@ -47,13 +59,13 @@ export function PostListIndex({
                       })}
                     </p>
                   )}
-                  <p className="mt-3 text-sm text-[var(--color-ink-soft)] line-clamp-2">
-                    {p.body
-                      .replace(/!?\[.*?\]\(.*?\)/g, "")
-                      .replace(/[#*_>`]/g, "")
-                      .trim()
-                      .slice(0, 240)}
+                  <p className="mt-3 text-sm leading-7 text-[var(--color-ink-soft)] line-clamp-4">
+                    {p.excerpt}
                   </p>
+                  <p className="mt-5 text-sm font-semibold text-[var(--color-accent)]">
+                    Read article →
+                  </p>
+                  </div>
                 </Link>
               </li>
             ))}

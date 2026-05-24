@@ -18,6 +18,8 @@ export type PostMeta = {
   categories: string[];
   canonicalSource: string;
   author?: string | null;
+  featuredImage?: string | null;
+  excerpt?: string;
 };
 
 export type Post = PostMeta & {
@@ -48,6 +50,7 @@ async function getMdxPosts(type: ContentType): Promise<Post[]> {
     if (!file.endsWith(".mdx")) continue;
     const raw = await readFile(join(dir, file), "utf8");
     const { data, content } = matter(raw);
+    const featuredImage = extractFirstImage(content);
     posts.push({
       title: data.title ?? "Untitled",
       slug: data.slug ?? file.replace(/\.mdx$/, ""),
@@ -56,6 +59,8 @@ async function getMdxPosts(type: ContentType): Promise<Post[]> {
       type,
       categories: data.categories ?? [],
       canonicalSource: data.canonicalSource ?? "",
+      featuredImage,
+      excerpt: createExcerpt(content),
       body: content.trim(),
     });
   }
@@ -76,17 +81,19 @@ async function getApprovedFanficSubmissions(): Promise<Post[]> {
 
   if (error || !data) return [];
 
-  return data.map((s) => ({
-    title: s.title,
-    slug: s.slug as string,
-    date: (s.moderated_at || s.created_at)?.slice(0, 10) || null,
-    postId: null,
-    type: "fanfic" as const,
-    categories: ["fan-fiction"],
-    canonicalSource: "",
-    author: s.author,
-    body: submissionToMarkdown(s.content),
-  }));
+    return data.map((s) => ({
+      title: s.title,
+      slug: s.slug as string,
+      date: (s.moderated_at || s.created_at)?.slice(0, 10) || null,
+      postId: null,
+      type: "fanfic" as const,
+      categories: ["fan-fiction"],
+      canonicalSource: "",
+      author: s.author,
+      featuredImage: null,
+      excerpt: createExcerpt(submissionToMarkdown(s.content)),
+      body: submissionToMarkdown(s.content),
+    }));
 }
 
 export async function getAllPosts(type: ContentType): Promise<Post[]> {
@@ -127,6 +134,8 @@ export async function getPost(
       type,
       categories: data.categories ?? [],
       canonicalSource: data.canonicalSource ?? "",
+      featuredImage: extractFirstImage(content),
+      excerpt: createExcerpt(content),
       body: content.trim(),
     };
   }
@@ -153,11 +162,28 @@ export async function getPost(
       categories: ["fan-fiction"],
       canonicalSource: "",
       author: data.author,
+      featuredImage: null,
+      excerpt: createExcerpt(submissionToMarkdown(data.content)),
       body: submissionToMarkdown(data.content),
     };
   }
 
   return null;
+}
+
+function extractFirstImage(body: string): string | null {
+  const match = body.match(/!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/);
+  return match?.[1] ?? null;
+}
+
+function createExcerpt(body: string): string {
+  return body
+    .replace(/!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/g, "")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1")
+    .replace(/[#*_>`]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 220);
 }
 
 export type MigratedComment = {
