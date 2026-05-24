@@ -19,11 +19,24 @@ export function Header() {
   return (
     <>
       <div
-        className="h-28 bg-[var(--color-primary)] bg-cover bg-center sm:h-36 md:h-44 lg:h-52"
-        style={{ backgroundImage: "url('/images/home/homepage-header.webp')" }}
-        aria-label="Mark Cheverton homepage header"
-        role="img"
-      />
+        className="relative min-h-36 overflow-hidden bg-[var(--color-primary)] bg-cover bg-center px-6 py-8 text-white sm:min-h-44 md:min-h-56 lg:min-h-64"
+        style={{ backgroundImage: "url('/images/home/homepage-header-no-text.webp')" }}
+      >
+        <div className="absolute inset-0 bg-black/25" />
+        <div className="relative mx-auto flex min-h-20 max-w-6xl items-center justify-center text-center sm:min-h-28 md:min-h-40">
+          <div className="max-w-4xl">
+            <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent-soft)] sm:text-sm">
+              New York Times Bestselling Author
+            </p>
+            <p className="mt-2 font-display text-3xl font-semibold leading-tight text-white drop-shadow-lg sm:text-4xl md:text-5xl lg:text-6xl">
+              Mark Cheverton
+            </p>
+            <p className="mx-auto mt-2 max-w-2xl text-sm font-medium text-white/90 drop-shadow sm:text-base md:text-lg">
+              Minecraft-inspired adventures, writing tools, and stories for young readers.
+            </p>
+          </div>
+        </div>
+      </div>
       <header className="sticky top-0 z-40 border-b border-[var(--color-rule)] bg-[var(--color-surface)]/80 backdrop-blur">
         <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between gap-6">
           <Link
