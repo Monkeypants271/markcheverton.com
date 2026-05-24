@@ -10,6 +10,17 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
+/** Add a 5-space indent to the first line of each paragraph. */
+function indentParagraphs(story: string): string {
+  return story
+    .replace(/\r\n/g, "\n")
+    .split(/\n\s*\n/)
+    .map((p) => p.trim())
+    .filter((p) => p.length > 0)
+    .map((p) => "     " + p)
+    .join("\n\n");
+}
+
 export async function POST(req: Request) {
   let body: {
     name?: string;
@@ -72,7 +83,7 @@ export async function POST(req: Request) {
   <tr><td style="padding:4px 12px 4px 0;color:#666">Length:</td><td>${wordCount.toLocaleString()} words</td></tr>
 </table>
 <hr style="margin:16px 0;border:none;border-top:1px solid #ddd"/>
-<div style="white-space:pre-wrap;font-family:Georgia,serif;font-size:15px;line-height:1.6">${escapeHtml(story)}</div>
+<div style="white-space:pre-wrap;font-family:Georgia,serif;font-size:15px;line-height:1.6">${escapeHtml(indentParagraphs(story))}</div>
 <hr style="margin:16px 0;border:none;border-top:1px solid #ddd"/>
 <p style="color:#888;font-size:12px">Reply to this email to write back to ${escapeHtml(name)} directly. To publish, paste the story into a new MDX file at content/fanfic/ in the repo.</p>
 `.trim();
