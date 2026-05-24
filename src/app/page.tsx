@@ -70,7 +70,7 @@ export default function Home() {
         style={{ backgroundImage: "url('/images/home/minecraft-lobby.jpg')" }}
       >
         <div className="absolute inset-0 bg-[#273814]/68" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[#4b3517]/58 via-[#273814]/68 to-[#17220d]/78" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#21383a]/55 via-[#273814]/68 to-[#17220d]/78" />
         <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#21383a]/95 via-[#21383a]/55 to-transparent" />
         <Container className="relative z-10">
           <div className="text-center max-w-3xl mx-auto">
