@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { findBook } from "@/data/books";
@@ -7,7 +8,17 @@ export default function Home() {
     <>
       {/* Hero — free Minecraft books offer */}
       <section className="relative overflow-hidden bg-[var(--color-primary)] text-white">
-        <Container className="py-20 md:py-28">
+        <Image
+          src="/images/home/castle-wall.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover opacity-35"
+        />
+        <div className="absolute inset-0 bg-[var(--color-primary)]/80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/90 to-[var(--color-primary)]/65" />
+        <Container className="relative z-10 py-20 md:py-28">
           <div className="grid md:grid-cols-5 gap-12 items-center">
             <div className="md:col-span-3">
               <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-soft)]">
@@ -41,8 +52,16 @@ export default function Home() {
               </div>
             </div>
             <div className="md:col-span-2">
-              <div className="aspect-[4/5] rounded-2xl bg-gradient-to-br from-[#5b8a2d] to-[#3a5c1d] shadow-xl flex items-center justify-center text-white/60 text-sm p-6 text-center">
-                [Elytra Perils &amp; The Virus covers]
+              <div className="relative aspect-[4/5]">
+                <div className="absolute inset-x-8 bottom-12 top-12 rounded-[32px] bg-black/25 blur-3xl" />
+                <Image
+                  src="/images/home/free-book-covers.png"
+                  alt="Elytra Perils and The Virus free Minecraft eBook covers"
+                  width={614}
+                  height={441}
+                  priority
+                  className="absolute left-1/2 top-1/2 w-[116%] max-w-none -translate-x-1/2 -translate-y-1/2 drop-shadow-2xl"
+                />
               </div>
             </div>
           </div>
