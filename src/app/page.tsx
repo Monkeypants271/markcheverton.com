@@ -85,14 +85,41 @@ export default function Home() {
 
           <div className="mt-12 grid sm:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
-              { title: "Invasion of the Overworld", number: "Book One" },
-              { title: "Battle for the Nether", number: "Book Two" },
-              { title: "Confronting the Dragon", number: "Book Three" },
+              {
+                title: "Invasion of the Overworld",
+                number: "Book One",
+                cover: "/images/home/invasion-overworld.png",
+                href: "https://www.amazon.com/gp/product/1632207117",
+              },
+              {
+                title: "Battle for the Nether",
+                number: "Book Two",
+                cover: "/images/home/battle-nether.png",
+                href: "https://www.amazon.com/gp/product/1632207125",
+              },
+              {
+                title: "Confronting the Dragon",
+                number: "Book Three",
+                cover: "/images/home/confronting-dragon.png",
+                href: "https://www.amazon.com/gp/product/1634500466",
+              },
             ].map((book) => (
               <div key={book.title} className="text-center">
-                <div className="aspect-[2/3] rounded-xl bg-gradient-to-br from-[#5b8a2d] to-[#2d4218] shadow-lg flex items-center justify-center text-white/60 text-xs p-4">
-                  [{book.title} cover]
-                </div>
+                <a
+                  href={book.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Buy ${book.title} paperback on Amazon`}
+                  className="group block"
+                >
+                  <Image
+                    src={book.cover}
+                    alt={`${book.title} paperback cover`}
+                    width={396}
+                    height={540}
+                    className="mx-auto h-auto w-full max-w-[260px] drop-shadow-xl transition-transform duration-200 group-hover:-translate-y-1 group-hover:scale-[1.02]"
+                  />
+                </a>
                 <p className="mt-4 text-xs uppercase tracking-wider text-[var(--color-muted)] font-semibold">
                   {book.number}
                 </p>
