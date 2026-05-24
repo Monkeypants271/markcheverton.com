@@ -270,30 +270,41 @@ export default function Home() {
       {/* Free books reinforcement */}
       <section className="py-20">
         <Container>
-          <div className="max-w-3xl mx-auto">
-            <h2 className="font-display text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">
-              Afraid to take a risk on a new author?
-            </h2>
-            <p className="mt-3 text-lg text-[var(--color-ink-soft)]">
-              I get it — trying a new author is always a little scary.
-            </p>
-            <p className="mt-6 text-[var(--color-ink-soft)] leading-relaxed">
-              You can download <strong>two</strong> Minecraft-inspired books for{" "}
-              <strong>FREE</strong>. All you have to do is sign up for my
-              newsletter — you can unsubscribe at any time. I use this
-              newsletter to notify fans about upcoming novels. You&apos;ll get
-              sneak peeks at new graphics, excerpts, and the chance to
-              participate in contests to name characters in whatever novel
-              I&apos;m currently writing. No spam. Your email is kept secure and
-              never shared.
-            </p>
-            <div className="mt-8">
-              <Link
-                href="/free-books"
-                className="inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-7 py-4 text-lg font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
-              >
-                I want some books!
-              </Link>
+          <div className="grid gap-10 md:grid-cols-5 md:items-center">
+            <div className="md:col-span-2">
+              <Image
+                src="/images/home/free-book-covers.png"
+                alt="Elytra Perils and The Virus free Minecraft eBook covers"
+                width={614}
+                height={441}
+                className="mx-auto w-full max-w-md drop-shadow-2xl"
+              />
+            </div>
+            <div className="md:col-span-3">
+              <h2 className="font-display text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">
+                Afraid to take a risk on a new author?
+              </h2>
+              <p className="mt-3 text-lg text-[var(--color-ink-soft)]">
+                I get it — trying a new author is always a little scary.
+              </p>
+              <p className="mt-6 text-[var(--color-ink-soft)] leading-relaxed">
+                You can download <strong>two</strong> Minecraft-inspired books for{" "}
+                <strong>FREE</strong>. All you have to do is sign up for my
+                newsletter — you can unsubscribe at any time. I use this
+                newsletter to notify fans about upcoming novels. You&apos;ll get
+                sneak peeks at new graphics, excerpts, and the chance to
+                participate in contests to name characters in whatever novel
+                I&apos;m currently writing. No spam. Your email is kept secure and
+                never shared.
+              </p>
+              <div className="mt-8">
+                <Link
+                  href="/free-books"
+                  className="inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-7 py-4 text-lg font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
+                >
+                  I want some books!
+                </Link>
+              </div>
             </div>
           </div>
         </Container>
@@ -359,9 +370,13 @@ export default function Home() {
                 Contact Me
               </Link>
             </div>
-            <div className="hidden md:block aspect-[4/3] rounded-2xl bg-gradient-to-br from-white/10 to-white/5 flex items-center justify-center text-white/40 text-sm">
-              [Meet Mark image]
-            </div>
+            <Image
+              src="/images/home/contact-cavern-dog.jpg"
+              alt="Minecraft-style green cavern scene with a dog using a phone"
+              width={700}
+              height={467}
+              className="hidden aspect-[4/3] rounded-2xl object-cover shadow-2xl md:block"
+            />
           </div>
         </Container>
       </section>
