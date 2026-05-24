@@ -350,12 +350,19 @@ export default function Home() {
 
       {/* Contact / Meet Mark */}
       <section
-        className="relative overflow-hidden bg-[#173d2e] bg-cover bg-center py-20 text-white md:py-28"
+        className="relative overflow-hidden bg-[#173d2e] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed md:py-28"
         style={{ backgroundImage: "url('/images/home/contact-cavern-dog.jpg')" }}
       >
         <div className="absolute inset-0 bg-black/20" />
         <Container className="relative z-10">
           <div className="max-w-md rounded-2xl bg-black/35 p-8 shadow-2xl backdrop-blur-[2px]">
+            <Image
+              src="/images/home/mark-cheverton.png"
+              alt="Mark Cheverton"
+              width={338}
+              height={325}
+              className="mb-6 h-32 w-32 rounded-full object-cover object-top shadow-xl"
+            />
             <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-soft)]">
               Meet Mark
             </p>
