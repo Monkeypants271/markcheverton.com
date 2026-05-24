@@ -24,6 +24,17 @@ export async function FanFicIndex({ page }: { page: number }) {
           : `Have a story you'd like to share? Send it over and I'll post it. Doesn't have to be Minecraft — any topic works.`}
       </PageHeader>
 
+      <Container className="pt-10">
+        <div className="text-center">
+          <Link
+            href="/fanfic/submit"
+            className="inline-flex rounded-full bg-[var(--color-accent)] text-white px-7 py-3 font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
+          >
+            Share your own story →
+          </Link>
+        </div>
+      </Container>
+
       <Container className="py-16">
         {pagePosts.length === 0 ? (
           <p className="text-[var(--color-muted)]">No stories yet.</p>
