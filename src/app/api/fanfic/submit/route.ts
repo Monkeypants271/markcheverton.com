@@ -10,11 +10,16 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-/** Add a 5-space indent to the first line of each paragraph. */
+/**
+ * Add a 5-space indent to the start of every paragraph and put a blank
+ * line between paragraphs. Treats any newline run as a paragraph break,
+ * matching how kids usually type — many hit Enter once between dialogue
+ * lines rather than twice.
+ */
 function indentParagraphs(story: string): string {
   return story
     .replace(/\r\n/g, "\n")
-    .split(/\n\s*\n/)
+    .split(/\n+/)
     .map((p) => p.trim())
     .filter((p) => p.length > 0)
     .map((p) => "     " + p)
