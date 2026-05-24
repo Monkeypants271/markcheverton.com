@@ -150,9 +150,13 @@ export default function Home() {
       <section className="py-20">
         <Container>
           <div className="max-w-2xl mx-auto text-center">
-            <div className="mx-auto w-28 h-28 rounded-full bg-gradient-to-br from-[var(--color-muted)] to-[var(--color-ink-soft)] flex items-center justify-center text-white/60 text-xs">
-              [photo]
-            </div>
+            <Image
+              src="/images/home/mark-cheverton.png"
+              alt="Mark Cheverton"
+              width={338}
+              height={325}
+              className="mx-auto h-28 w-28 rounded-full object-cover object-top shadow-lg"
+            />
             <p className="mt-6 text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)] italic">
               New York Times Best Selling Author
             </p>
