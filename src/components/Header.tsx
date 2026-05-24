@@ -32,7 +32,7 @@ export function Header() {
               Mark Cheverton
             </p>
             <p className="mx-auto mt-2 max-w-2xl text-sm font-medium text-white/90 drop-shadow sm:text-base md:text-lg">
-              Minecraft-inspired adventures, writing tools, and stories for young readers.
+              Minecraft-inspired adventures and writing tools that help kids love reading.
             </p>
           </div>
         </div>
