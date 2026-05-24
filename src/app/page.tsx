@@ -11,8 +11,8 @@ export default function Home() {
         className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll text-white md:bg-fixed"
         style={{ backgroundImage: "url('/images/home/castle-wall.jpg')" }}
       >
-        <div className="absolute inset-0 bg-[var(--color-primary)]/65" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/75 via-[var(--color-primary)]/65 to-[var(--color-primary)]/55" />
+        <div className="absolute inset-0 bg-[var(--color-primary)]/55" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/65 via-[var(--color-primary)]/55 to-[var(--color-primary)]/45" />
         <Container className="relative z-10 py-20 md:py-28">
           <div className="grid md:grid-cols-5 gap-12 items-center">
             <div className="md:col-span-3">
@@ -65,11 +65,11 @@ export default function Home() {
 
       {/* Featured series — Gameknight999 */}
       <section
-        className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed md:py-28"
+        className="relative overflow-hidden bg-[#243515] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed md:py-28"
         style={{ backgroundImage: "url('/images/home/minecraft-lobby.jpg')" }}
       >
-        <div className="absolute inset-0 bg-[var(--color-primary)]/72" />
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-primary)]/65 via-[var(--color-primary)]/72 to-[var(--color-primary)]/78" />
+        <div className="absolute inset-0 bg-[#273814]/68" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#4b3517]/58 via-[#273814]/68 to-[#17220d]/78" />
         <Container className="relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
