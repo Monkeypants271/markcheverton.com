@@ -349,34 +349,29 @@ export default function Home() {
       </section>
 
       {/* Contact / Meet Mark */}
-      <section className="py-20">
-        <Container>
-          <div className="rounded-3xl bg-[var(--color-primary)] text-white p-12 md:p-16 grid md:grid-cols-2 gap-10 items-center">
-            <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-soft)]">
-                Meet Mark
-              </p>
-              <h2 className="mt-3 font-display text-4xl font-semibold">
-                Want to say hi?
-              </h2>
-              <p className="mt-4 text-white/80 leading-relaxed">
-                I read and personally respond to every email — questions, story
-                ideas, fan art, school assignments. Send it all.
-              </p>
-              <Link
-                href="/contact"
-                className="mt-8 inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-7 py-3 font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
-              >
-                Contact Me
-              </Link>
-            </div>
-            <Image
-              src="/images/home/contact-cavern-dog.jpg"
-              alt="Minecraft-style green cavern scene with a dog using a phone"
-              width={700}
-              height={467}
-              className="hidden aspect-[4/3] rounded-2xl object-cover shadow-2xl md:block"
-            />
+      <section
+        className="relative overflow-hidden bg-[#173d2e] bg-cover bg-center py-20 text-white md:py-28"
+        style={{ backgroundImage: "url('/images/home/contact-cavern-dog.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-black/20" />
+        <Container className="relative z-10">
+          <div className="max-w-md rounded-2xl bg-black/35 p-8 shadow-2xl backdrop-blur-[2px]">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-soft)]">
+              Meet Mark
+            </p>
+            <h2 className="mt-3 font-display text-4xl font-semibold">
+              Want to say hi?
+            </h2>
+            <p className="mt-4 text-white/85 leading-relaxed">
+              I read and personally respond to every email — questions, story
+              ideas, fan art, school assignments. Send it all.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-8 inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-7 py-3 font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
+            >
+              Contact Me
+            </Link>
           </div>
         </Container>
       </section>
