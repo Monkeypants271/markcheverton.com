@@ -13,7 +13,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-[var(--color-primary)]/55" />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/65 via-[var(--color-primary)]/55 to-[var(--color-primary)]/45" />
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-[#243515]/90" />
+        <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-b from-transparent via-[#21383a]/55 to-[#21383a]/95" />
         <Container className="relative z-10 py-20 md:py-28">
           <div className="grid md:grid-cols-5 gap-12 items-center">
             <div className="md:col-span-3">
@@ -71,7 +71,7 @@ export default function Home() {
       >
         <div className="absolute inset-0 bg-[#273814]/68" />
         <div className="absolute inset-0 bg-gradient-to-b from-[#4b3517]/58 via-[#273814]/68 to-[#17220d]/78" />
-        <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-[var(--color-primary)]/70 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#21383a]/95 via-[#21383a]/55 to-transparent" />
         <Container className="relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
