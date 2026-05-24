@@ -192,6 +192,7 @@ export default function Home() {
         style={{ backgroundImage: "url('/images/home/dark-bookshelf.jpg')" }}
       >
         <div className="absolute inset-0 bg-[var(--color-primary)]/42" />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-white/18" />
         <Container className="relative z-10">
           <h2 className="font-display text-4xl md:text-5xl font-semibold text-center">
             Other Books
