@@ -40,11 +40,36 @@ create table if not exists public.admin_magic_tokens (
   created_at  timestamptz not null default now()
 );
 
+-- Fan fiction submissions awaiting moderation.
+-- Slug is assigned at approval time so we can dedupe against existing MDX.
+create table if not exists public.fanfic_submissions (
+  id           bigserial primary key,
+  slug         text unique,
+  title        text not null,
+  author       text not null,
+  author_email text,
+  ip_address   text,
+  content      text not null,
+  status       text not null default 'pending'
+                check (status in ('pending', 'approved', 'rejected')),
+  action_token text not null,
+  created_at   timestamptz not null default now(),
+  moderated_at timestamptz
+);
+
+create index if not exists fanfic_submissions_status_idx
+  on public.fanfic_submissions (status, created_at desc);
+
+create index if not exists fanfic_submissions_slug_idx
+  on public.fanfic_submissions (slug)
+  where status = 'approved';
+
 -- Row Level Security: we'll always go through the service role from our API
 -- routes, so block all anonymous direct access.
 alter table public.comments             enable row level security;
 alter table public.ip_bans              enable row level security;
 alter table public.admin_magic_tokens   enable row level security;
+alter table public.fanfic_submissions   enable row level security;
 
 -- No anon policies = anon clients can read/write nothing directly.
 -- The service role bypasses RLS, which is what our server routes use.

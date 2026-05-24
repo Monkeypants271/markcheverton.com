@@ -19,20 +19,37 @@ export default async function AdminHome() {
   const supabase = getSupabaseAdmin();
   let pendingCount = 0;
   let banCount = 0;
+  let pendingSubs = 0;
   if (supabase) {
-    const [{ count: pc }, { count: bc }] = await Promise.all([
+    const [{ count: pc }, { count: bc }, { count: ps }] = await Promise.all([
       supabase.from("comments").select("id", { count: "exact", head: true }).eq("status", "pending"),
       supabase.from("ip_bans").select("ip_address", { count: "exact", head: true }),
+      supabase.from("fanfic_submissions").select("id", { count: "exact", head: true }).eq("status", "pending"),
     ]);
     pendingCount = pc ?? 0;
     banCount = bc ?? 0;
+    pendingSubs = ps ?? 0;
   }
 
   return (
     <>
       <PageHeader eyebrow="Admin" title="Moderation" />
       <Container className="py-12">
-        <ul className="grid sm:grid-cols-2 gap-4 max-w-2xl">
+        <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <li>
+            <Link
+              href="/admin/submissions"
+              className="block rounded-2xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-6 hover:border-[var(--color-accent)]"
+            >
+              <p className="font-display text-2xl font-semibold text-[var(--color-primary)]">
+                Fan fic submissions
+              </p>
+              <p className="mt-2 text-3xl font-semibold text-[var(--color-accent)]">{pendingSubs}</p>
+              <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
+                Read the stories kids have submitted and decide which to publish.
+              </p>
+            </Link>
+          </li>
           <li>
             <Link
               href="/admin/comments"
@@ -43,7 +60,7 @@ export default async function AdminHome() {
               </p>
               <p className="mt-2 text-3xl font-semibold text-[var(--color-accent)]">{pendingCount}</p>
               <p className="mt-2 text-sm text-[var(--color-ink-soft)]">
-                Review, approve or reject submissions awaiting moderation.
+                Review, approve or reject comments left on stories.
               </p>
             </Link>
           </li>

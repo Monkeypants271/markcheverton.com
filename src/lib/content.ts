@@ -34,7 +34,7 @@ async function fileExists(path: string): Promise<boolean> {
   }
 }
 
-export async function getAllPosts(type: ContentType): Promise<Post[]> {
+async function getMdxPosts(type: ContentType): Promise<Post[]> {
   const dir = join(CONTENT_DIR, type);
   let files: string[];
   try {
@@ -42,7 +42,6 @@ export async function getAllPosts(type: ContentType): Promise<Post[]> {
   } catch {
     return [];
   }
-
   const posts: Post[] = [];
   for (const file of files) {
     if (!file.endsWith(".mdx")) continue;
@@ -59,8 +58,46 @@ export async function getAllPosts(type: ContentType): Promise<Post[]> {
       body: content.trim(),
     });
   }
+  return posts;
+}
 
-  // Newest first
+async function getApprovedFanficSubmissions(): Promise<Post[]> {
+  const { getSupabaseAdmin } = await import("@/lib/supabase");
+  const { submissionToMarkdown } = await import("@/lib/fanfic-submissions");
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("fanfic_submissions")
+    .select("title, slug, content, author, moderated_at, created_at")
+    .eq("status", "approved")
+    .not("slug", "is", null);
+
+  if (error || !data) return [];
+
+  return data.map((s) => ({
+    title: s.title,
+    slug: s.slug as string,
+    date: (s.moderated_at || s.created_at)?.slice(0, 10) || null,
+    postId: null,
+    type: "fanfic" as const,
+    categories: ["fan-fiction"],
+    canonicalSource: "",
+    body: submissionToMarkdown(s.content),
+  }));
+}
+
+export async function getAllPosts(type: ContentType): Promise<Post[]> {
+  const [mdx, db] = await Promise.all([
+    getMdxPosts(type),
+    type === "fanfic" ? getApprovedFanficSubmissions() : Promise.resolve([]),
+  ]);
+
+  // De-dupe by slug — MDX wins if both exist (shouldn't happen, but safe)
+  const bySlug = new Map<string, Post>();
+  for (const p of [...db, ...mdx]) bySlug.set(p.slug, p);
+  const posts = Array.from(bySlug.values());
+
   posts.sort((a, b) => {
     if (!a.date && !b.date) return 0;
     if (!a.date) return 1;
@@ -75,21 +112,49 @@ export async function getPost(
   type: ContentType,
   slug: string
 ): Promise<Post | null> {
+  // Try MDX first
   const path = join(CONTENT_DIR, type, `${slug}.mdx`);
-  if (!(await fileExists(path))) return null;
+  if (await fileExists(path)) {
+    const raw = await readFile(path, "utf8");
+    const { data, content } = matter(raw);
+    return {
+      title: data.title ?? "Untitled",
+      slug: data.slug ?? slug,
+      date: data.date ?? null,
+      postId: data.postId ?? null,
+      type,
+      categories: data.categories ?? [],
+      canonicalSource: data.canonicalSource ?? "",
+      body: content.trim(),
+    };
+  }
 
-  const raw = await readFile(path, "utf8");
-  const { data, content } = matter(raw);
-  return {
-    title: data.title ?? "Untitled",
-    slug: data.slug ?? slug,
-    date: data.date ?? null,
-    postId: data.postId ?? null,
-    type,
-    categories: data.categories ?? [],
-    canonicalSource: data.canonicalSource ?? "",
-    body: content.trim(),
-  };
+  // Fall back to DB for fan fic submissions
+  if (type === "fanfic") {
+    const { getSupabaseAdmin } = await import("@/lib/supabase");
+    const { submissionToMarkdown } = await import("@/lib/fanfic-submissions");
+    const supabase = getSupabaseAdmin();
+    if (!supabase) return null;
+    const { data } = await supabase
+      .from("fanfic_submissions")
+      .select("title, slug, content, moderated_at, created_at")
+      .eq("status", "approved")
+      .eq("slug", slug)
+      .maybeSingle();
+    if (!data) return null;
+    return {
+      title: data.title,
+      slug: data.slug as string,
+      date: (data.moderated_at || data.created_at)?.slice(0, 10) || null,
+      postId: null,
+      type: "fanfic",
+      categories: ["fan-fiction"],
+      canonicalSource: "",
+      body: submissionToMarkdown(data.content),
+    };
+  }
+
+  return null;
 }
 
 export type MigratedComment = {
