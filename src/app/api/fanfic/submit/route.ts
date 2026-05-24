@@ -23,7 +23,7 @@ function indentParagraphs(story: string): string {
     .map((p) => p.trim())
     .filter((p) => p.length > 0)
     .map((p) => "     " + p)
-    .join("\n\n");
+    .join("\n");
 }
 
 export async function POST(req: Request) {
