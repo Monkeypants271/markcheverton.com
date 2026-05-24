@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
 import { Markdown } from "@/components/Markdown";
 import { CommentList } from "@/components/CommentList";
+import { CommentForm } from "@/components/CommentForm";
 import { getPost, getCommentsForPost } from "@/lib/content";
 
 export async function generateMetadata({
@@ -27,7 +28,7 @@ export default async function FanFicStoryPage({
   const post = await getPost("fanfic", slug);
   if (!post) notFound();
 
-  const comments = await getCommentsForPost(post.postId);
+  const comments = await getCommentsForPost(post.postId, "fanfic", post.slug);
 
   return (
     <>
@@ -44,6 +45,7 @@ export default async function FanFicStoryPage({
         <article className="mx-auto max-w-3xl">
           <Markdown>{post.body}</Markdown>
           <CommentList comments={comments} />
+          <CommentForm postSlug={post.slug} postType="fanfic" postId={post.postId} />
         </article>
 
         <div className="mt-12 text-center">

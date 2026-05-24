@@ -105,7 +105,7 @@ export type MigratedComment = {
 
 let commentsCache: { byPost: Record<number, MigratedComment[]> } | null = null;
 
-export async function getCommentsForPost(
+async function getMigratedComments(
   postId: number | null
 ): Promise<MigratedComment[]> {
   if (!postId) return [];
@@ -119,4 +119,65 @@ export async function getCommentsForPost(
     }
   }
   return commentsCache?.byPost[postId] ?? [];
+}
+
+async function getNewComments(
+  postType: string,
+  postSlug: string
+): Promise<MigratedComment[]> {
+  // Lazy import so Supabase doesn't load when env isn't configured
+  const { getSupabaseAdmin } = await import("@/lib/supabase");
+  const supabase = getSupabaseAdmin();
+  if (!supabase) return [];
+
+  const { data, error } = await supabase
+    .from("comments")
+    .select("id, parent_id, author, content, created_at")
+    .eq("post_slug", postSlug)
+    .eq("post_type", postType)
+    .eq("status", "approved")
+    .order("created_at", { ascending: true });
+
+  if (error || !data) return [];
+
+  // Adapt DB rows into the shape CommentList already expects
+  return data.map((c) => ({
+    id: c.id,
+    parent: c.parent_id ?? 0,
+    author: c.author,
+    authorUrl: null,
+    date: c.created_at,
+    // Wrap plain-text content in a <p> for the dangerouslySetInnerHTML render path
+    contentHtml: `<p>${escapeHtmlForComment(c.content)}</p>`,
+    link: "",
+    status: "approved" as const,
+  }));
+}
+
+function escapeHtmlForComment(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\n/g, "<br/>");
+}
+
+/**
+ * Returns ALL approved comments for a post — both the WordPress-migrated
+ * ones (keyed by legacy post_id) and any new ones submitted through the
+ * new comment form (keyed by post_type + post_slug).
+ */
+export async function getCommentsForPost(
+  postId: number | null,
+  postType?: string,
+  postSlug?: string
+): Promise<MigratedComment[]> {
+  const [legacy, fresh] = await Promise.all([
+    getMigratedComments(postId),
+    postType && postSlug ? getNewComments(postType, postSlug) : Promise.resolve([]),
+  ]);
+  // Sort oldest-first by date for stable threading
+  return [...legacy, ...fresh].sort((a, b) =>
+    a.date.localeCompare(b.date)
+  );
 }
