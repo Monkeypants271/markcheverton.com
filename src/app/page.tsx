@@ -9,7 +9,7 @@ export default function Home() {
       {/* Hero — free Minecraft books offer */}
       <section
         className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll text-white md:bg-fixed"
-        style={{ backgroundImage: "url('/images/home/castle-wall.jpg')" }}
+        style={{ backgroundImage: "url('/images/home/homepage-header.webp')" }}
       >
         <div className="absolute inset-0 bg-[var(--color-primary)]/55" />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/65 via-[var(--color-primary)]/55 to-[var(--color-primary)]/45" />
