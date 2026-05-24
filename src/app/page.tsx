@@ -14,10 +14,10 @@ export default function Home() {
           fill
           priority
           sizes="100vw"
-          className="object-cover opacity-35"
+          className="object-cover"
         />
-        <div className="absolute inset-0 bg-[var(--color-primary)]/80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)] via-[var(--color-primary)]/90 to-[var(--color-primary)]/65" />
+        <div className="absolute inset-0 bg-[var(--color-primary)]/65" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/75 via-[var(--color-primary)]/65 to-[var(--color-primary)]/55" />
         <Container className="relative z-10 py-20 md:py-28">
           <div className="grid md:grid-cols-5 gap-12 items-center">
             <div className="md:col-span-3">
