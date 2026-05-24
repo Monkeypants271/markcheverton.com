@@ -87,7 +87,7 @@ export async function GET(req: Request) {
     );
   }
 
-  // Approve — assign slug
+  // Approve — assign slug, publish, and redirect Mark to the live story
   const base = slugify(submission.title);
   const slug = await findUniqueSlug(base);
 
@@ -104,9 +104,6 @@ export async function GET(req: Request) {
     return htmlResponse("Error", `<h1 class="err">${error.message}</h1>`, 500);
   }
 
-  return htmlResponse(
-    "Approved",
-    `<h1 class="ok">✓ Submission approved.</h1>
-     <p><strong>${submission.title}</strong> is now live at <a href="/fanfic/${slug}">/fanfic/${slug}</a>.</p>`
-  );
+  // Redirect to the live story so Mark sees the published page immediately
+  return NextResponse.redirect(new URL(`/fanfic/${slug}`, req.url));
 }

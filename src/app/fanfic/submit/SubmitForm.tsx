@@ -85,10 +85,13 @@ export function SubmitForm() {
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Your name or pen name"
+          placeholder="Your first name or Minecraft name… NO last names"
           disabled={status === "submitting"}
           className="mt-1 w-full rounded-lg border border-[var(--color-rule)] bg-white px-4 py-3 focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/30 disabled:opacity-60"
         />
+        <p className="mt-1 text-xs text-[var(--color-muted)]">
+          For your safety, please don&apos;t use your last name. Just your first name or a fun Minecraft-style name.
+        </p>
       </div>
 
       <div>

@@ -132,6 +132,9 @@ export async function POST(req: Request) {
   <a href="${link("approve")}" style="display:inline-block;padding:10px 20px;margin-right:8px;background:#1e3a5f;color:white;text-decoration:none;border-radius:999px;font-weight:600">Approve &amp; publish</a>
   <a href="${link("reject")}" style="display:inline-block;padding:10px 20px;background:#888;color:white;text-decoration:none;border-radius:999px;font-weight:600">Reject</a>
 </p>
+<p style="background:#fff4e5;border:1px solid #f5c481;border-radius:8px;padding:10px 14px;font-size:13px;color:#7a4a14;margin-top:8px">
+  <strong>Heads up:</strong> if the author wrote what looks like a real first &amp; last name (e.g. &ldquo;Steve Smith&rdquo;), don&apos;t use the Approve button here — go to <a href="${escapeHtml(SITE_URL)}/admin/submissions" style="color:#7a4a14">admin/submissions</a> to edit the name first, then approve.
+</p>
 <hr style="margin:16px 0;border:none;border-top:1px solid #ddd"/>
 <div style="white-space:pre-wrap;font-family:Georgia,serif;font-size:15px;line-height:1.6">${escapeHtml(indentParagraphs(story))}</div>
 <hr style="margin:16px 0;border:none;border-top:1px solid #ddd"/>

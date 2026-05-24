@@ -17,6 +17,7 @@ export type PostMeta = {
   type: ContentType;
   categories: string[];
   canonicalSource: string;
+  author?: string | null;
 };
 
 export type Post = PostMeta & {
@@ -83,6 +84,7 @@ async function getApprovedFanficSubmissions(): Promise<Post[]> {
     type: "fanfic" as const,
     categories: ["fan-fiction"],
     canonicalSource: "",
+    author: s.author,
     body: submissionToMarkdown(s.content),
   }));
 }
@@ -137,7 +139,7 @@ export async function getPost(
     if (!supabase) return null;
     const { data } = await supabase
       .from("fanfic_submissions")
-      .select("title, slug, content, moderated_at, created_at")
+      .select("title, slug, content, author, moderated_at, created_at")
       .eq("status", "approved")
       .eq("slug", slug)
       .maybeSingle();
@@ -150,6 +152,7 @@ export async function getPost(
       type: "fanfic",
       categories: ["fan-fiction"],
       canonicalSource: "",
+      author: data.author,
       body: submissionToMarkdown(data.content),
     };
   }

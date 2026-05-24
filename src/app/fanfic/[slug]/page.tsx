@@ -33,12 +33,20 @@ export default async function FanFicStoryPage({
   return (
     <>
       <PageHeader eyebrow="Fan Fiction" title={post.title}>
-        {post.date &&
-          new Date(post.date).toLocaleDateString(undefined, {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+        {post.author && (
+          <span className="block">
+            by <strong className="text-[var(--color-primary)]">{post.author}</strong>
+          </span>
+        )}
+        {post.date && (
+          <span className={post.author ? "block text-sm text-[var(--color-muted)] mt-1" : ""}>
+            {new Date(post.date).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </span>
+        )}
       </PageHeader>
 
       <Container className="py-16">
