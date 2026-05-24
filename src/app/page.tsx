@@ -187,8 +187,13 @@ export default function Home() {
       </section>
 
       {/* Other books */}
-      <section className="py-20 bg-[var(--color-primary)] text-white">
-        <Container>
+      <section
+        className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed"
+        style={{ backgroundImage: "url('/images/home/dark-bookshelf.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-[var(--color-primary)]/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-primary)]/55 via-[var(--color-primary)]/50 to-[var(--color-primary)]/60" />
+        <Container className="relative z-10">
           <h2 className="font-display text-4xl md:text-5xl font-semibold text-center">
             Other Books
           </h2>
@@ -197,21 +202,25 @@ export default function Home() {
             {[
               {
                 title: "Trouble in Zombie-town",
+                cover: "/images/home/trouble-zombie-town.jpg",
                 blurb:
                   "Gameknight's sister is trapped inside Minecraft and transformed into a zombie. To save her, Gameknight must enter Zombie-town and survive a game that's no longer just a game.",
               },
               {
                 title: "Saving Crafter",
+                cover: "/images/home/saving-crafter.jpg",
                 blurb:
                   "Herobrine's revenge isn't aimed at Gameknight. It's aimed at his friends. As the fabric of Minecraft itself turns deadly, Gameknight must save Crafter before the world they know comes apart forever.",
               },
               {
                 title: "The Phantom Virus",
+                cover: "/images/home/phantom-virus.jpg",
                 blurb:
                   "After defeating Herobrine, Gameknight thought the war was over — until deadly devices, built by Herobrine, started destroying villages and NPCs. Gameknight must dismantle the traps before chaos consumes the world.",
               },
               {
                 title: "Facing the Beast Within",
+                cover: "/images/home/facing-beast-within.jpg",
                 blurb:
                   "Cameron Poole struggles with anxiety, and it follows him everywhere — even to summer camp. When the demon Malphas tries to open a gateway between worlds, Cameron and his friends must stop him before disaster befalls them all.",
               },
@@ -220,11 +229,15 @@ export default function Home() {
               return (
                 <article
                   key={entry.title}
-                  className="rounded-2xl bg-white/5 border border-white/10 p-5 flex flex-col"
+                  className="rounded-2xl bg-white/8 border border-white/15 p-5 flex flex-col shadow-xl backdrop-blur-[2px]"
                 >
-                  <div className="aspect-[2/3] rounded-lg bg-gradient-to-br from-white/20 to-white/5 mb-4 flex items-center justify-center text-white/40 text-xs p-3 text-center">
-                    [{entry.title} cover]
-                  </div>
+                  <Image
+                    src={entry.cover}
+                    alt={`${entry.title} book cover`}
+                    width={360}
+                    height={540}
+                    className="mb-4 aspect-[2/3] w-full rounded-lg object-cover shadow-lg"
+                  />
                   <h3 className="font-display text-xl font-semibold leading-tight">
                     {entry.title}
                   </h3>
