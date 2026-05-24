@@ -7,15 +7,10 @@ export default function Home() {
   return (
     <>
       {/* Hero — free Minecraft books offer */}
-      <section className="relative overflow-hidden bg-[var(--color-primary)] text-white">
-        <Image
-          src="/images/home/castle-wall.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
-        />
+      <section
+        className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll text-white md:bg-fixed"
+        style={{ backgroundImage: "url('/images/home/castle-wall.jpg')" }}
+      >
         <div className="absolute inset-0 bg-[var(--color-primary)]/65" />
         <div className="absolute inset-0 bg-gradient-to-r from-[var(--color-primary)]/75 via-[var(--color-primary)]/65 to-[var(--color-primary)]/55" />
         <Container className="relative z-10 py-20 md:py-28">
@@ -69,16 +64,21 @@ export default function Home() {
       </section>
 
       {/* Featured series — Gameknight999 */}
-      <section className="py-20 md:py-28 bg-[var(--color-surface)] border-b border-[var(--color-rule)]">
-        <Container>
+      <section
+        className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed md:py-28"
+        style={{ backgroundImage: "url('/images/home/minecraft-lobby.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-[var(--color-primary)]/72" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-primary)]/65 via-[var(--color-primary)]/72 to-[var(--color-primary)]/78" />
+        <Container className="relative z-10">
           <div className="text-center max-w-3xl mx-auto">
             <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
               Featured Series
             </p>
-            <h2 className="mt-3 font-display text-4xl md:text-5xl font-semibold text-[var(--color-primary)]">
+            <h2 className="mt-3 font-display text-4xl md:text-5xl font-semibold text-white">
               The Gameknight999 Series
             </h2>
-            <p className="mt-3 text-xl text-[var(--color-ink-soft)] italic">
+            <p className="mt-3 text-xl text-white/80 italic">
               The 1st Minecraft series ever published.
             </p>
           </div>
@@ -120,17 +120,17 @@ export default function Home() {
                     className="mx-auto h-auto w-full max-w-[260px] drop-shadow-xl transition-transform duration-200 group-hover:-translate-y-1 group-hover:scale-[1.02]"
                   />
                 </a>
-                <p className="mt-4 text-xs uppercase tracking-wider text-[var(--color-muted)] font-semibold">
+                <p className="mt-4 text-xs uppercase tracking-wider text-white/65 font-semibold">
                   {book.number}
                 </p>
-                <p className="mt-1 font-display text-lg text-[var(--color-primary)]">
+                <p className="mt-1 font-display text-lg text-white">
                   {book.title}
                 </p>
               </div>
             ))}
           </div>
 
-          <p className="mt-12 text-center text-lg text-[var(--color-ink-soft)] max-w-2xl mx-auto">
+          <p className="mt-12 text-center text-lg text-white/80 max-w-2xl mx-auto">
             Perfect for kids who love Minecraft, adventure, teamwork, and
             fast-paced action.
           </p>
@@ -138,7 +138,7 @@ export default function Home() {
           <div className="mt-8 text-center">
             <Link
               href="/books"
-              className="inline-flex items-center rounded-full bg-[var(--color-primary)] text-white px-6 py-3 font-semibold hover:bg-[var(--color-primary-soft)] transition-colors"
+              className="inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-6 py-3 font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
             >
               See all my novels
             </Link>
