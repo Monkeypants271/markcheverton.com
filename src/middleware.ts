@@ -15,7 +15,12 @@ async function expectedCookieValue(): Promise<string | null> {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (!pathname.startsWith("/admin") || pathname.startsWith("/admin/login")) {
+  if (
+    !pathname.startsWith("/admin") ||
+    pathname.startsWith("/admin/login") ||
+    pathname.startsWith("/admin/forgot") ||
+    pathname.startsWith("/admin/magic")
+  ) {
     return NextResponse.next();
   }
 

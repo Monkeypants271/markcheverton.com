@@ -33,10 +33,18 @@ create table if not exists public.ip_bans (
   banned_at  timestamptz not null default now()
 );
 
+create table if not exists public.admin_magic_tokens (
+  token       text primary key,
+  expires_at  timestamptz not null,
+  used_at     timestamptz,
+  created_at  timestamptz not null default now()
+);
+
 -- Row Level Security: we'll always go through the service role from our API
 -- routes, so block all anonymous direct access.
-alter table public.comments  enable row level security;
-alter table public.ip_bans   enable row level security;
+alter table public.comments             enable row level security;
+alter table public.ip_bans              enable row level security;
+alter table public.admin_magic_tokens   enable row level security;
 
 -- No anon policies = anon clients can read/write nothing directly.
 -- The service role bypasses RLS, which is what our server routes use.

@@ -78,6 +78,11 @@ export default async function AdminLoginPage({
           >
             Sign in
           </button>
+          <p className="text-center text-sm text-[var(--color-ink-soft)]">
+            <a href="/admin/forgot" className="hover:text-[var(--color-accent)] underline">
+              Forgot your password?
+            </a>
+          </p>
         </form>
       </Container>
     </>
