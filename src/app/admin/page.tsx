@@ -7,6 +7,9 @@ import { ADMIN_COOKIE } from "@/lib/admin-auth";
 import { getSupabaseAdmin } from "@/lib/supabase";
 
 export const metadata = { title: "Admin", robots: "noindex,nofollow" };
+export const dynamic = "force-dynamic";
+export const fetchCache = "only-no-store";
+export const revalidate = 0;
 
 async function logoutAction() {
   "use server";
@@ -21,14 +24,14 @@ export default async function AdminHome() {
   let banCount = 0;
   let pendingSubs = 0;
   if (supabase) {
-    const [{ count: pc }, { count: bc }, { count: ps }] = await Promise.all([
-      supabase.from("comments").select("id", { count: "exact", head: true }).eq("status", "pending"),
-      supabase.from("ip_bans").select("ip_address", { count: "exact", head: true }),
-      supabase.from("fanfic_submissions").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    const [{ data: pendingComments }, { data: bannedIps }, { data: pendingSubmissions }] = await Promise.all([
+      supabase.from("comments").select("id").eq("status", "pending"),
+      supabase.from("ip_bans").select("ip_address"),
+      supabase.from("fanfic_submissions").select("id").eq("status", "pending"),
     ]);
-    pendingCount = pc ?? 0;
-    banCount = bc ?? 0;
-    pendingSubs = ps ?? 0;
+    pendingCount = pendingComments?.length ?? 0;
+    banCount = bannedIps?.length ?? 0;
+    pendingSubs = pendingSubmissions?.length ?? 0;
   }
 
   return (
