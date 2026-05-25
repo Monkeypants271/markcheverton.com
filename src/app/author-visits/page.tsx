@@ -44,8 +44,11 @@ export default function AuthorVisitsPage() {
   return (
     <section className="bg-white">
       <section
-        className="relative overflow-hidden bg-slate-900 py-24 text-white md:py-32"
-        style={{ backgroundImage: "url('/images/author-visits/minecraft-background.webp')" }}
+        className="relative overflow-hidden bg-slate-900 bg-cover bg-center bg-no-repeat py-24 text-white md:bg-fixed md:py-32"
+        style={{
+          backgroundImage:
+            "url('/images/author-visits/minecraft-background.webp')",
+        }}
       >
         <div className="absolute inset-0 bg-[rgba(17,29,51,0.68)]" />
         <Container className="relative">
@@ -129,66 +132,90 @@ export default function AuthorVisitsPage() {
       </section>
 
       <section
-        className="relative overflow-hidden py-20 md:py-24"
-        style={{ backgroundImage: "url('/images/author-visits/author-visit.jpg')" }}
+        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-20 md:bg-fixed md:py-24"
+        style={{
+          backgroundImage: "url('/images/author-visits/author-visit.jpg')",
+        }}
       >
-        <div className="absolute inset-0 bg-[rgba(255,255,255,0.86)]" />
+        <div className="absolute inset-0 bg-[rgba(255,255,255,0.34)]" />
         <Container className="relative">
-          <div className="mx-auto max-w-4xl">
-            <h2 className="font-display text-4xl font-semibold text-[var(--color-primary)]">
-              Why I Share This Story
-            </h2>
-            <div className="mt-8 space-y-6 text-[1.05rem] leading-8 text-[var(--color-ink-soft)]">
-              <p>
-                For a long time, I didn&apos;t think I was very good at writing.
-              </p>
-              <p>
-                My first four novels failed completely. They were rejected again
-                and again, and for a while, I was ready to quit. I didn&apos;t
-                know how to write a novel yet, but after each failure, I tried
-                to learn more and keep going.
-              </p>
-              <p>
-                Everything changed when my son was bullied while playing
-                Minecraft. Instead of giving advice, I wrote a story just for
-                him. We read it together at bedtime, and as we talked about it,
-                he began to see that hurtful behavior often comes from people
-                dealing with their own struggles. That moment reminded me why
-                stories matter.
-              </p>
-              <p>
-                I share this story with students because I know what it feels
-                like to doubt yourself. I want kids to see that failure
-                doesn&apos;t mean you should stop trying — it just means you
-                haven&apos;t found the right path yet. And learning, even when
-                it&apos;s hard, is where growth begins.
-              </p>
+          <div className="mx-auto max-w-6xl">
+            <div className="grid items-start gap-8 lg:grid-cols-[1.08fr_1.12fr]">
+              <div className="bg-white/92 p-10 shadow-[0_18px_44px_rgba(15,23,42,0.18)] md:p-12">
+                <h2 className="font-display text-4xl font-semibold leading-tight text-[var(--color-primary)] md:text-6xl">
+                  Why I Share This Story
+                </h2>
+                <div className="mt-8 space-y-6 text-[1.05rem] leading-8 text-[var(--color-ink-soft)] md:text-[1.12rem]">
+                  <p>
+                    For a long time, I didn&apos;t think I was very good at
+                    writing.
+                  </p>
+                  <p>
+                    My first four novels failed completely. They were rejected
+                    again and again, and for a while, I was ready to quit.
+                    I didn&apos;t know how to write a novel yet — but after each
+                    failure, I tried to learn more and keep going.
+                  </p>
+                </div>
+              </div>
+
+              <div className="lg:pt-[26rem]" />
+            </div>
+
+            <div className="mt-8 lg:mt-[-4rem] lg:flex lg:justify-end">
+              <div className="max-w-5xl bg-[linear-gradient(135deg,#7058ff,#8f62ff)] p-8 text-white shadow-[0_18px_44px_rgba(73,58,155,0.24)] md:p-10 lg:w-[62%]">
+                <div className="space-y-6 text-[1.05rem] leading-8 md:text-[1.12rem]">
+                  <p>
+                    Everything changed when my son was bullied while playing
+                    Minecraft. Instead of giving advice, I wrote a story just
+                    for him. We read it together at bedtime, and as we talked
+                    about it, he began to see that hurtful behavior often comes
+                    from people dealing with their own struggles. That moment
+                    reminded me why stories matter.
+                  </p>
+                  <p>
+                    I share this story with students because I know what it
+                    feels like to doubt yourself. I want kids to see that
+                    failure doesn&apos;t mean you should stop trying — it just
+                    means you haven&apos;t found the right path yet. And
+                    learning, even when it&apos;s hard, is where growth begins.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </Container>
       </section>
 
       <section
-        className="relative overflow-hidden py-20 text-white md:py-24"
-        style={{ backgroundImage: "url('/images/author-visits/kids-reading.jpg')" }}
+        className="relative overflow-hidden bg-cover bg-center bg-no-repeat py-20 text-white md:bg-fixed md:py-24"
+        style={{
+          backgroundImage: "url('/images/author-visits/kids-reading.jpg')",
+        }}
       >
         <div className="absolute inset-0 bg-[rgba(19,33,50,0.66)]" />
         <Container className="relative">
-          <div className="mx-auto max-w-4xl text-center">
-            <h2 className="font-display text-4xl font-semibold">
-              In-Person and virtual visits available.
-            </h2>
-            <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/90">
-              I usually respond within 1-2 business days. If you&apos;re planning
-              a school visit, library event, or literacy program, send me the
-              basics and we&apos;ll talk through the details.
-            </p>
-            <Link
-              href="/contact"
-              className="mt-8 inline-flex rounded-full bg-[var(--color-accent)] px-7 py-3 text-sm font-semibold text-white transition hover:brightness-95"
-            >
-              Request Availability & Pricing
-            </Link>
+          <div className="flex justify-center lg:justify-end">
+            <div className="w-full max-w-2xl bg-white/88 p-10 text-left shadow-[0_20px_48px_rgba(15,23,42,0.2)] md:p-14">
+              <h2 className="font-display text-4xl font-semibold leading-tight text-black md:text-5xl">
+                Ready to Bring This Message to Your School?
+              </h2>
+              <p className="mt-8 text-xl leading-9 text-black/85">
+                I&apos;d love to help your students see failure, creativity, and
+                confidence in a new way.
+              </p>
+              <Link
+                href="/contact"
+                className="mt-10 inline-flex rounded-none bg-[linear-gradient(135deg,#6f57ff,#955fff)] px-7 py-4 text-base font-semibold text-white shadow-[0_12px_28px_rgba(111,87,255,0.3)] transition hover:brightness-95"
+              >
+                Request Availability & Pricing
+              </Link>
+              <p className="mt-10 text-2xl leading-10 text-black">
+                In-Person and virtual visits available.
+                <br />
+                Responds within 1-2 days.
+              </p>
+            </div>
           </div>
         </Container>
       </section>
