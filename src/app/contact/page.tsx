@@ -33,9 +33,6 @@ export default function ContactPage() {
                 5 Southside Drive, Suite 11 #318<br />
                 Clifton Park, NY 12065
               </address>
-              <p className="mt-2 text-sm text-[var(--color-muted)]">
-                Letters are forwarded through agent Holly Root at Root Literary.
-              </p>
             </div>
           </div>
 
