@@ -46,6 +46,9 @@ export default function Home() {
                   Browse all books
                 </Link>
               </div>
+              <p className="mt-4 text-sm font-medium text-white/75">
+                No spam. Unsubscribe anytime.
+              </p>
             </div>
             <div className="md:col-span-2">
               <div className="relative aspect-[4/5]">
@@ -60,6 +63,84 @@ export default function Home() {
                 />
               </div>
             </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* Trust strip */}
+      <section className="border-y border-[var(--color-rule)] bg-[var(--color-surface)]">
+        <Container className="py-6">
+          <div className="grid gap-4 text-center sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              { stat: "2 million+", label: "copies sold" },
+              { stat: "31", label: "countries" },
+              { stat: "27", label: "languages" },
+              { stat: "NYT", label: "bestselling author" },
+            ].map((item) => (
+              <div key={item.label} className="rounded-xl border border-[var(--color-rule)] bg-white px-4 py-5 shadow-sm">
+                <p className="font-display text-3xl font-semibold text-[var(--color-primary)]">
+                  {item.stat}
+                </p>
+                <p className="mt-1 text-sm font-medium uppercase tracking-wider text-[var(--color-muted)]">
+                  {item.label}
+                </p>
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* Audience paths */}
+      <section className="py-16">
+        <Container>
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+              Start Here
+            </p>
+            <h2 className="mt-3 font-display text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">
+              Pick the path that fits you best.
+            </h2>
+            <p className="mt-4 text-lg text-[var(--color-ink-soft)]">
+              Whether you&apos;re here for books, free reads, school visits, or
+              writing help, there&apos;s a good next stop.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {[
+              {
+                title: "Books for Readers",
+                body: "Start with the Minecraft series and find the best entry point.",
+                href: "/books",
+              },
+              {
+                title: "Get 2 Free Books",
+                body: "Try two free Minecraft stories before committing to a series.",
+                href: "/free-books",
+              },
+              {
+                title: "Author Visits",
+                body: "Bring Mark to your school, library, or literacy program.",
+                href: "/author-visits",
+              },
+              {
+                title: "Writing Resources",
+                body: "Use free tools, prompts, and lessons to help kids write.",
+                href: "/writing-resources",
+              },
+            ].map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="rounded-xl border border-[var(--color-rule)] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <h3 className="font-display text-2xl font-semibold text-[var(--color-primary)]">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                  {item.body}
+                </p>
+              </Link>
+            ))}
           </div>
         </Container>
       </section>
@@ -160,7 +241,7 @@ export default function Home() {
               className="mx-auto h-28 w-28 rounded-full object-cover object-top shadow-lg"
             />
             <p className="mt-6 text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)] italic">
-              New York Times Best Selling Author
+              New York Times Bestselling Author
             </p>
             <h2 className="mt-3 font-display text-5xl font-semibold text-[var(--color-primary)]">
               Mark Cheverton
@@ -173,7 +254,7 @@ export default function Home() {
               started calling, Mark knew he&apos;d struck a nerve with kids.
               After 10 years, Mark has written <strong>27 novels</strong> that
               have appeared in the New York Times, USA Today, and
-              Publisher&apos;s Weekly bestsellers lists. They&apos;ve been
+              Publisher&apos;s Weekly bestseller lists. They&apos;ve been
               published in <strong>31 countries</strong>, translated into{" "}
               <strong>27 languages</strong>, and over{" "}
               <strong>2 million copies</strong> have been sold worldwide.

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
 import { series, type Book } from "@/data/books";
@@ -14,6 +15,54 @@ export default function BooksPage() {
       </PageHeader>
 
       <Container className="py-16 space-y-20">
+        <section className="rounded-[28px] border border-[var(--color-rule)] bg-[var(--color-surface)] p-8 shadow-sm md:p-10">
+          <div className="max-w-3xl">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+              New Readers Start Here
+            </p>
+            <h2 className="mt-3 font-display text-3xl font-semibold text-[var(--color-primary)] md:text-4xl">
+              Not sure which book to try first?
+            </h2>
+            <p className="mt-4 text-lg leading-relaxed text-[var(--color-ink-soft)]">
+              If your reader loves Minecraft, start with Gameknight999 Book One.
+              If you&apos;d rather try before you buy, grab two free books first.
+            </p>
+          </div>
+          <div className="mt-8 grid gap-4 md:grid-cols-2">
+            <Link
+              href="/free-books"
+              className="rounded-2xl border border-[var(--color-rule)] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+                Free First
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold text-[var(--color-primary)]">
+                Get 2 free Minecraft books
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                Try Elytra Perils and The Virus before committing to a series.
+              </p>
+            </Link>
+            <a
+              href="https://www.amazon.com/gp/product/1632207117"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-2xl border border-[var(--color-rule)] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+                Most Popular Starting Point
+              </p>
+              <h3 className="mt-2 font-display text-2xl font-semibold text-[var(--color-primary)]">
+                Invasion of the Overworld
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                Begin with the first Gameknight999 adventure and read the series
+                in order.
+              </p>
+            </a>
+          </div>
+        </section>
+
         {series.map((s) => (
           <section key={s.name}>
             <header className="text-center max-w-2xl mx-auto">
@@ -59,7 +108,6 @@ function BookCard({ book }: { book: Book }) {
           width={320}
           height={420}
           className="max-h-full w-auto object-contain group-hover:scale-105 transition-transform duration-300"
-          unoptimized
         />
       </div>
       <div className="mt-3 text-center">
