@@ -9,20 +9,36 @@ export default async function SensoryDetailsPage() {
   const posts = await getAllPosts("sensory-details");
   const featureImages = [
     {
-      src: "/images/sensory-details/terror.png",
+      src: "/images/sensory-details/emotions/terror.png",
       alt: "Terror emotion illustration",
     },
     {
-      src: "/images/sensory-details/shocked-2.png",
-      alt: "Shocked emotion illustration",
+      src: "/images/sensory-details/emotions/shock.png",
+      alt: "Shock emotion illustration",
     },
     {
-      src: "/images/sensory-details/surprise.png",
+      src: "/images/sensory-details/emotions/surprise.png",
       alt: "Surprised emotion illustration",
     },
     {
-      src: "/images/sensory-details/grief.png",
+      src: "/images/sensory-details/emotions/grief.png",
       alt: "Grief emotion illustration",
+    },
+    {
+      src: "/images/sensory-details/emotions/sadness.png",
+      alt: "Sadness emotion illustration",
+    },
+    {
+      src: "/images/sensory-details/emotions/anger.png",
+      alt: "Anger emotion illustration",
+    },
+    {
+      src: "/images/sensory-details/emotions/nervousness.png",
+      alt: "Nervousness emotion illustration",
+    },
+    {
+      src: "/images/sensory-details/emotions/peacefulness.png",
+      alt: "Peacefulness emotion illustration",
     },
   ];
 
@@ -41,7 +57,7 @@ export default async function SensoryDetailsPage() {
             />
           </div>
 
-          <div className="mt-8 space-y-6 text-lg leading-9 text-slate-800 sm:text-[1.75rem] sm:leading-[1.45]">
+          <div className="mt-8 max-w-5xl space-y-6 text-left text-[1.05rem] leading-8 text-slate-800 md:text-[1.15rem]">
             <p>
               Strong stories don&apos;t just tell readers what&apos;s happening - they
               help them experience it.
@@ -82,7 +98,7 @@ export default async function SensoryDetailsPage() {
             </div>
           </div>
 
-          <p className="mt-6 text-lg leading-8 text-slate-800">
+          <p className="mt-6 max-w-5xl text-[1.05rem] leading-8 text-slate-800 md:text-[1.15rem]">
             If you want to download the sheet of different emotion examples, as
             shown in the video, click{" "}
             <Link
@@ -114,7 +130,7 @@ export default async function SensoryDetailsPage() {
               ))}
             </div>
 
-            <div className="space-y-8">
+            <div className="space-y-6">
               {featureImages.map((image) => (
                 <div
                   key={image.src}
