@@ -112,7 +112,7 @@ export default async function SensoryDetailsPage() {
             . It will take you to a dropbox folder for download.
           </p>
 
-          <div className="mt-14 grid gap-8 xl:grid-cols-[minmax(0,1fr)_280px]">
+          <div className="mt-14 grid gap-8 xl:grid-cols-[minmax(0,1fr)_220px]">
             <div className="grid gap-6 sm:grid-cols-2">
               {posts.map((post) => (
                 <Link
@@ -130,7 +130,7 @@ export default async function SensoryDetailsPage() {
               ))}
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-5">
               {featureImages.map((image) => (
                 <div
                   key={image.src}
