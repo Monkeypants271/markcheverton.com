@@ -7,6 +7,24 @@ export const metadata = { title: "Sensory Details" };
 
 export default async function SensoryDetailsPage() {
   const posts = await getAllPosts("sensory-details");
+  const featureImages = [
+    {
+      src: "/images/sensory-details/terror.png",
+      alt: "Terror emotion illustration",
+    },
+    {
+      src: "/images/sensory-details/shocked-2.png",
+      alt: "Shocked emotion illustration",
+    },
+    {
+      src: "/images/sensory-details/surprise.png",
+      alt: "Surprised emotion illustration",
+    },
+    {
+      src: "/images/sensory-details/grief.png",
+      alt: "Grief emotion illustration",
+    },
+  ];
 
   return (
     <section className="bg-white py-16 sm:py-20">
@@ -78,21 +96,40 @@ export default async function SensoryDetailsPage() {
             . It will take you to a dropbox folder for download.
           </p>
 
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
-            {posts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/writing-resources/sensory-details/${post.slug}`}
-                className="block rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_12px_28px_rgba(15,23,42,0.08)] transition-transform hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(15,23,42,0.12)]"
-              >
-                <h2 className="font-display text-2xl font-semibold uppercase tracking-[0.03em] text-slate-900">
-                  {post.title}
-                </h2>
-                <p className="mt-4 text-base leading-8 text-slate-700">
-                  {post.excerpt}
-                </p>
-              </Link>
-            ))}
+          <div className="mt-14 grid gap-8 xl:grid-cols-[minmax(0,1fr)_280px]">
+            <div className="grid gap-6 sm:grid-cols-2">
+              {posts.map((post) => (
+                <Link
+                  key={post.slug}
+                  href={`/writing-resources/sensory-details/${post.slug}`}
+                  className="block rounded-xl border-2 border-sky-600 bg-white p-6 shadow-[0_14px_34px_rgba(15,23,42,0.12)] transition-transform hover:-translate-y-1 hover:shadow-[0_18px_40px_rgba(15,23,42,0.16)]"
+                >
+                  <h2 className="text-2xl font-semibold uppercase tracking-[0.02em] text-sky-700 underline underline-offset-4">
+                    {post.title}
+                  </h2>
+                  <p className="mt-4 text-base leading-8 text-slate-700">
+                    {post.excerpt}
+                  </p>
+                </Link>
+              ))}
+            </div>
+
+            <div className="space-y-8">
+              {featureImages.map((image) => (
+                <div
+                  key={image.src}
+                  className="overflow-hidden rounded-sm bg-slate-100 shadow-[0_14px_30px_rgba(15,23,42,0.12)]"
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    width={1024}
+                    height={1024}
+                    className="h-auto w-full"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </Container>
