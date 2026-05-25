@@ -28,6 +28,46 @@ export type Post = PostMeta & {
 
 const CONTENT_DIR = join(process.cwd(), "content");
 
+const FEATURED_IMAGE_OVERRIDES: Partial<
+  Record<ContentType, Record<string, string>>
+> = {
+  tips: {
+    "anatomy-of-a-battle-scene":
+      "/images/tips/anatomy-of-a-battle-scene.jpg",
+    "character-descriptions": "/images/tips/character-descriptions.jpg",
+    "dark-night-of-the-soul": "/images/tips/dark-night-of-the-soul.jpg",
+    "designing-flawed-characters":
+      "/images/tips/designing-flawed-characters.jpg",
+    "developing-your-storys-concept-and-premise":
+      "/images/tips/developing-your-storys-concept-and-premise.jpg",
+    dialogue: "/images/tips/dialogue.jpg",
+    "dont-tell-show": "/images/tips/dont-tell-show.jpg",
+    "echoing-and-character-names-2":
+      "/images/tips/echoing-and-character-names-2.jpg",
+    "how-to-use-grammarly-to-fix-errors":
+      "/images/tips/how-to-use-grammarly-to-fix-errors.jpg",
+    "not-sure-what-to-do-send-them-on-a-journey":
+      "/images/tips/not-sure-what-to-do-send-them-on-a-journey.jpg",
+    "physical-effects-of-emotions":
+      "/images/tips/physical-effects-of-emotions.jpg",
+    "pixars-storytelling-rule-4":
+      "/images/tips/pixars-storytelling-rule-4.jpg",
+    "plot-questions": "/images/tips/plot-questions.jpg",
+    "sentence-structure": "/images/tips/sentence-structure.jpg",
+    "show-what-you-need-before-you-use-it":
+      "/images/tips/show-what-you-need-before-you-use-it.jpg",
+    "story-planning-opposites":
+      "/images/tips/story-planning-opposites.jpg",
+    "structure-of-a-chapter": "/images/tips/structure-of-a-chapter.jpg",
+    "what-are-the-keys-to-writing-a-good-story-these-are-mine":
+      "/images/tips/what-are-the-keys-to-writing-a-good-story-these-are-mine.jpg",
+    "why-do-i-alway-run-out-of-ideas-for-my-story":
+      "/images/tips/why-do-i-alway-run-out-of-ideas-for-my-story.jpg",
+    "writing-an-awesome-hook": "/images/tips/writing-an-awesome-hook.jpg",
+    "writing-is-rewriting": "/images/tips/writing-is-rewriting.jpg",
+  },
+};
+
 async function fileExists(path: string): Promise<boolean> {
   try {
     await readFile(path);
@@ -50,10 +90,14 @@ async function getMdxPosts(type: ContentType): Promise<Post[]> {
     if (!file.endsWith(".mdx")) continue;
     const raw = await readFile(join(dir, file), "utf8");
     const { data, content } = matter(raw);
-    const featuredImage = extractFirstImage(content);
+    const slug = data.slug ?? file.replace(/\.mdx$/, "");
+    const featuredImage =
+      data.featuredImage ??
+      getFeaturedImageOverride(type, slug) ??
+      extractFirstImage(content);
     posts.push({
       title: data.title ?? "Untitled",
-      slug: data.slug ?? file.replace(/\.mdx$/, ""),
+      slug,
       date: data.date ?? null,
       postId: data.postId ?? null,
       type,
@@ -134,7 +178,10 @@ export async function getPost(
       type,
       categories: data.categories ?? [],
       canonicalSource: data.canonicalSource ?? "",
-      featuredImage: extractFirstImage(content),
+      featuredImage:
+        data.featuredImage ??
+        getFeaturedImageOverride(type, data.slug ?? slug) ??
+        extractFirstImage(content),
       excerpt: createExcerpt(content),
       body: content.trim(),
     };
@@ -174,6 +221,13 @@ export async function getPost(
 function extractFirstImage(body: string): string | null {
   const match = body.match(/!\[[^\]]*\]\(([^)\s]+)(?:\s+"[^"]*")?\)/);
   return match?.[1] ?? null;
+}
+
+function getFeaturedImageOverride(
+  type: ContentType,
+  slug: string
+): string | null {
+  return FEATURED_IMAGE_OVERRIDES[type]?.[slug] ?? null;
 }
 
 function createExcerpt(body: string): string {
