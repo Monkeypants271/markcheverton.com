@@ -98,20 +98,6 @@ export default async function SensoryDetailsPage() {
             </div>
           </div>
 
-          <p className="mt-6 max-w-5xl text-[1.05rem] leading-8 text-slate-800 md:text-[1.15rem]">
-            If you want to download the sheet of different emotion examples, as
-            shown in the video, click{" "}
-            <Link
-              href="https://www.dropbox.com/scl/fi/mw8dpy7m7pjs716kpgfc0/Show-Dont-Tell-with-Emotions.docx?rlkey=1eu4bf45vxc0w69mkyfy177fg&st=zw53gflh&dl=0"
-              target="_blank"
-              rel="noreferrer"
-              className="font-semibold text-[var(--color-accent)] underline decoration-2 underline-offset-4"
-            >
-              HERE
-            </Link>
-            . It will take you to a dropbox folder for download.
-          </p>
-
           <div className="mt-14 grid gap-8 xl:grid-cols-[minmax(0,1fr)_220px]">
             <div className="grid gap-6 sm:grid-cols-2">
               {posts.map((post) => (
