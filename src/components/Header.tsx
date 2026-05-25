@@ -10,6 +10,7 @@ const navLinks = [
   { href: "/fanfic", label: "Fan Fiction" },
   { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export function Header() {

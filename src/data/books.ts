@@ -3,6 +3,7 @@ export type Book = {
   cover: string;
   amazon?: string;
   comingSoon?: boolean;
+  note?: string;
 };
 
 export type Series = {
@@ -19,6 +20,10 @@ export const series: Series[] = [
         title: "Facing the Beast Within",
         cover: "/images/books/3D-FtBW-8-facing-left-with-award.png",
         amazon: "https://www.amazon.com/Facing-Beast-Within-Mark-Cheverton/dp/1735878162",
+      },
+      {
+        title: "Cameron and the Shadow-wraiths",
+        cover: "/images/books/cameron-and-the-shadow-wraiths.png",
       },
     ],
   },
@@ -232,22 +237,22 @@ export const series: Series[] = [
   },
   {
     name: "Minecraft Short Stories",
-    tag: "Free via BookFunnel",
+    tag: "Free via newsletter signup",
     books: [
       {
         title: "Elytra Peril",
         cover: "/images/books/Elytra-Peril-SS-3D-small.png",
-        amazon: "https://books.bookfunnel.com/freeminecraftstories",
+        note: "Free with newsletter signup",
       },
       {
         title: "The Virus",
         cover: "/images/books/The-Virus-SS-3D-small.png",
-        amazon: "https://books.bookfunnel.com/freeminecraftstories",
+        note: "Free with newsletter signup",
       },
       {
         title: "Battle with Wither King",
         cover: "/images/books/Battle-with-Wither-King-SS-3D-small.png",
-        amazon: "https://books.bookfunnel.com/freeminecraftstories",
+        note: "Free with newsletter signup",
       },
     ],
   },

@@ -10,8 +10,10 @@ export default function BooksPage() {
   return (
     <>
       <PageHeader eyebrow="Books" title="Every book Mark has written.">
-        Click any cover to view that book on Amazon. 27 novels published across
-        31 countries, 27 languages, and 2 million+ copies in print.
+        Click linked covers to view books on Amazon. Free content-magnet
+        stories are available through the newsletter signup. 27 novels
+        published across 31 countries, 27 languages, and 2 million+ copies in
+        print.
       </PageHeader>
 
       <Container className="py-16 space-y-20">
@@ -117,6 +119,11 @@ function BookCard({ book }: { book: Book }) {
         {book.comingSoon && (
           <p className="mt-1 text-xs uppercase tracking-wider text-[var(--color-accent)] font-semibold">
             Coming soon
+          </p>
+        )}
+        {!book.comingSoon && book.note && (
+          <p className="mt-1 text-xs uppercase tracking-wider text-[var(--color-accent)] font-semibold">
+            {book.note}
           </p>
         )}
       </div>
