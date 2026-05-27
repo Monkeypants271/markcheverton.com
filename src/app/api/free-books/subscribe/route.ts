@@ -1,9 +1,23 @@
 import { NextResponse } from "next/server";
+import {
+  consumeRateLimit,
+  getClientIp,
+  isValidEmail,
+  parseStartedAt,
+  submittedTooFast,
+  verifyTurnstileToken,
+} from "@/lib/anti-spam";
 
 const BREVO_ENDPOINT = "https://api.brevo.com/v3/contacts";
 
 export async function POST(req: Request) {
-  let body: { email?: string; firstName?: string };
+  let body: {
+    email?: string;
+    firstName?: string;
+    website?: string;
+    startedAt?: number | string;
+    turnstileToken?: string;
+  };
   try {
     body = await req.json();
   } catch {
@@ -12,12 +26,39 @@ export async function POST(req: Request) {
 
   const email = (body.email || "").trim().toLowerCase();
   const firstName = (body.firstName || "").trim();
+  const website = (body.website || "").trim();
+  const startedAt = parseStartedAt(body.startedAt);
+  const turnstileToken = (body.turnstileToken || "").trim() || null;
+  const ip = getClientIp(req);
 
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (website) {
+    return NextResponse.json({ ok: true });
+  }
+
+  if (!email || !isValidEmail(email)) {
     return NextResponse.json(
       { error: "Please enter a valid email address." },
       { status: 400 }
     );
+  }
+  if (submittedTooFast(startedAt, 2500)) {
+    return NextResponse.json(
+      { error: "Please take a moment and try again." },
+      { status: 400 }
+    );
+  }
+
+  const rateLimit = consumeRateLimit("free-books-subscribe", ip, 6, 60 * 60 * 1000);
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "You've tried a few times already. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(rateLimit.retryAfterMs / 1000)) } }
+    );
+  }
+
+  const turnstile = await verifyTurnstileToken(turnstileToken, ip);
+  if (!turnstile.ok) {
+    return NextResponse.json({ error: turnstile.error }, { status: 400 });
   }
 
   const apiKey = process.env.BREVO_API_KEY;

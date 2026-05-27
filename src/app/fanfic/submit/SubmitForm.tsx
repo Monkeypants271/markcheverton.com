@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -10,6 +11,8 @@ export function SubmitForm() {
   const [title, setTitle] = useState("");
   const [story, setStory] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
+  const [startedAt] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -22,7 +25,7 @@ export function SubmitForm() {
       const res = await fetch("/api/fanfic/submit", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, email, title, story, website }),
+        body: JSON.stringify({ name, email, title, story, website, startedAt, turnstileToken }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -145,6 +148,8 @@ export function SubmitForm() {
           {wordCount.toLocaleString()} words
         </p>
       </div>
+
+      <TurnstileWidget onTokenChange={setTurnstileToken} />
 
       {errorMessage && (
         <p className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">

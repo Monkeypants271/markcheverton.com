@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import nodemailer from "nodemailer";
 import { getSupabaseAdmin } from "@/lib/supabase";
+import {
+  consumeRateLimit,
+  getClientIp,
+  hasTooManyLinks,
+  isValidEmail,
+  parseStartedAt,
+  submittedTooFast,
+  verifyTurnstileToken,
+} from "@/lib/anti-spam";
 
 function getSiteUrl(req: Request): string {
   const envUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -37,14 +46,6 @@ function indentParagraphs(story: string): string {
     .join("\n");
 }
 
-function clientIp(req: Request): string {
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  const real = req.headers.get("x-real-ip");
-  if (real) return real.trim();
-  return "unknown";
-}
-
 export async function POST(req: Request) {
   let body: {
     name?: string;
@@ -52,6 +53,8 @@ export async function POST(req: Request) {
     title?: string;
     story?: string;
     website?: string; // honeypot
+    startedAt?: number | string;
+    turnstileToken?: string;
   };
   try {
     body = await req.json();
@@ -68,11 +71,15 @@ export async function POST(req: Request) {
   const email = (body.email || "").trim().toLowerCase();
   const title = (body.title || "").trim();
   const story = (body.story || "").trim();
+  const startedAt = parseStartedAt(body.startedAt);
+  const turnstileToken = (body.turnstileToken || "").trim() || null;
 
   if (!name) return NextResponse.json({ error: "Please add your name." }, { status: 400 });
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+  if (!email || !isValidEmail(email))
     return NextResponse.json({ error: "Please enter a valid email." }, { status: 400 });
   if (!title) return NextResponse.json({ error: "Please add a title." }, { status: 400 });
+  if (submittedTooFast(startedAt, 5000))
+    return NextResponse.json({ error: "Please take a moment and try again." }, { status: 400 });
   if (story.length < 50)
     return NextResponse.json(
       { error: "Your story needs to be a bit longer (at least 50 characters)." },
@@ -81,6 +88,11 @@ export async function POST(req: Request) {
   if (story.length > 200000)
     return NextResponse.json(
       { error: "That story is too long for the form — please email Mark directly." },
+      { status: 400 }
+    );
+  if (hasTooManyLinks(`${title}\n${story}`, 4))
+    return NextResponse.json(
+      { error: "Please remove extra links and try again." },
       { status: 400 }
     );
 
@@ -99,7 +111,20 @@ export async function POST(req: Request) {
     );
   }
 
-  const ip = clientIp(req);
+  const ip = getClientIp(req);
+  const rateLimit = consumeRateLimit("fanfic-submit", ip, 2, 24 * 60 * 60 * 1000);
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "You've already submitted recently. Please try again tomorrow." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(rateLimit.retryAfterMs / 1000)) } }
+    );
+  }
+
+  const turnstile = await verifyTurnstileToken(turnstileToken, ip);
+  if (!turnstile.ok) {
+    return NextResponse.json({ error: turnstile.error }, { status: 400 });
+  }
+
   const actionToken = randomBytes(24).toString("hex");
   const SITE_URL = getSiteUrl(req);
 

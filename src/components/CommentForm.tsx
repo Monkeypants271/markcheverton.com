@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -17,6 +18,8 @@ export function CommentForm({
   const [authorEmail, setAuthorEmail] = useState("");
   const [content, setContent] = useState("");
   const [website, setWebsite] = useState(""); // honeypot
+  const [startedAt] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -36,6 +39,8 @@ export function CommentForm({
           authorEmail,
           content,
           website,
+          startedAt,
+          turnstileToken,
         }),
       });
       const data = await res.json();
@@ -138,6 +143,8 @@ export function CommentForm({
           className="mt-1 w-full rounded-lg border border-[var(--color-rule)] bg-white px-3 py-2 focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/30 disabled:opacity-60 leading-relaxed"
         />
       </div>
+
+      <TurnstileWidget onTokenChange={setTurnstileToken} />
 
       {errorMessage && (
         <p className="rounded-lg bg-red-50 border border-red-200 px-3 py-2 text-sm text-red-700">

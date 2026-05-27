@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
+import { TurnstileWidget } from "@/components/TurnstileWidget";
 
 const BOOKFUNNEL_URL =
   process.env.NEXT_PUBLIC_BOOKFUNNEL_URL ||
@@ -13,6 +13,9 @@ type Status = "idle" | "submitting" | "success" | "error";
 export function FreeBooksForm() {
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
+  const [website, setWebsite] = useState("");
+  const [startedAt] = useState(() => Date.now());
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -25,7 +28,7 @@ export function FreeBooksForm() {
       const res = await fetch("/api/free-books/subscribe", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ firstName, email }),
+        body: JSON.stringify({ firstName, email, website, startedAt, turnstileToken }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -74,6 +77,18 @@ export function FreeBooksForm() {
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+        <div className="hidden" aria-hidden>
+          <label>
+            Website
+            <input
+              tabIndex={-1}
+              autoComplete="off"
+              value={website}
+              onChange={(e) => setWebsite(e.target.value)}
+            />
+          </label>
+        </div>
+
         <div>
           <label
             htmlFor="firstName"
@@ -111,6 +126,8 @@ export function FreeBooksForm() {
             className="mt-1 w-full rounded-lg border border-[var(--color-rule)] bg-white px-4 py-3 focus:border-[var(--color-accent)] focus:outline-none focus:ring-2 focus:ring-[var(--color-accent)]/30 disabled:opacity-60"
           />
         </div>
+
+        <TurnstileWidget onTokenChange={setTurnstileToken} />
 
         {errorMessage && (
           <p className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">

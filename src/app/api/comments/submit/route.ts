@@ -2,16 +2,17 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "node:crypto";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendMail, escapeHtml } from "@/lib/mail";
+import {
+  consumeRateLimit,
+  getClientIp,
+  hasTooManyLinks,
+  isValidEmail,
+  parseStartedAt,
+  submittedTooFast,
+  verifyTurnstileToken,
+} from "@/lib/anti-spam";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
-
-function clientIp(req: Request): string {
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  const real = req.headers.get("x-real-ip");
-  if (real) return real.trim();
-  return "unknown";
-}
 
 export async function POST(req: Request) {
   let body: {
@@ -23,6 +24,8 @@ export async function POST(req: Request) {
     content?: string;
     parentId?: number | null;
     website?: string; // honeypot
+    startedAt?: number | string;
+    turnstileToken?: string;
   };
   try {
     body = await req.json();
@@ -40,6 +43,8 @@ export async function POST(req: Request) {
   const author = (body.author || "").trim();
   const authorEmail = (body.authorEmail || "").trim().toLowerCase();
   const content = (body.content || "").trim();
+  const turnstileToken = (body.turnstileToken || "").trim() || null;
+  const startedAt = parseStartedAt(body.startedAt);
   const parentId =
     typeof body.parentId === "number" && body.parentId > 0 ? body.parentId : null;
   const postId =
@@ -53,8 +58,12 @@ export async function POST(req: Request) {
   if (!content) return NextResponse.json({ error: "Comment can't be empty." }, { status: 400 });
   if (content.length > 4000)
     return NextResponse.json({ error: "Comment is too long (4000 chars max)." }, { status: 400 });
-  if (authorEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(authorEmail))
+  if (authorEmail && !isValidEmail(authorEmail))
     return NextResponse.json({ error: "That email doesn't look right." }, { status: 400 });
+  if (submittedTooFast(startedAt, 3500))
+    return NextResponse.json({ error: "Please take a moment and try again." }, { status: 400 });
+  if (hasTooManyLinks(content, 2))
+    return NextResponse.json({ error: "Too many links in one comment." }, { status: 400 });
 
   const supabase = getSupabaseAdmin();
   if (!supabase) {
@@ -65,7 +74,19 @@ export async function POST(req: Request) {
     );
   }
 
-  const ip = clientIp(req);
+  const ip = getClientIp(req);
+  const rateLimit = consumeRateLimit("comments-submit", ip, 4, 60 * 60 * 1000);
+  if (!rateLimit.ok) {
+    return NextResponse.json(
+      { error: "You've posted a few comments already. Please try again later." },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(rateLimit.retryAfterMs / 1000)) } }
+    );
+  }
+
+  const turnstile = await verifyTurnstileToken(turnstileToken, ip);
+  if (!turnstile.ok) {
+    return NextResponse.json({ error: turnstile.error }, { status: 400 });
+  }
 
   // IP ban check
   if (ip !== "unknown") {
