@@ -4,9 +4,14 @@ import { Container } from "@/components/Container";
 import { findBook } from "@/data/books";
 
 export default function Home() {
+  // Temporarily hide the free Minecraft eBooks lead magnet. Flip back to true
+  // to restore the hero offer and the "Afraid to take a risk" reinforcement.
+  const showFreeBooksOffer = false;
+
   return (
     <>
       {/* Hero — free Minecraft books offer */}
+      {showFreeBooksOffer && (
       <section
         className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll text-white md:bg-fixed"
         style={{ backgroundImage: "url('/images/home/castle-wall.jpg')" }}
@@ -66,6 +71,7 @@ export default function Home() {
           </div>
         </Container>
       </section>
+      )}
 
       {/* Trust strip */}
       <section className="border-y border-[var(--color-rule)] bg-[var(--color-surface)]">
@@ -352,6 +358,7 @@ export default function Home() {
       </section>
 
       {/* Free books reinforcement */}
+      {showFreeBooksOffer && (
       <section className="py-20">
         <Container>
           <div className="grid gap-10 md:grid-cols-5 md:items-center">
@@ -393,6 +400,7 @@ export default function Home() {
           </div>
         </Container>
       </section>
+      )}
 
       {/* Writing tools teaser */}
       <section className="py-20 bg-[var(--color-surface)] border-y border-[var(--color-rule)]">
