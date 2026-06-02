@@ -57,12 +57,6 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="/free-books"
-              className="rounded-full bg-[var(--color-accent)] text-white px-4 py-2 text-sm font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
-            >
-              Free Books
-            </Link>
           </nav>
 
           <button
@@ -95,13 +89,6 @@ export function Header() {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                href="/free-books"
-                onClick={() => setOpen(false)}
-                className="mt-2 inline-flex justify-center rounded-full bg-[var(--color-accent)] text-white px-4 py-3 font-semibold"
-              >
-                Free Books
-              </Link>
             </nav>
           </div>
         )}
