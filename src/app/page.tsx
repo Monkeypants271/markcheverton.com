@@ -96,56 +96,6 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Audience paths */}
-      <section className="py-16">
-        <Container>
-          <div className="max-w-2xl">
-            <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
-              Start Here
-            </p>
-            <h2 className="mt-3 font-display text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">
-              Pick the path that fits you best.
-            </h2>
-            <p className="mt-4 text-lg text-[var(--color-ink-soft)]">
-              Whether you&apos;re here for books, school visits, or writing
-              help, there&apos;s a good next stop.
-            </p>
-          </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {[
-              {
-                title: "Books for Readers",
-                body: "Start with the Minecraft series and find the best entry point.",
-                href: "/books",
-              },
-              {
-                title: "Author Visits",
-                body: "Bring Mark to your school, library, or literacy program.",
-                href: "/author-visits",
-              },
-              {
-                title: "Writing Resources",
-                body: "Use free tools, prompts, and lessons to help kids write.",
-                href: "/writing-resources",
-              },
-            ].map((item) => (
-              <Link
-                key={item.title}
-                href={item.href}
-                className="rounded-xl border border-[var(--color-rule)] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
-              >
-                <h3 className="font-display text-2xl font-semibold text-[var(--color-primary)]">
-                  {item.title}
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
-                  {item.body}
-                </p>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
-
       {/* Featured series — Gameknight999 */}
       <section
         className="relative overflow-hidden bg-[#243515] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed md:py-28"
@@ -226,6 +176,56 @@ export default function Home() {
             >
               See all my novels
             </Link>
+          </div>
+        </Container>
+      </section>
+
+      {/* Audience paths */}
+      <section className="py-16">
+        <Container>
+          <div className="max-w-2xl">
+            <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+              Start Here
+            </p>
+            <h2 className="mt-3 font-display text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">
+              Pick the path that fits you best.
+            </h2>
+            <p className="mt-4 text-lg text-[var(--color-ink-soft)]">
+              Whether you&apos;re here for books, school visits, or writing
+              help, there&apos;s a good next stop.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                title: "Books for Readers",
+                body: "Start with the Minecraft series and find the best entry point.",
+                href: "/books",
+              },
+              {
+                title: "Author Visits",
+                body: "Bring Mark to your school, library, or literacy program.",
+                href: "/author-visits",
+              },
+              {
+                title: "Writing Resources",
+                body: "Use free tools, prompts, and lessons to help kids write.",
+                href: "/writing-resources",
+              },
+            ].map((item) => (
+              <Link
+                key={item.title}
+                href={item.href}
+                className="rounded-xl border border-[var(--color-rule)] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <h3 className="font-display text-2xl font-semibold text-[var(--color-primary)]">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                  {item.body}
+                </p>
+              </Link>
+            ))}
           </div>
         </Container>
       </section>
