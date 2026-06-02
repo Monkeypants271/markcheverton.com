@@ -7,13 +7,19 @@ import { series, type Book } from "@/data/books";
 export const metadata = { title: "Books" };
 
 export default function BooksPage() {
+  // Temporarily hide the free Minecraft eBooks lead magnet. Flip back to true
+  // to restore the free-books references on this page.
+  const showFreeBooksOffer = false;
+
   return (
     <>
       <PageHeader eyebrow="Books" title="Every book Mark has written.">
-        Click linked covers to view books on Amazon. Free content-magnet
-        stories are available through the newsletter signup. 27 novels
-        published across 31 countries, 27 languages, and 2 million+ copies in
-        print.
+        Click linked covers to view books on Amazon.
+        {showFreeBooksOffer
+          ? " Free content-magnet stories are available through the newsletter signup."
+          : ""}{" "}
+        27 novels published across 31 countries, 27 languages, and 2 million+
+        copies in print.
       </PageHeader>
 
       <Container className="py-16 space-y-20">
@@ -27,24 +33,32 @@ export default function BooksPage() {
             </h2>
             <p className="mt-4 text-lg leading-relaxed text-[var(--color-ink-soft)]">
               If your reader loves Minecraft, start with Gameknight999 Book One.
-              If you&apos;d rather try before you buy, grab two free books first.
+              {showFreeBooksOffer
+                ? " If you'd rather try before you buy, grab two free books first."
+                : ""}
             </p>
           </div>
-          <div className="mt-8 grid gap-4 md:grid-cols-2">
-            <Link
-              href="/free-books"
-              className="rounded-2xl border border-[var(--color-rule)] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
-                Free First
-              </p>
-              <h3 className="mt-2 font-display text-2xl font-semibold text-[var(--color-primary)]">
-                Get 2 free Minecraft books
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
-                Try Elytra Perils and The Virus before committing to a series.
-              </p>
-            </Link>
+          <div
+            className={`mt-8 grid gap-4 ${
+              showFreeBooksOffer ? "md:grid-cols-2" : "max-w-xl"
+            }`}
+          >
+            {showFreeBooksOffer && (
+              <Link
+                href="/free-books"
+                className="rounded-2xl border border-[var(--color-rule)] bg-white p-6 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+                  Free First
+                </p>
+                <h3 className="mt-2 font-display text-2xl font-semibold text-[var(--color-primary)]">
+                  Get 2 free Minecraft books
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                  Try Elytra Perils and The Virus before committing to a series.
+                </p>
+              </Link>
+            )}
             <a
               href="https://www.amazon.com/gp/product/1632207117"
               target="_blank"
@@ -65,7 +79,11 @@ export default function BooksPage() {
           </div>
         </section>
 
-        {series.map((s) => (
+        {series
+          .filter(
+            (s) => showFreeBooksOffer || s.name !== "Minecraft Short Stories",
+          )
+          .map((s) => (
           <section key={s.name}>
             <header className="text-center max-w-2xl mx-auto">
               <h2 className="font-display text-3xl md:text-4xl font-semibold text-[var(--color-primary)]">

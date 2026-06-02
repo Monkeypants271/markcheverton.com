@@ -107,21 +107,16 @@ export default function Home() {
               Pick the path that fits you best.
             </h2>
             <p className="mt-4 text-lg text-[var(--color-ink-soft)]">
-              Whether you&apos;re here for books, free reads, school visits, or
-              writing help, there&apos;s a good next stop.
+              Whether you&apos;re here for books, school visits, or writing
+              help, there&apos;s a good next stop.
             </p>
           </div>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[
               {
                 title: "Books for Readers",
                 body: "Start with the Minecraft series and find the best entry point.",
                 href: "/books",
-              },
-              {
-                title: "Get 2 Free Books",
-                body: "Try two free Minecraft stories before committing to a series.",
-                href: "/free-books",
               },
               {
                 title: "Author Visits",
@@ -286,6 +281,11 @@ export default function Home() {
           <h2 className="font-display text-4xl md:text-5xl font-semibold text-center">
             Other Books
           </h2>
+          <p className="mx-auto mt-4 max-w-3xl text-center text-lg text-white/80 leading-relaxed">
+            Fan-favorite adventures read by kids around the world. If you love
+            danger, mystery, monsters, and heroes who never give up, these books
+            are a great place to jump in.
+          </p>
 
           <div className="mt-12 grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
@@ -353,6 +353,15 @@ export default function Home() {
                 </article>
               );
             })}
+          </div>
+
+          <div className="mt-12 text-center">
+            <Link
+              href="/books"
+              className="inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-7 py-4 text-lg font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
+            >
+              See all my books
+            </Link>
           </div>
         </Container>
       </section>

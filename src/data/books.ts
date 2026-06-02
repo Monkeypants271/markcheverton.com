@@ -24,6 +24,7 @@ export const series: Series[] = [
       {
         title: "Cameron and the Shadow-wraiths",
         cover: "/images/books/cameron-and-the-shadow-wraiths.png",
+        amazon: "https://www.amazon.com/Cameron-Shadow-wraiths-Battle-Anxiety-Stones/dp/B0CRDC4VZ5",
       },
     ],
   },
@@ -41,9 +42,9 @@ export const series: Series[] = [
     name: "I Hate It When…",
     books: [
       {
-        title: "I Hate It When Goblins Do That",
+        title: "I Hate It When Aliens Do That",
         cover: "/images/books/3D-facing-left-IHIWADT-72dpi-.png",
-        comingSoon: true,
+        amazon: "https://www.amazon.com/Hate-When-Aliens-Do-That/dp/B0D29ZLLNP",
       },
     ],
   },
@@ -203,12 +204,12 @@ export const series: Series[] = [
         amazon: "https://www.amazon.com/gp/product/151072737X",
       },
       {
-        title: "Skeletons Strike!",
+        title: "Bones of Doom",
         cover: "/images/books/Book-20-3D-small.png",
         amazon: "https://www.amazon.com/gp/product/1510727388",
       },
       {
-        title: "Spiders Swarm!",
+        title: "Into the Spiders' Lair",
         cover: "/images/books/Book-21-3D-small.png",
         amazon: "https://www.amazon.com/gp/product/1510727396",
       },
@@ -219,17 +220,17 @@ export const series: Series[] = [
     tag: "Far Land Series #2",
     books: [
       {
-        title: "Wither Attack!",
+        title: "The Wither King",
         cover: "/images/books/Book-22-3D-small.png",
         amazon: "https://www.amazon.com/gp/product/1510734880",
       },
       {
-        title: "Wither Invasion!",
+        title: "The Withers Awaken",
         cover: "/images/books/Book-23-3D-small.png",
         amazon: "https://www.amazon.com/gp/product/1510734899",
       },
       {
-        title: "Wither Battle!",
+        title: "The Wither Invasion",
         cover: "/images/books/Book-24-3D-small.png",
         amazon: "https://www.amazon.com/gp/product/1510734902",
       },
