@@ -230,46 +230,6 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* Mini bio */}
-      <section className="py-20">
-        <Container>
-          <div className="max-w-2xl mx-auto text-center">
-            <Image
-              src="/images/home/mark-cheverton.png"
-              alt="Mark Cheverton"
-              width={338}
-              height={325}
-              className="mx-auto h-28 w-28 rounded-full object-cover object-top shadow-lg"
-            />
-            <p className="mt-6 text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)] italic">
-              New York Times Bestselling Author
-            </p>
-            <h2 className="mt-3 font-display text-5xl font-semibold text-[var(--color-primary)]">
-              Mark Cheverton
-            </h2>
-            <p className="mt-8 text-lg text-[var(--color-ink-soft)] leading-relaxed">
-              When Mark self-published his first Minecraft-inspired novel,{" "}
-              <em>Invasion of the Overworld</em>, in 2013, he didn&apos;t
-              really expect the book to be significant. But when it reached{" "}
-              <strong>#29 on Amazon&apos;s Top 100</strong> and the publishers
-              started calling, Mark knew he&apos;d struck a nerve with kids.
-              After 10 years, Mark has written <strong>27 novels</strong> that
-              have appeared in the New York Times, USA Today, and
-              Publisher&apos;s Weekly bestseller lists. They&apos;ve been
-              published in <strong>31 countries</strong>, translated into{" "}
-              <strong>27 languages</strong>, and over{" "}
-              <strong>2 million copies</strong> have been sold worldwide.
-            </p>
-            <Link
-              href="/about"
-              className="mt-8 inline-flex text-sm font-semibold text-[var(--color-accent)] hover:text-[var(--color-primary)]"
-            >
-              More about Mark →
-            </Link>
-          </div>
-        </Container>
-      </section>
-
       {/* Other books */}
       <section
         className="relative overflow-hidden bg-[var(--color-primary)] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed"
@@ -361,6 +321,46 @@ export default function Home() {
               className="inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-7 py-4 text-lg font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
             >
               See all my books
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      {/* Mini bio */}
+      <section className="py-20">
+        <Container>
+          <div className="max-w-2xl mx-auto text-center">
+            <Image
+              src="/images/home/mark-cheverton.png"
+              alt="Mark Cheverton"
+              width={338}
+              height={325}
+              className="mx-auto h-28 w-28 rounded-full object-cover object-top shadow-lg"
+            />
+            <p className="mt-6 text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)] italic">
+              New York Times Bestselling Author
+            </p>
+            <h2 className="mt-3 font-display text-5xl font-semibold text-[var(--color-primary)]">
+              Mark Cheverton
+            </h2>
+            <p className="mt-8 text-lg text-[var(--color-ink-soft)] leading-relaxed">
+              When Mark self-published his first Minecraft-inspired novel,{" "}
+              <em>Invasion of the Overworld</em>, in 2013, he didn&apos;t
+              really expect the book to be significant. But when it reached{" "}
+              <strong>#29 on Amazon&apos;s Top 100</strong> and the publishers
+              started calling, Mark knew he&apos;d struck a nerve with kids.
+              After 10 years, Mark has written <strong>27 novels</strong> that
+              have appeared in the New York Times, USA Today, and
+              Publisher&apos;s Weekly bestseller lists. They&apos;ve been
+              published in <strong>31 countries</strong>, translated into{" "}
+              <strong>27 languages</strong>, and over{" "}
+              <strong>2 million copies</strong> have been sold worldwide.
+            </p>
+            <Link
+              href="/about"
+              className="mt-8 inline-flex text-sm font-semibold text-[var(--color-accent)] hover:text-[var(--color-primary)]"
+            >
+              More about Mark →
             </Link>
           </div>
         </Container>
