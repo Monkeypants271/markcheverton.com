@@ -169,6 +169,39 @@ export default function ForEducatorsPage() {
           </div>
         </Container>
       </section>
+
+      {/* Author visit funnel — turn educator interest into a booked visit */}
+      <Container className="py-16">
+        <div className="rounded-3xl bg-[var(--color-primary)] p-8 text-white md:p-12">
+          <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent-soft)]">
+            Bring Mark to your school
+          </p>
+          <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold md:text-4xl">
+            Want the author behind these books in your building?
+          </h2>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-white/85">
+            Many teachers and librarians first meet Mark through these free
+            resources, then bring him in for an author visit. As a New York Times
+            bestselling Minecraft author and former teacher, Mark delivers a
+            growth-mindset presentation — in person or virtual — that turns
+            reluctant readers and Gameknight999 fans into motivated writers.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/author-visits"
+              className="inline-flex items-center rounded-full bg-[var(--color-accent)] px-6 py-3 font-semibold text-white transition-colors hover:bg-[var(--color-accent-soft)]"
+            >
+              Explore author visits
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center rounded-full border border-white/40 px-6 py-3 font-semibold transition-colors hover:bg-white/10"
+            >
+              Request availability &amp; pricing
+            </Link>
+          </div>
+        </div>
+      </Container>
     </>
   );
 }

@@ -1,8 +1,36 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
 
-export const metadata = { title: "Author Visits" };
+export const metadata: Metadata = {
+  title: "Author Visits — In-Person & Virtual School Visits",
+  description:
+    "Book an in-person or virtual school author visit with New York Times bestselling Minecraft author Mark Cheverton. A growth-mindset presentation that turns Gameknight999 fans and reluctant readers into motivated writers — for elementary and middle schools and libraries.",
+  alternates: { canonical: "/author-visits" },
+  openGraph: {
+    title: "Author Visits with Mark Cheverton — In-Person & Virtual",
+    description:
+      "A growth-mindset author visit from a NYT bestselling Minecraft author and former teacher. In-person or virtual, for schools and libraries.",
+    url: "https://www.markcheverton.com/author-visits/",
+    type: "website",
+  },
+};
+
+const formats = [
+  {
+    title: "In-person assemblies & classroom visits",
+    body: "A high-energy, growth-mindset presentation for a whole grade level or a single class.",
+  },
+  {
+    title: "Virtual author visits",
+    body: "Can't host in person? Mark presents the same engaging session live over video — for any school, anywhere.",
+  },
+  {
+    title: "Libraries & literacy programs",
+    body: "A natural fit for summer reading, book clubs, and literacy nights built around high-interest reading.",
+  },
+];
 
 const benefits = [
   {
@@ -67,6 +95,31 @@ export default function AuthorVisitsPage() {
         >
           Request availability & pricing
         </Link>
+      </Container>
+
+      <Container className="py-12">
+        <h2 className="font-display text-3xl font-semibold text-[var(--color-primary)]">
+          In-person and virtual author visits for schools and libraries
+        </h2>
+        <p className="mt-4 max-w-3xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
+          Mark&apos;s visits are especially powerful for reluctant readers and
+          the Minecraft fans in your building — kids who light up when the author
+          of their favorite books walks in (or appears on screen). Sessions work
+          for elementary and middle school students.
+        </p>
+        <div className="mt-8 grid sm:grid-cols-3 gap-4">
+          {formats.map((f) => (
+            <div
+              key={f.title}
+              className="rounded-xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-6"
+            >
+              <h3 className="font-display text-xl font-semibold text-[var(--color-primary)]">
+                {f.title}
+              </h3>
+              <p className="mt-2 text-[var(--color-ink-soft)]">{f.body}</p>
+            </div>
+          ))}
+        </div>
       </Container>
 
       <Container className="py-12">
