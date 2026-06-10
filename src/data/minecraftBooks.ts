@@ -266,7 +266,8 @@ export type ElaResource = {
 };
 
 // Additional free ELA / writing resources for parents, teachers, and
-// homeschoolers, delivered through the BookFunnel resources page.
+// homeschoolers. Items with a direct BookFunnel download link point straight
+// to it; the rest open the full BookFunnel resources page.
 export const elaResources: ElaResource[] = [
   {
     title: "ELA Companion Guide for Any Book",
@@ -283,8 +284,26 @@ export const elaResources: ElaResource[] = [
   {
     title: "5 Strategies for Reluctant Writers",
     description:
-      "Practical, classroom-tested strategies to get hesitant writers putting words on the page.",
-    href: ELA_RESOURCES_URL,
+      "Five proven strategies to get a hesitant writer putting words on the page — and eventually enjoying it.",
+    href: "https://dl.bookfunnel.com/r5jtl2b948",
+  },
+  {
+    title: "How to Give Constructive Feedback",
+    description:
+      "Ten strategies for giving feedback on a child's writing without crushing their motivation.",
+    href: "https://dl.bookfunnel.com/ml5ysytccc",
+  },
+  {
+    title: "11 Strategies to Help Kids Finish Long Assignments",
+    description:
+      "Practical ways to help kids push through long, challenging assignments to the finish.",
+    href: "https://dl.bookfunnel.com/3dff13u88b",
+  },
+  {
+    title: "Linking Fan Fiction to Reading",
+    description:
+      "Fifteen strategies for using fan fiction and creative writing to strengthen reading and writing skills.",
+    href: "https://dl.bookfunnel.com/q4steblaey",
   },
   {
     title: "Integrate Creative Writing into Homeschool Curriculums",

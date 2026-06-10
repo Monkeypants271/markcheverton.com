@@ -126,7 +126,7 @@ export default function ForEducatorsPage() {
           <h3 className="mt-14 font-display text-2xl font-semibold text-[var(--color-primary)]">
             More free writing &amp; homeschool resources
           </h3>
-          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {elaResources.map((r) => (
               <li key={r.title}>
                 <ExternalLink
