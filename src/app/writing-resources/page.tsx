@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
@@ -9,21 +10,25 @@ const tools = [
     title: "Plot Builder",
     href: "/writing-resources/plot",
     body: "An 8-step interactive tool to outline your story from hook to new normal.",
+    image: "/images/writing/plot-builder.jpg",
   },
   {
     title: "Writing Tips",
     href: "/writing-resources/tips",
     body: "Short, practical essays to help writers make stronger choices.",
+    image: "/images/writing/writing-tips.jpg",
   },
   {
     title: "Sensory Details",
     href: "/writing-resources/sensory-details",
     body: "Ways to use sight, sound, and feeling to bring scenes and emotions to life.",
+    image: "/images/writing/sensory-details.jpg",
   },
   {
     title: "Story Prompts",
     href: "/writing-resources/prompts",
     body: "Themed starting points to help you begin without being told what to write.",
+    image: "/images/writing/story-prompts.jpg",
   },
 ];
 
@@ -76,15 +81,27 @@ export default function WritingResourcesPage() {
             <Link
               key={t.title}
               href={t.href}
-              className="group rounded-2xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-8 hover:border-[var(--color-accent)] hover:shadow-lg transition-all"
+              className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-rule)] bg-[var(--color-surface)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all"
             >
-              <h2 className="font-display text-2xl font-semibold text-[var(--color-primary)]">
-                {t.title}
-              </h2>
-              <p className="mt-3 text-[var(--color-ink-soft)]">{t.body}</p>
-              <p className="mt-6 text-sm font-semibold text-[var(--color-accent)] group-hover:translate-x-1 transition-transform">
-                Open →
-              </p>
+              <div className="relative aspect-[16/9] overflow-hidden bg-[var(--color-rule)]">
+                <Image
+                  src={t.image}
+                  alt={`${t.title} — a free writing resource from Mark Cheverton`}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                />
+              </div>
+              <div className="flex flex-1 flex-col p-8">
+                <h2 className="font-display text-2xl font-semibold text-[var(--color-primary)]">
+                  {t.title}
+                </h2>
+                <p className="mt-3 flex-1 text-[var(--color-ink-soft)]">
+                  {t.body}
+                </p>
+                <p className="mt-6 text-sm font-semibold text-[var(--color-accent)] group-hover:translate-x-1 transition-transform">
+                  Open →
+                </p>
+              </div>
             </Link>
           ))}
         </div>
