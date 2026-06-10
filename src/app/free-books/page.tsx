@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
 import { FreeBooksForm, FreeBooksCovers } from "./FreeBooksForm";
@@ -36,6 +37,17 @@ export default function FreeBooksPage() {
           <FreeBooksCovers />
           <FreeBooksForm />
         </div>
+
+        <p className="mt-12 text-center text-[var(--color-ink-soft)]">
+          Want the full reading order? See the{" "}
+          <Link
+            href="/minecraft-books"
+            className="font-semibold text-[var(--color-accent)] hover:underline"
+          >
+            complete Minecraft-inspired book guide
+          </Link>
+          .
+        </p>
 
         <h2 className="mt-20 font-display text-3xl font-semibold text-[var(--color-primary)] text-center">
           What kids and parents are saying

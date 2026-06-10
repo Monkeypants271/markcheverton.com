@@ -36,6 +36,34 @@ export default function WritingResourcesPage() {
       </PageHeader>
 
       <Container className="py-16">
+        <div className="mb-10 rounded-2xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-6">
+          <p className="text-lg leading-relaxed text-[var(--color-ink-soft)]">
+            Have a Minecraft-loving writer at home or in your classroom? Start
+            with{" "}
+            <Link
+              href="/writing-resources/prompts"
+              className="font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              Minecraft-inspired story prompts
+            </Link>
+            , then use the{" "}
+            <Link
+              href="/writing-resources/plot"
+              className="font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              Plot Builder
+            </Link>{" "}
+            to turn that idea into a real story. New here through the books? See
+            the{" "}
+            <Link
+              href="/minecraft-books"
+              className="font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              Minecraft books for kids guide
+            </Link>
+            .
+          </p>
+        </div>
         <div className="grid sm:grid-cols-2 gap-6">
           {tools.map((t) => (
             <Link

@@ -18,6 +18,7 @@ export function Footer() {
           <p className="font-semibold text-[var(--color-ink)] mb-3">Explore</p>
           <ul className="space-y-2 text-[var(--color-ink-soft)]">
             <li><Link href="/books" className="hover:text-[var(--color-primary)]">Books</Link></li>
+            <li><Link href="/minecraft-books" className="hover:text-[var(--color-primary)]">Minecraft Books</Link></li>
             <li><Link href="/writing-resources" className="hover:text-[var(--color-primary)]">Writing Resources</Link></li>
             <li><Link href="/fanfic" className="hover:text-[var(--color-primary)]">Fan Fiction</Link></li>
             <li><Link href="/free-books" className="hover:text-[var(--color-primary)]">Free Books</Link></li>
@@ -29,13 +30,13 @@ export function Footer() {
           <ul className="space-y-2 text-[var(--color-ink-soft)]">
             <li><Link href="/contact" className="hover:text-[var(--color-primary)]">Contact</Link></li>
             <li>
-              <a href="https://www.facebook.com/mark.cheverton.94" target="_blank" rel="noreferrer" className="hover:text-[var(--color-primary)]">Facebook</a>
+              <a href="https://www.facebook.com/mark.cheverton.94" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-primary)]">Facebook</a>
             </li>
             <li>
-              <a href="https://twitter.com/MarkC_Author" target="_blank" rel="noreferrer" className="hover:text-[var(--color-primary)]">Twitter / X</a>
+              <a href="https://twitter.com/MarkC_Author" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-primary)]">Twitter / X</a>
             </li>
             <li>
-              <a href="https://www.linkedin.com/in/markchevertonauthor/" target="_blank" rel="noreferrer" className="hover:text-[var(--color-primary)]">LinkedIn</a>
+              <a href="https://www.linkedin.com/in/markchevertonauthor/" target="_blank" rel="noopener noreferrer" className="hover:text-[var(--color-primary)]">LinkedIn</a>
             </li>
           </ul>
         </div>

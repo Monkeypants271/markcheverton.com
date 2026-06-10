@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
 
@@ -23,7 +24,16 @@ export default function AboutPage() {
             kids. Ten years and <strong>27 novels</strong> later — published in{" "}
             <strong>31 countries</strong>, translated into{" "}
             <strong>27 languages</strong>, with over <strong>2 million copies</strong>{" "}
-            sold worldwide — I&apos;m still doing it.
+            sold worldwide — I&apos;m still doing it. That story became{" "}
+            <em>Invasion of the Overworld</em>, the first book in the
+            Gameknight999 series. See the{" "}
+            <Link
+              href="/minecraft-books"
+              className="font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              complete Minecraft-inspired reading guide
+            </Link>
+            .
           </p>
           <p>
             Before writing full-time I spent ten years teaching Physics and

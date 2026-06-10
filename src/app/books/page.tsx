@@ -37,6 +37,16 @@ export default function BooksPage() {
                 ? " If you'd rather try before you buy, grab two free books first."
                 : ""}
             </p>
+            <p className="mt-4 text-base leading-relaxed text-[var(--color-ink-soft)]">
+              Looking for the Minecraft-inspired novels? See the{" "}
+              <Link
+                href="/minecraft-books"
+                className="font-semibold text-[var(--color-accent)] hover:underline"
+              >
+                complete Gameknight999 reading order
+              </Link>{" "}
+              and Minecraft books for kids guide.
+            </p>
           </div>
           <div
             className={`mt-8 grid gap-4 ${

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
@@ -19,6 +20,24 @@ export async function FanFicIndex({ page }: { page: number }) {
       </PageHeader>
 
       <Container className="pt-10">
+        <p className="mb-8 max-w-3xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
+          Young writers have shared more than 1,000 stories here, many inspired
+          by Minecraft,{" "}
+          <Link
+            href="/minecraft-books"
+            className="font-semibold text-[var(--color-accent)] hover:underline"
+          >
+            Gameknight999
+          </Link>
+          , and their own imagined worlds. Want to write your own? Try Mark&apos;s{" "}
+          <Link
+            href="/writing-resources"
+            className="font-semibold text-[var(--color-accent)] hover:underline"
+          >
+            writing resources
+          </Link>
+          . Please ask a parent before submitting anything online.
+        </p>
         <FanFicSearch posts={posts} initialPage={page} />
       </Container>
     </>

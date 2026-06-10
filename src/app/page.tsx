@@ -166,13 +166,26 @@ export default function Home() {
 
           <p className="mt-12 text-center text-lg text-white/80 max-w-2xl mx-auto">
             Perfect for kids who love Minecraft, adventure, teamwork, and
-            fast-paced action.
+            fast-paced action. Looking for{" "}
+            <Link
+              href="/minecraft-books"
+              className="font-semibold text-[var(--color-accent-soft)] underline underline-offset-2 hover:text-white"
+            >
+              Minecraft books for kids
+            </Link>
+            ? See the complete Gameknight999 reading guide.
           </p>
 
-          <div className="mt-8 text-center">
+          <div className="mt-8 flex flex-wrap justify-center gap-3">
+            <Link
+              href="/minecraft-books"
+              className="inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-6 py-3 font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
+            >
+              Gameknight999 reading guide
+            </Link>
             <Link
               href="/books"
-              className="inline-flex items-center rounded-full bg-[var(--color-accent)] text-white px-6 py-3 font-semibold hover:bg-[var(--color-accent-soft)] transition-colors"
+              className="inline-flex items-center rounded-full border border-white/40 px-6 py-3 font-semibold hover:bg-white/10 transition-colors"
             >
               See all my novels
             </Link>

@@ -50,9 +50,20 @@ export default function AuthorVisitsPage() {
       </PageHeader>
 
       <Container className="py-12">
+        <p className="max-w-3xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
+          Many students first discover Mark through the{" "}
+          <Link
+            href="/minecraft-books"
+            className="font-semibold text-[var(--color-accent)] hover:underline"
+          >
+            Gameknight999 Minecraft-inspired novels
+          </Link>
+          . His author visits use that excitement to help students understand
+          story, revision, resilience, and the courage to keep writing.
+        </p>
         <Link
           href="/contact"
-          className="inline-flex rounded-full bg-[var(--color-accent)] text-white px-6 py-3 font-semibold hover:bg-[var(--color-accent-soft)]"
+          className="mt-8 inline-flex rounded-full bg-[var(--color-accent)] text-white px-6 py-3 font-semibold hover:bg-[var(--color-accent-soft)]"
         >
           Request availability & pricing
         </Link>
