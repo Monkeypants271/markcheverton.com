@@ -10,25 +10,25 @@ const tools = [
     title: "Plot Builder",
     href: "/writing-resources/plot",
     body: "An 8-step interactive tool to outline your story from hook to new normal.",
-    image: "/images/writing/plot-builder.jpg",
+    image: "/images/writing/plot-builder.webp",
   },
   {
     title: "Writing Tips",
     href: "/writing-resources/tips",
     body: "Short, practical essays to help writers make stronger choices.",
-    image: "/images/writing/writing-tips.jpg",
+    image: "/images/writing/writing-tips.webp",
   },
   {
     title: "Sensory Details",
     href: "/writing-resources/sensory-details",
     body: "Ways to use sight, sound, and feeling to bring scenes and emotions to life.",
-    image: "/images/writing/sensory-details.jpg",
+    image: "/images/writing/sensory-details.webp",
   },
   {
     title: "Story Prompts",
     href: "/writing-resources/prompts",
     body: "Themed starting points to help you begin without being told what to write.",
-    image: "/images/writing/story-prompts.jpg",
+    image: "/images/writing/story-prompts.webp",
   },
 ];
 
@@ -83,7 +83,7 @@ export default function WritingResourcesPage() {
               href={t.href}
               className="group flex flex-col overflow-hidden rounded-2xl border border-[var(--color-rule)] bg-[var(--color-surface)] hover:border-[var(--color-accent)] hover:shadow-lg transition-all"
             >
-              <div className="relative aspect-[16/9] overflow-hidden bg-[var(--color-rule)]">
+              <div className="relative aspect-[4/3] overflow-hidden bg-[var(--color-rule)]">
                 <Image
                   src={t.image}
                   alt={`${t.title} — a free writing resource from Mark Cheverton`}
