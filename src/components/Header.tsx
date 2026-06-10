@@ -7,6 +7,7 @@ const navLinks = [
   { href: "/books", label: "Books" },
   { href: "/minecraft-books", label: "Minecraft Books" },
   { href: "/author-visits", label: "Author Visits" },
+  { href: "/for-educators", label: "For Educators" },
   { href: "/writing-resources", label: "Writing Resources" },
   { href: "/fanfic", label: "Fan Fiction" },
   { href: "/blog", label: "Blog" },
