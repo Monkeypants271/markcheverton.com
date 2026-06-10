@@ -20,6 +20,7 @@ export function Footer() {
             <li><Link href="/books" className="hover:text-[var(--color-primary)]">Books</Link></li>
             <li><Link href="/minecraft-books" className="hover:text-[var(--color-primary)]">Minecraft Books</Link></li>
             <li><Link href="/writing-resources" className="hover:text-[var(--color-primary)]">Writing Resources</Link></li>
+            <li><Link href="/for-educators" className="hover:text-[var(--color-primary)]">For Educators</Link></li>
             <li><Link href="/fanfic" className="hover:text-[var(--color-primary)]">Fan Fiction</Link></li>
             <li><Link href="/free-books" className="hover:text-[var(--color-primary)]">Free Books</Link></li>
           </ul>

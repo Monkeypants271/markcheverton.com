@@ -6,6 +6,7 @@ import { findBook } from "@/data/books";
 import {
   getGameknightReadingOrder,
   seriesCards,
+  elaCompanionGuideByTitle,
 } from "@/data/minecraftBooks";
 
 export const metadata: Metadata = {
@@ -228,6 +229,15 @@ export default function MinecraftBooksPage() {
                           ★ Start here
                         </span>
                       )}
+                      {elaCompanionGuideByTitle[entry.title] && (
+                        <ExternalLink
+                          href={elaCompanionGuideByTitle[entry.title]}
+                          ariaLabel={`Get the free ELA companion guide for ${entry.title}`}
+                          className="mt-1 block text-xs font-semibold text-[var(--color-accent)] hover:underline"
+                        >
+                          📘 Free ELA teaching guide →
+                        </ExternalLink>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-[var(--color-ink-soft)]">
                       <span className="block">{entry.arc}</span>
@@ -372,7 +382,25 @@ export default function MinecraftBooksPage() {
             from a game kids love to the books they read. Mark is a former
             teacher, and many students first discover him through Gameknight999.
           </p>
+          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
+            There are even{" "}
+            <Link
+              href="/for-educators"
+              className="font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              free ELA companion guides
+            </Link>{" "}
+            for the first three books, turning each novel into ready-to-use
+            grammar, vocabulary, and writing lessons for classrooms and
+            homeschools.
+          </p>
           <div className="mt-6 flex flex-wrap gap-3">
+            <Link
+              href="/for-educators"
+              className="inline-flex items-center rounded-full bg-[var(--color-accent)] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-soft)]"
+            >
+              Free teaching &amp; ELA resources
+            </Link>
             <Link
               href="/author-visits"
               className="inline-flex items-center rounded-full border border-[var(--color-rule)] px-5 py-2 text-sm font-semibold text-[var(--color-ink-soft)] hover:border-[var(--color-accent)]"

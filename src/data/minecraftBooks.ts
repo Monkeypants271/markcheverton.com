@@ -223,3 +223,73 @@ export const seriesCards: SeriesCard[] = [
       "The withers awaken and war comes to the Far Lands. The final arc brings the sequel saga to its biggest, most explosive finish.",
   },
 ];
+
+// The BookFunnel page where parents, teachers, and homeschoolers can browse all
+// of Mark's free ELA and writing resources.
+export const ELA_RESOURCES_URL = "https://books.bookfunnel.com/ELAresources";
+
+// Free ELA companion guides for the first three Gameknight999 books, delivered
+// as free downloads via BookFunnel. Order matches the reading order.
+export const bookCompanionGuides: {
+  title: string;
+  href: string;
+  blurb: string;
+}[] = [
+  {
+    title: "Invasion of the Overworld",
+    href: "https://dl.bookfunnel.com/o8nfliewox",
+    blurb:
+      "Lesson-ready grammar, vocabulary, writing, and comprehension activities built around Book One.",
+  },
+  {
+    title: "Battle for the Nether",
+    href: "https://dl.bookfunnel.com/gd6moashpf",
+    blurb:
+      "ELA activities to teach grammar, writing, and vocabulary with Book Two of the series.",
+  },
+  {
+    title: "Confronting the Dragon",
+    href: "https://dl.bookfunnel.com/ei4ll9gvrf",
+    blurb:
+      "ELA activities to teach grammar, writing, and vocabulary with Book Three of the series.",
+  },
+];
+
+// Quick lookup of a book's companion-guide URL by canonical title.
+export const elaCompanionGuideByTitle: Record<string, string> =
+  Object.fromEntries(bookCompanionGuides.map((g) => [g.title, g.href]));
+
+export type ElaResource = {
+  title: string;
+  description: string;
+  href: string;
+};
+
+// Additional free ELA / writing resources for parents, teachers, and
+// homeschoolers, delivered through the BookFunnel resources page.
+export const elaResources: ElaResource[] = [
+  {
+    title: "ELA Companion Guide for Any Book",
+    description:
+      "A flexible set of ELA activities you can pair with any Mark Cheverton novel.",
+    href: ELA_RESOURCES_URL,
+  },
+  {
+    title: "365 Writing Prompts for 15-Minute Daily Writing",
+    description:
+      "A full year of quick daily prompts to build a consistent writing habit.",
+    href: ELA_RESOURCES_URL,
+  },
+  {
+    title: "5 Strategies for Reluctant Writers",
+    description:
+      "Practical, classroom-tested strategies to get hesitant writers putting words on the page.",
+    href: ELA_RESOURCES_URL,
+  },
+  {
+    title: "Integrate Creative Writing into Homeschool Curriculums",
+    description:
+      "How to weave creative writing into a homeschool routine without adding a whole new program.",
+    href: ELA_RESOURCES_URL,
+  },
+];

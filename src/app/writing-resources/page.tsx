@@ -61,6 +61,13 @@ export default function WritingResourcesPage() {
             >
               Minecraft books for kids guide
             </Link>
+            . Teachers and homeschoolers can also grab{" "}
+            <Link
+              href="/for-educators"
+              className="font-semibold text-[var(--color-accent)] hover:underline"
+            >
+              free ELA companion guides and teaching resources
+            </Link>
             .
           </p>
         </div>

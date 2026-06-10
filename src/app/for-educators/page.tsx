@@ -1,8 +1,22 @@
+import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
+import { ExternalLink } from "@/components/ExternalLink";
+import { findBook } from "@/data/books";
+import {
+  bookCompanionGuides,
+  elaResources,
+  ELA_RESOURCES_URL,
+} from "@/data/minecraftBooks";
 
-export const metadata = { title: "For Educators" };
+export const metadata: Metadata = {
+  title: "For Educators",
+  description:
+    "Free ELA companion guides, writing prompts, and teaching resources from NYT bestselling author Mark Cheverton — use the Gameknight999 Minecraft-inspired books to teach grammar, vocabulary, and writing.",
+  alternates: { canonical: "/for-educators" },
+};
 
 export default function ForEducatorsPage() {
   return (
@@ -41,18 +55,120 @@ export default function ForEducatorsPage() {
                 A practical guide for designing creative thinking opportunities
                 inside the lessons you already teach.
               </p>
-              <a
+              <ExternalLink
                 href="https://www.amazon.com/Creativity-Reclaimed-Creative-Thinking-Lessons-ebook/dp/B0GJN5DSW3"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="mt-5 inline-flex rounded-full bg-[var(--color-accent)] text-white px-5 py-2 text-sm font-semibold hover:bg-[var(--color-accent-soft)]"
               >
                 Learn more
-              </a>
+              </ExternalLink>
             </div>
           </div>
         </div>
       </Container>
+
+      {/* ELA companion guides for the Gameknight999 books */}
+      <section className="border-y border-[var(--color-rule)] bg-[var(--color-surface)]">
+        <Container className="py-16">
+          <p className="text-sm font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+            Free Teaching &amp; ELA Resources
+          </p>
+          <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-[var(--color-primary)] md:text-4xl">
+            Teach grammar, vocabulary, and writing with the Gameknight999 books
+          </h2>
+          <p className="mt-4 max-w-3xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
+            Each ELA companion guide turns a Minecraft-inspired novel kids
+            already love into lesson-ready English Language Arts activities —
+            grammar, vocabulary, comprehension, and writing. They&apos;re free,
+            and they work in classrooms and homeschools alike. (Delivered as
+            free downloads through BookFunnel.)
+          </p>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {bookCompanionGuides.map((guide, i) => {
+              const book = findBook(guide.title);
+              return (
+                <div
+                  key={guide.title}
+                  className="flex flex-col rounded-2xl border border-[var(--color-rule)] bg-white p-6 shadow-sm"
+                >
+                  {book?.cover && (
+                    <div className="mb-4 flex h-44 items-center justify-center">
+                      <Image
+                        src={book.cover}
+                        alt={`Cover of ${guide.title} by Mark Cheverton`}
+                        width={200}
+                        height={260}
+                        className="max-h-full w-auto object-contain"
+                      />
+                    </div>
+                  )}
+                  <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">
+                    Book {i + 1} · ELA Companion Guide
+                  </p>
+                  <h3 className="mt-1 font-display text-xl font-semibold text-[var(--color-primary)]">
+                    {guide.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                    {guide.blurb}
+                  </p>
+                  <ExternalLink
+                    href={guide.href}
+                    ariaLabel={`Get the free ELA companion guide for ${guide.title}`}
+                    className="mt-5 inline-flex items-center justify-center rounded-full bg-[var(--color-accent)] px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-accent-soft)]"
+                  >
+                    Get the free guide
+                  </ExternalLink>
+                </div>
+              );
+            })}
+          </div>
+
+          <h3 className="mt-14 font-display text-2xl font-semibold text-[var(--color-primary)]">
+            More free writing &amp; homeschool resources
+          </h3>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+            {elaResources.map((r) => (
+              <li key={r.title}>
+                <ExternalLink
+                  href={r.href}
+                  className="flex h-full flex-col rounded-2xl border border-[var(--color-rule)] bg-white p-5 transition-all hover:-translate-y-0.5 hover:border-[var(--color-accent)] hover:shadow-lg"
+                >
+                  <span className="font-display text-lg font-semibold text-[var(--color-primary)]">
+                    {r.title}
+                  </span>
+                  <span className="mt-2 text-sm leading-relaxed text-[var(--color-ink-soft)]">
+                    {r.description}
+                  </span>
+                  <span className="mt-4 text-sm font-semibold text-[var(--color-accent)]">
+                    Get it free →
+                  </span>
+                </ExternalLink>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-10 flex flex-wrap gap-3">
+            <ExternalLink
+              href={ELA_RESOURCES_URL}
+              className="inline-flex items-center rounded-full bg-[var(--color-primary)] px-6 py-3 font-semibold text-white transition-colors hover:bg-[var(--color-primary-soft)]"
+            >
+              Browse all ELA resources
+            </ExternalLink>
+            <Link
+              href="/minecraft-books"
+              className="inline-flex items-center rounded-full border border-[var(--color-rule)] px-6 py-3 font-semibold text-[var(--color-ink-soft)] transition-colors hover:border-[var(--color-accent)]"
+            >
+              See the Gameknight999 reading guide
+            </Link>
+            <Link
+              href="/writing-resources"
+              className="inline-flex items-center rounded-full border border-[var(--color-rule)] px-6 py-3 font-semibold text-[var(--color-ink-soft)] transition-colors hover:border-[var(--color-accent)]"
+            >
+              Free writing tools
+            </Link>
+          </div>
+        </Container>
+      </section>
     </>
   );
 }
