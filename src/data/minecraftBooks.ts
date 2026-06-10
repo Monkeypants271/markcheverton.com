@@ -79,12 +79,47 @@ export const gameknightArcs: ReadingOrderArc[] = [
   },
 ];
 
+// The theme / positive message of each book, written for parents, teachers,
+// and librarians. Keyed by the canonical title in books.ts.
+export const themesByTitle: Record<string, string> = {
+  "Invasion of the Overworld": "Bullying and the value of friendship",
+  "Battle for the Nether": "Dealing with fear and anxiety",
+  "Confronting the Dragon": "Confronting your fears",
+  "Trouble in Zombie-town": "Sibling relationships",
+  "The Jungle Temple Oracle": "Even the smallest person can be a hero",
+  "Last Stand on the Ocean Shore":
+    "Working together is better than working alone",
+  "Saving Crafter": "Father/son relationships and growing up",
+  "Destruction of the Overworld": "Don't let fear rule your life — just be you",
+  "Gameknight999 vs Herobrine": "Judge the behavior first, not the person",
+  "The Phantom Virus": "Be responsible for your own choices and actions",
+  "Overworld in Flames": "Judge yourself by the quality of the friends you keep",
+  "System Overload": "Look for the good in things, not just the bad",
+  "The Great Zombie Invasion": "Being accepted by being yourself",
+  "Attack of the Shadow-Crafters":
+    "Accepting your weaknesses does not make you a failure",
+  "Herobrine's War": "Asking for help is not a weakness — it's a strength",
+  "Terrors of the Forest":
+    "Belief in yourself can make you stronger than you realize",
+  "Monsters in the Mist": "Hate can consume who you are — choose forgiveness",
+  "Mission to the Moon": "Making good choices for the right reasons",
+  "Zombies Attack!": "Be yourself instead of who others want you to be",
+  "Bones of Doom": "Believing in yourself",
+  "Into the Spiders' Lair":
+    "Failing doesn't make you a failure — it just means try again",
+  "The Wither King": "Stuff isn't important — friends are",
+  "The Withers Awaken": "Be true to your inner self",
+  "The Wither Invasion":
+    "Learn from your failures so you can become stronger",
+};
+
 export type ReadingOrderEntry = {
   order: number;
   title: string;
   arc: string;
   saga: string;
   bestFor: string;
+  theme?: string;
   amazon?: string;
   cover?: string;
 };
@@ -112,6 +147,7 @@ export function getGameknightReadingOrder(): ReadingOrderEntry[] {
         arc: arc.arc,
         saga: arc.saga,
         bestFor,
+        theme: themesByTitle[title],
         amazon: book?.amazon,
         cover: book?.cover,
       });

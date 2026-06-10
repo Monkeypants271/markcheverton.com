@@ -41,7 +41,7 @@ const faqs: { q: string; a: string }[] = [
   },
   {
     q: "What age are these books for?",
-    a: "They are middle-grade adventure novels written mainly for readers roughly 8–13 years old, though younger and older fans enjoy them too. The reading level and fast pace make them a great fit for upper-elementary and middle-school readers.",
+    a: "They are middle-grade adventure novels written mainly for readers roughly 8–13 years old, at about a sixth-grade reading level, and typically 200–250 pages each. Younger and older fans enjoy them too. The familiar Minecraft setting and fast pace make them a great fit for upper-elementary and middle-school readers.",
   },
   {
     q: "Are these good books for reluctant readers?",
@@ -187,6 +187,8 @@ export default function MinecraftBooksPage() {
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-[var(--color-ink-soft)]">
             The complete Minecraft-inspired saga in reading order — the six
             original Gameknight999 arcs followed by the Far Lands sequel saga.
+            Every book is a fast adventure with a positive theme parents can feel
+            good about, listed below.
           </p>
 
           <div className="mt-8 overflow-x-auto rounded-2xl border border-[var(--color-rule)]">
@@ -203,7 +205,7 @@ export default function MinecraftBooksPage() {
                     Series / Arc
                   </th>
                   <th scope="col" className="px-4 py-3 font-semibold">
-                    Best For
+                    Theme / Message
                   </th>
                   <th scope="col" className="px-4 py-3 font-semibold">
                     Buy / Learn More
@@ -221,6 +223,11 @@ export default function MinecraftBooksPage() {
                     </td>
                     <td className="px-4 py-3 font-medium text-[var(--color-ink)]">
                       {entry.title}
+                      {entry.order === 1 && (
+                        <span className="mt-1 block text-xs font-semibold uppercase tracking-wider text-[var(--color-accent)]">
+                          ★ Start here
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-[var(--color-ink-soft)]">
                       <span className="block">{entry.arc}</span>
@@ -229,7 +236,7 @@ export default function MinecraftBooksPage() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-[var(--color-ink-soft)]">
-                      {entry.bestFor}
+                      {entry.theme ?? entry.bestFor}
                     </td>
                     <td className="px-4 py-3">
                       {entry.amazon ? (
