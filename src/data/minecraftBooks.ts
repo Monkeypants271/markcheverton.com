@@ -228,6 +228,11 @@ export const seriesCards: SeriesCard[] = [
 // of Mark's free ELA and writing resources.
 export const ELA_RESOURCES_URL = "https://books.bookfunnel.com/ELAresources";
 
+// Direct download for the "Linking Fan Fiction to Reading" guide, also surfaced
+// on the fan fiction page.
+export const LINKING_FANFIC_TO_READING_URL =
+  "https://dl.bookfunnel.com/q4steblaey";
+
 // Free ELA companion guides for the first three Gameknight999 books, delivered
 // as free downloads via BookFunnel. Order matches the reading order.
 export const bookCompanionGuides: {
@@ -303,7 +308,7 @@ export const elaResources: ElaResource[] = [
     title: "Linking Fan Fiction to Reading",
     description:
       "Fifteen strategies for using fan fiction and creative writing to strengthen reading and writing skills.",
-    href: "https://dl.bookfunnel.com/q4steblaey",
+    href: LINKING_FANFIC_TO_READING_URL,
   },
   {
     title: "Integrate Creative Writing into Homeschool Curriculums",
