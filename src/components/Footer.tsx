@@ -23,6 +23,7 @@ export function Footer() {
             <li><Link href="/for-educators" className="hover:text-[var(--color-primary)]">For Educators</Link></li>
             <li><Link href="/fanfic" className="hover:text-[var(--color-primary)]">Fan Fiction</Link></li>
             <li><Link href="/free-books" className="hover:text-[var(--color-primary)]">Free Books</Link></li>
+            <li><Link href="/patents" className="hover:text-[var(--color-primary)]">Patents</Link></li>
           </ul>
         </div>
 

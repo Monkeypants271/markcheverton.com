@@ -6,7 +6,7 @@ import { useState } from "react";
 const navLinks = [
   { href: "/books", label: "Books" },
   { href: "/minecraft-books", label: "Minecraft Books" },
-  { href: "/author-visits", label: "Author Visits" },
+  { href: "https://www.chevertonauthorvisits.com", label: "Author Visits", external: true },
   { href: "/for-educators", label: "For Educators" },
   { href: "/writing-resources", label: "Writing Resources" },
   { href: "/fanfic", label: "Fan Fiction" },
@@ -50,15 +50,27 @@ export function Header() {
           </Link>
 
           <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-[var(--color-ink-soft)]">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="hover:text-[var(--color-primary)] transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) =>
+              link.external ? (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-[var(--color-primary)] transition-colors"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="hover:text-[var(--color-primary)] transition-colors"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
           </nav>
 
           <button
@@ -81,16 +93,29 @@ export function Header() {
         {open && (
           <div className="lg:hidden border-t border-[var(--color-rule)] bg-[var(--color-surface)]">
             <nav className="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setOpen(false)}
-                  className="py-2 text-base text-[var(--color-ink-soft)] hover:text-[var(--color-primary)]"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) =>
+                link.external ? (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setOpen(false)}
+                    className="py-2 text-base text-[var(--color-ink-soft)] hover:text-[var(--color-primary)]"
+                  >
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setOpen(false)}
+                    className="py-2 text-base text-[var(--color-ink-soft)] hover:text-[var(--color-primary)]"
+                  >
+                    {link.label}
+                  </Link>
+                )
+              )}
             </nav>
           </div>
         )}

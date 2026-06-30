@@ -20,6 +20,7 @@ const staticRoutes: { path: string; priority: number }[] = [
   { path: "/fanfic", priority: 0.6 },
   { path: "/blog", priority: 0.6 },
   { path: "/about", priority: 0.6 },
+  { path: "/patents", priority: 0.5 },
   { path: "/contact", priority: 0.5 },
   { path: "/privacy", priority: 0.3 },
 ];
