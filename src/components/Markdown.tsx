@@ -1,5 +1,18 @@
+import type { ReactNode } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { YouTubeEmbed } from "./YouTubeEmbed";
+
+const VIDEO_MARKER = /^\{\{youtube:([A-Za-z0-9_-]{6,20})\}\}$/;
+
+/** True when a paragraph's only content is plain text (no links, bold, etc). */
+function asPlainText(children: ReactNode): string | null {
+  if (typeof children === "string") return children;
+  if (Array.isArray(children) && children.length === 1 && typeof children[0] === "string") {
+    return children[0];
+  }
+  return null;
+}
 
 export function Markdown({ children }: { children: string }) {
   return (
@@ -7,6 +20,16 @@ export function Markdown({ children }: { children: string }) {
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         components={{
+          p: ({ children }) => {
+            const text = asPlainText(children);
+            const match = text ? VIDEO_MARKER.exec(text.trim()) : null;
+            if (match) return <YouTubeEmbed id={match[1]} />;
+            return (
+              <p className="my-4 text-[var(--color-ink-soft)] leading-relaxed">
+                {children}
+              </p>
+            );
+          },
           h1: ({ children }) => (
             <h1 className="font-display text-3xl font-semibold text-[var(--color-primary)] mt-10 mb-4">
               {children}
@@ -21,11 +44,6 @@ export function Markdown({ children }: { children: string }) {
             <h3 className="font-display text-xl font-semibold text-[var(--color-primary)] mt-6 mb-2">
               {children}
             </h3>
-          ),
-          p: ({ children }) => (
-            <p className="my-4 text-[var(--color-ink-soft)] leading-relaxed">
-              {children}
-            </p>
           ),
           a: ({ href, children }) => (
             <a
