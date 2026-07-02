@@ -19,14 +19,36 @@ function pruneExpiredBuckets(now: number) {
   }
 }
 
-export function getClientIp(req: Request): string {
-  const forwarded = req.headers.get("x-forwarded-for");
-  if (forwarded) return forwarded.split(",")[0].trim();
-  const real = req.headers.get("x-real-ip");
+type HeaderGetter = { get(name: string): string | null };
+
+/**
+ * Resolve the client IP from a trusted, platform-set header.
+ *
+ * The leftmost value of `x-forwarded-for` is client-controlled (an attacker
+ * can send their own header, which the platform appends to), so it must NOT
+ * be trusted for rate limiting or IP bans. On Vercel, `x-real-ip` is set by
+ * the platform to the true client IP; Cloudflare uses `cf-connecting-ip`.
+ * We only fall back to `x-forwarded-for` when neither trusted header exists,
+ * and then take the RIGHTMOST entry (the one added by the closest proxy).
+ */
+export function getClientIpFromHeaders(headers: HeaderGetter): string {
+  const real = headers.get("x-real-ip");
   if (real) return real.trim();
-  const cfIp = req.headers.get("cf-connecting-ip");
+
+  const cfIp = headers.get("cf-connecting-ip");
   if (cfIp) return cfIp.trim();
+
+  const forwarded = headers.get("x-forwarded-for");
+  if (forwarded) {
+    const parts = forwarded.split(",").map((p) => p.trim()).filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
+
   return "unknown";
+}
+
+export function getClientIp(req: Request): string {
+  return getClientIpFromHeaders(req.headers);
 }
 
 export function consumeRateLimit(
@@ -81,6 +103,14 @@ export async function verifyTurnstileToken(token: string | null, ip: string) {
   const secret = process.env.TURNSTILE_SECRET_KEY;
 
   if (!secret) {
+    // Bot protection is silently disabled without a secret. That's fine for
+    // local dev, but in production it means the CAPTCHA layer is off — make
+    // that loud so a misconfigured deploy doesn't quietly ship unprotected.
+    if (process.env.NODE_ENV === "production") {
+      console.error(
+        "TURNSTILE_SECRET_KEY is not set in production — bot protection is DISABLED."
+      );
+    }
     return { ok: true as const, skipped: true as const };
   }
 

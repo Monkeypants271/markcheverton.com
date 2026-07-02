@@ -184,7 +184,7 @@ export async function POST(req: Request) {
     await transporter.sendMail({
       from: `"markcheverton.com" <${gmailUser}>`,
       to,
-      replyTo: `"${name}" <${email}>`,
+      replyTo: { name, address: email },
       subject: `[Fan fic] ${title} — by ${name}`,
       html: htmlBody,
     });

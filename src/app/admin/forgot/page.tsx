@@ -1,9 +1,11 @@
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { randomBytes } from "node:crypto";
 import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { sendMail, escapeHtml } from "@/lib/mail";
+import { consumeRateLimit, getClientIpFromHeaders } from "@/lib/anti-spam";
 
 export const metadata = { title: "Forgot password", robots: "noindex,nofollow" };
 
@@ -20,6 +22,15 @@ async function requestMagicLinkAction(formData: FormData) {
     .toLowerCase();
 
   const submitted = String(formData.get("email") || "").trim().toLowerCase();
+
+  // Throttle to prevent email-bombing the admin and flooding the token table:
+  // 3 link requests per hour per IP. Silently redirect to the same "sent"
+  // page so this doesn't leak anything either.
+  const ip = getClientIpFromHeaders(await headers());
+  const rl = consumeRateLimit("admin-forgot", ip, 3, 60 * 60 * 1000);
+  if (!rl.ok) {
+    redirect("/admin/forgot?sent=1");
+  }
 
   // Always redirect to the same "sent" page regardless of whether the email
   // matched — prevents leaking which email is the admin. (Even though it's

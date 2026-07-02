@@ -1,8 +1,9 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { Container } from "@/components/Container";
 import { PageHeader } from "@/components/PageHeader";
 import { ADMIN_COOKIE, makeCookieValue, verifyPassword } from "@/lib/admin-auth";
+import { consumeRateLimit, getClientIpFromHeaders } from "@/lib/anti-spam";
 
 export const metadata = { title: "Admin login", robots: "noindex,nofollow" };
 
@@ -10,6 +11,13 @@ async function loginAction(formData: FormData) {
   "use server";
   const password = String(formData.get("password") || "");
   const next = String(formData.get("next") || "/admin");
+
+  // Throttle password guessing: 10 attempts per 15 minutes per IP.
+  const ip = getClientIpFromHeaders(await headers());
+  const rl = consumeRateLimit("admin-login", ip, 10, 15 * 60 * 1000);
+  if (!rl.ok) {
+    redirect(`/admin/login?error=rate&next=${encodeURIComponent(next)}`);
+  }
 
   if (!verifyPassword(password)) {
     redirect(`/admin/login?error=1&next=${encodeURIComponent(next)}`);
@@ -43,9 +51,11 @@ export default async function AdminLoginPage({
   const errorMessage =
     params.error === "config"
       ? "Admin password isn't set on the server. Set ADMIN_PASSWORD in .env.local."
-      : params.error
-        ? "Wrong password."
-        : null;
+      : params.error === "rate"
+        ? "Too many attempts. Please wait a few minutes and try again."
+        : params.error
+          ? "Wrong password."
+          : null;
 
   return (
     <>

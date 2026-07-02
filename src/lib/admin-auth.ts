@@ -1,42 +1,33 @@
 import { cookies } from "next/headers";
+import { signSession, verifySession } from "./admin-session";
 
 export const ADMIN_COOKIE = "mc_admin_session";
 
 /**
- * Cookie value is a Web-Crypto SHA-256 hash of the configured admin
- * password plus a server-side salt. Web Crypto is used (not node:crypto)
- * so the hash matches what middleware computes on the Edge runtime.
- * When the password changes, all existing cookies invalidate.
+ * Constant-time-ish password check. We fold the length difference into the
+ * accumulator instead of returning early on it, so the comparison doesn't
+ * leak the configured password's length through timing.
  */
-async function expectedCookieValue(): Promise<string | null> {
-  const pw = process.env.ADMIN_PASSWORD;
-  if (!pw) return null;
-  const data = new TextEncoder().encode(pw + "markcheverton.com/admin/v1");
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 export function verifyPassword(password: string): boolean {
   const configured = process.env.ADMIN_PASSWORD;
   if (!configured) return false;
-  if (password.length !== configured.length) return false;
-  let mismatch = 0;
-  for (let i = 0; i < password.length; i++) {
-    mismatch |= password.charCodeAt(i) ^ configured.charCodeAt(i);
+
+  const a = new TextEncoder().encode(password);
+  const b = new TextEncoder().encode(configured);
+
+  let mismatch = a.length ^ b.length;
+  for (let i = 0; i < a.length; i++) {
+    mismatch |= a[i] ^ (b[i] ?? 0);
   }
   return mismatch === 0;
 }
 
+/** Mint a signed session cookie value for a freshly authenticated admin. */
 export async function makeCookieValue(): Promise<string | null> {
-  return expectedCookieValue();
+  return signSession();
 }
 
 export async function isAdminAuthed(): Promise<boolean> {
-  const expected = await expectedCookieValue();
-  if (!expected) return false;
   const c = await cookies();
-  const got = c.get(ADMIN_COOKIE)?.value;
-  return got === expected;
+  return verifySession(c.get(ADMIN_COOKIE)?.value);
 }

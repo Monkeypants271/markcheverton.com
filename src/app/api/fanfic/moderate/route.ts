@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { getSupabaseAdmin } from "@/lib/supabase";
 import { findUniqueSlug, slugify } from "@/lib/fanfic-submissions";
+import { escapeHtml } from "@/lib/mail";
 
 type Action = "approve" | "reject";
+
+const ACTION_LABELS: Record<Action, string> = {
+  approve: "Approve & publish this story",
+  reject: "Reject this story",
+};
 
 function htmlResponse(title: string, body: string, status = 200) {
   const html = `<!doctype html>
@@ -17,6 +23,9 @@ function htmlResponse(title: string, body: string, status = 200) {
     .ok { color: #1e3a5f; }
     .err { color: #b94a3c; }
     a { color: #e07a3c; }
+    button { font: inherit; cursor: pointer; padding: 10px 20px; border: none; border-radius: 999px; color: #fff; font-weight: 600; }
+    .approve { background: #1e3a5f; }
+    .reject { background: #888; }
   </style>
 </head>
 <body>${body}</body>
@@ -27,50 +36,100 @@ function htmlResponse(title: string, body: string, status = 200) {
   });
 }
 
-export async function GET(req: Request) {
-  const url = new URL(req.url);
+type Submission = {
+  id: number;
+  title: string;
+  action_token: string;
+  status: string;
+  author: string | null;
+};
+
+async function resolve(
+  url: URL
+): Promise<
+  | { error: NextResponse }
+  | { id: number; token: string; action: Action; submission: Submission }
+> {
   const id = Number(url.searchParams.get("id") || "");
   const token = (url.searchParams.get("token") || "").trim();
   const action = (url.searchParams.get("action") || "").trim() as Action;
 
   if (!Number.isInteger(id) || id <= 0 || !token || !["approve", "reject"].includes(action)) {
-    return htmlResponse("Bad link", `<h1 class="err">That link doesn't look right.</h1>`, 400);
+    return { error: htmlResponse("Bad link", `<h1 class="err">That link doesn't look right.</h1>`, 400) };
   }
 
   const supabase = getSupabaseAdmin();
   if (!supabase) {
-    return htmlResponse(
-      "Not configured",
-      `<h1 class="err">Submissions aren't configured on the server.</h1>`,
-      503
-    );
+    return {
+      error: htmlResponse("Not configured", `<h1 class="err">Submissions aren't configured on the server.</h1>`, 503),
+    };
   }
 
   const { data: submission } = await supabase
     .from("fanfic_submissions")
-    .select("id, title, action_token, status")
+    .select("id, title, action_token, status, author")
     .eq("id", id)
     .maybeSingle();
 
   if (!submission) {
-    return htmlResponse("Not found", `<h1 class="err">That submission doesn't exist.</h1>`, 404);
+    return { error: htmlResponse("Not found", `<h1 class="err">That submission doesn't exist.</h1>`, 404) };
   }
 
   if (submission.action_token !== token) {
-    return htmlResponse(
-      "Invalid token",
-      `<h1 class="err">That moderation link is invalid.</h1>`,
-      403
-    );
+    return { error: htmlResponse("Invalid token", `<h1 class="err">That moderation link is invalid.</h1>`, 403) };
   }
 
   if (submission.status !== "pending") {
-    return htmlResponse(
-      "Already moderated",
-      `<h1>This submission was already ${submission.status}.</h1>
-       <p><a href="/admin/submissions">View all submissions</a></p>`
-    );
+    return {
+      error: htmlResponse(
+        "Already moderated",
+        `<h1>This submission was already ${escapeHtml(submission.status)}.</h1>
+         <p><a href="/admin/submissions">View all submissions</a></p>`
+      ),
+    };
   }
+
+  return { id, token, action, submission: submission as Submission };
+}
+
+/**
+ * GET renders a confirmation page only — it never mutates. Prevents email
+ * scanners / prefetchers from auto-publishing a story by fetching the link.
+ */
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const resolved = await resolve(url);
+  if ("error" in resolved) return resolved.error;
+
+  const { action, submission } = resolved;
+  const postAction = `/api/fanfic/moderate?id=${submission.id}&token=${encodeURIComponent(
+    submission.action_token
+  )}&action=${action}`;
+
+  return htmlResponse(
+    "Confirm moderation",
+    `<h1>${ACTION_LABELS[action]}?</h1>
+     <p><strong>${escapeHtml(submission.title)}</strong>${
+       submission.author ? ` by ${escapeHtml(submission.author)}` : ""
+     }</p>
+     ${
+       action === "approve"
+         ? `<p style="background:#fff4e5;border:1px solid #f5c481;border-radius:8px;padding:10px 14px;font-size:13px;color:#7a4a14">If the author used a real first &amp; last name, cancel and edit it in <a href="/admin/submissions">admin/submissions</a> first.</p>`
+         : ""
+     }
+     <form method="post" action="${escapeHtml(postAction)}">
+       <button type="submit" class="${action}">${ACTION_LABELS[action]}</button>
+     </form>`
+  );
+}
+
+export async function POST(req: Request) {
+  const url = new URL(req.url);
+  const resolved = await resolve(url);
+  if ("error" in resolved) return resolved.error;
+
+  const { id, action, submission } = resolved;
+  const supabase = getSupabaseAdmin()!;
 
   if (action === "reject") {
     const { error } = await supabase
@@ -78,7 +137,8 @@ export async function GET(req: Request) {
       .update({ status: "rejected", moderated_at: new Date().toISOString() })
       .eq("id", id);
     if (error) {
-      return htmlResponse("Error", `<h1 class="err">${error.message}</h1>`, 500);
+      console.error("Fanfic reject failed", error);
+      return htmlResponse("Error", `<h1 class="err">Couldn't update the submission. Please try again.</h1>`, 500);
     }
     return htmlResponse(
       "Rejected",
@@ -87,7 +147,7 @@ export async function GET(req: Request) {
     );
   }
 
-  // Approve — assign slug, publish, and redirect Mark to the live story
+  // Approve — assign slug, publish, and redirect to the live story
   const base = slugify(submission.title);
   const slug = await findUniqueSlug(base);
 
@@ -101,9 +161,9 @@ export async function GET(req: Request) {
     .eq("id", id);
 
   if (error) {
-    return htmlResponse("Error", `<h1 class="err">${error.message}</h1>`, 500);
+    console.error("Fanfic approve failed", error);
+    return htmlResponse("Error", `<h1 class="err">Couldn't publish the submission. Please try again.</h1>`, 500);
   }
 
-  // Redirect to the live story so Mark sees the published page immediately
-  return NextResponse.redirect(new URL(`/fanfic/${slug}`, req.url));
+  return NextResponse.redirect(new URL(`/fanfic/${slug}`, req.url), 303);
 }

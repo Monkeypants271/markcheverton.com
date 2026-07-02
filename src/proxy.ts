@@ -1,20 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
+import { verifySession } from "@/lib/admin-session";
 
 const ADMIN_COOKIE = "mc_admin_session";
 
-async function expectedCookieValue(): Promise<string | null> {
-  const pw = process.env.ADMIN_PASSWORD;
-  if (!pw) return null;
-  const data = new TextEncoder().encode(pw + "markcheverton.com/admin/v1");
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hashBuffer))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
-export async function middleware(req: NextRequest) {
+// Renamed from `middleware` — the middleware convention is deprecated in
+// Next.js 16 and replaced by `proxy`.
+export async function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // Public admin routes: the login/recovery flow must be reachable while signed out.
   if (
     !pathname.startsWith("/admin") ||
     pathname.startsWith("/admin/login") ||
@@ -24,10 +18,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
-  const expected = await expectedCookieValue();
-  const got = req.cookies.get(ADMIN_COOKIE)?.value;
-
-  if (!expected || got !== expected) {
+  const ok = await verifySession(req.cookies.get(ADMIN_COOKIE)?.value);
+  if (!ok) {
     const url = req.nextUrl.clone();
     url.pathname = "/admin/login";
     url.searchParams.set("next", pathname);
