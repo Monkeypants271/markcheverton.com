@@ -28,7 +28,7 @@ const tools = [
     title: "Story Prompts",
     href: "/writing-resources/prompts",
     body: "Themed starting points to help you begin without being told what to write.",
-    image: "/images/writing/story-prompts.webp",
+    image: "/images/writing/story-prompts.png",
   },
   {
     title: "Sensory Details",
