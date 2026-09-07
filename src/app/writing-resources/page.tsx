@@ -7,6 +7,12 @@ export const metadata = { title: "Writing Resources" };
 
 const tools = [
   {
+    title: "Character Creator",
+    href: "/writing-resources/character-creator",
+    body: "Build a memorable character with simple questions about who they are and what matters to them.",
+    image: "/images/writing/character-creator.png",
+  },
+  {
     title: "Plot Builder",
     href: "/writing-resources/plot",
     body: "An 8-step interactive tool to outline your story from hook to new normal.",
@@ -19,16 +25,16 @@ const tools = [
     image: "/images/writing/writing-tips.webp",
   },
   {
-    title: "Sensory Details",
-    href: "/writing-resources/sensory-details",
-    body: "Ways to use sight, sound, and feeling to bring scenes and emotions to life.",
-    image: "/images/writing/sensory-details.webp",
-  },
-  {
     title: "Story Prompts",
     href: "/writing-resources/prompts",
     body: "Themed starting points to help you begin without being told what to write.",
     image: "/images/writing/story-prompts.webp",
+  },
+  {
+    title: "Sensory Details",
+    href: "/writing-resources/sensory-details",
+    body: "Ways to use sight, sound, and feeling to bring scenes and emotions to life.",
+    image: "/images/writing/sensory-details.webp",
   },
 ];
 
