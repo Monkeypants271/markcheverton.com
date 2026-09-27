@@ -45,6 +45,13 @@ function revealTransform(side: Appearance["side"], progress: number) {
   return `translateX(${position}%) rotate(${rotation}deg)`;
 }
 
+function shouldMirrorCharacter(character: RandomCharacter, side: Appearance["side"]) {
+  if (character.facing === "center") return false;
+
+  const inwardFacingDirection = side === "left" ? "right" : "left";
+  return character.facing !== inwardFacingDirection;
+}
+
 export function WitherPeek() {
   const [appearance, setAppearance] = useState<Appearance | null>(null);
   const characterBag = useRef<RandomCharacter[]>([]);
@@ -278,6 +285,8 @@ export function WitherPeek() {
 
   if (!appearance) return null;
 
+  const shouldMirror = shouldMirrorCharacter(appearance.character, appearance.side);
+
   return (
     <button
       type="button"
@@ -289,15 +298,17 @@ export function WitherPeek() {
       }}
       onClick={dismiss}
     >
-      <Image
-        src={appearance.character.src}
-        alt=""
-        width={appearance.character.width}
-        height={appearance.character.height}
-        className={`${styles.image} ${
-          appearance.revealProgress === 1 ? styles.bobbing : ""
-        }`}
-      />
+      <span className={`${styles.character} ${shouldMirror ? styles.mirrored : ""}`}>
+        <Image
+          src={appearance.character.src}
+          alt=""
+          width={appearance.character.width}
+          height={appearance.character.height}
+          className={`${styles.image} ${
+            appearance.revealProgress === 1 ? styles.bobbing : ""
+          }`}
+        />
+      </span>
     </button>
   );
 }
