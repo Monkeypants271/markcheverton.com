@@ -19,8 +19,8 @@ type Appearance = {
 
 const WITHER_SETTINGS = {
   maxAppearances: 6,
-  minScrollDistance: 360,
-  scrollDistanceRange: 1040,
+  minScrollDistance: 720,
+  scrollDistanceRange: 2080,
   revealScrollDistance: 420,
   visibleDuration: 1040,
   incompleteRevealDuration: 1600,
@@ -49,7 +49,9 @@ export function WitherPeek() {
   const [appearance, setAppearance] = useState<Appearance | null>(null);
   const characterBag = useRef<RandomCharacter[]>([]);
   const lastCharacterId = useRef<string | null>(null);
-  const nextTrigger = useRef(0);
+  const nextTriggerDistance = useRef(0);
+  const scrollDistanceSinceTrigger = useRef(0);
+  const lastScrollY = useRef(0);
   const active = useRef(false);
   const appearances = useRef(0);
   const hideTimer = useRef<number | null>(null);
@@ -57,8 +59,15 @@ export function WitherPeek() {
   const removeTimer = useRef<number | null>(null);
   const revealProgress = useRef(0);
   const revealComplete = useRef(false);
+  const revealScrollDistance = useRef(0);
   const overflowRevealDistance = useRef(0);
   const touchStartY = useRef<number | null>(null);
+
+  const scheduleNextAppearance = () => {
+    nextTriggerDistance.current = randomScrollDistance();
+    scrollDistanceSinceTrigger.current = 0;
+    lastScrollY.current = window.scrollY;
+  };
 
   const nextCharacter = () => {
     if (characterBag.current.length === 0) {
@@ -77,10 +86,6 @@ export function WitherPeek() {
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: no-preference)");
-
-    const scheduleNextAppearance = () => {
-      nextTrigger.current = window.scrollY + randomScrollDistance();
-    };
 
     const clearTimers = () => {
       if (hideTimer.current !== null) {
@@ -106,6 +111,7 @@ export function WitherPeek() {
         active.current = false;
         revealProgress.current = 0;
         revealComplete.current = false;
+        revealScrollDistance.current = 0;
         overflowRevealDistance.current = 0;
         removeTimer.current = null;
         setAppearance(null);
@@ -135,7 +141,7 @@ export function WitherPeek() {
         1,
         Math.max(
           0,
-          (window.scrollY - nextTrigger.current + overflowRevealDistance.current) /
+          (revealScrollDistance.current + overflowRevealDistance.current) /
             WITHER_SETTINGS.revealScrollDistance,
         ),
       );
@@ -180,34 +186,33 @@ export function WitherPeek() {
 
       active.current = true;
       appearances.current += 1;
-      const initialRevealProgress = Math.min(
-        1,
-        Math.max(
-          0,
-          (window.scrollY - nextTrigger.current) / WITHER_SETTINGS.revealScrollDistance,
-        ),
-      );
-      revealProgress.current = initialRevealProgress;
-      revealComplete.current = initialRevealProgress === 1;
+      revealProgress.current = 0;
+      revealComplete.current = false;
+      revealScrollDistance.current = 0;
       overflowRevealDistance.current = 0;
       setAppearance({
         character: nextCharacter(),
         side: Math.random() < 0.5 ? "left" : "right",
         top: 34 + Math.floor(Math.random() * 28),
-        revealProgress: initialRevealProgress,
+        revealProgress: 0,
         leaving: false,
       });
 
-      if (revealComplete.current) {
-        startHideTimer();
-      } else {
-        startIncompleteRevealTimer();
-      }
+      startIncompleteRevealTimer();
     };
 
     const handleScroll = () => {
-      if (window.scrollY >= nextTrigger.current) show();
-      updateReveal();
+      const distance = Math.abs(window.scrollY - lastScrollY.current);
+      lastScrollY.current = window.scrollY;
+
+      if (active.current) {
+        revealScrollDistance.current += distance;
+        updateReveal();
+        return;
+      }
+
+      scrollDistanceSinceTrigger.current += distance;
+      if (scrollDistanceSinceTrigger.current >= nextTriggerDistance.current) show();
     };
 
     const handleWheel = (event: WheelEvent) => {
@@ -263,10 +268,11 @@ export function WitherPeek() {
       active.current = false;
       revealProgress.current = 0;
       revealComplete.current = false;
+      revealScrollDistance.current = 0;
       overflowRevealDistance.current = 0;
       removeTimer.current = null;
       setAppearance(null);
-      nextTrigger.current = window.scrollY + randomScrollDistance();
+      scheduleNextAppearance();
     }, WITHER_SETTINGS.exitDuration);
   };
 
