@@ -24,14 +24,6 @@
   transform-origin: right center;
 }
 
-.entering.left {
-  animation: peek-in-left 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
-.entering.right {
-  animation: peek-in-right 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-
 .leaving.left {
   animation: peek-out-left 450ms ease-in forwards;
 }
@@ -46,25 +38,10 @@
   height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 0.75rem 0.8rem rgb(8 20 10 / 0.35));
-  animation: bob 1.7s ease-in-out 1400ms infinite;
 }
 
-@keyframes peek-in-left {
-  from {
-    transform: translateX(-78%) rotate(-7deg);
-  }
-  to {
-    transform: translateX(-18%) rotate(-3deg);
-  }
-}
-
-@keyframes peek-in-right {
-  from {
-    transform: translateX(78%) rotate(7deg);
-  }
-  to {
-    transform: translateX(18%) rotate(3deg);
-  }
+.bobbing {
+  animation: bob 1.7s ease-in-out infinite;
 }
 
 @keyframes peek-out-left {

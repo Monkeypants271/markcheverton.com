@@ -13,13 +13,15 @@ type Appearance = {
   character: RandomCharacter;
   side: "left" | "right";
   top: number;
+  revealProgress: number;
   leaving: boolean;
 };
 
 const WITHER_SETTINGS = {
   maxAppearances: 6,
-  minScrollDistance: 180,
-  scrollDistanceRange: 520,
+  minScrollDistance: 360,
+  scrollDistanceRange: 1040,
+  revealScrollDistance: 420,
   visibleDuration: 2600,
   exitDuration: 450,
 };
@@ -31,6 +33,17 @@ function randomScrollDistance() {
   );
 }
 
+function revealTransform(side: Appearance["side"], progress: number) {
+  const enteringPosition = side === "left" ? -78 : 78;
+  const restingPosition = side === "left" ? -18 : 18;
+  const enteringRotation = side === "left" ? -7 : 7;
+  const restingRotation = side === "left" ? -3 : 3;
+  const position = enteringPosition + (restingPosition - enteringPosition) * progress;
+  const rotation = enteringRotation + (restingRotation - enteringRotation) * progress;
+
+  return `translateX(${position}%) rotate(${rotation}deg)`;
+}
+
 export function WitherPeek() {
   const [appearance, setAppearance] = useState<Appearance | null>(null);
   const characterBag = useRef<RandomCharacter[]>([]);
@@ -40,6 +53,8 @@ export function WitherPeek() {
   const appearances = useRef(0);
   const hideTimer = useRef<number | null>(null);
   const removeTimer = useRef<number | null>(null);
+  const revealProgress = useRef(0);
+  const revealComplete = useRef(false);
 
   const nextCharacter = () => {
     if (characterBag.current.length === 0) {
@@ -75,9 +90,41 @@ export function WitherPeek() {
       setAppearance((current) => (current ? { ...current, leaving: true } : null));
       removeTimer.current = window.setTimeout(() => {
         active.current = false;
+        revealProgress.current = 0;
+        revealComplete.current = false;
         setAppearance(null);
         scheduleNextAppearance();
       }, WITHER_SETTINGS.exitDuration);
+    };
+
+    const startHideTimer = () => {
+      if (hideTimer.current) return;
+
+      hideTimer.current = window.setTimeout(hide, WITHER_SETTINGS.visibleDuration);
+    };
+
+    const updateReveal = () => {
+      if (!active.current || revealComplete.current) return;
+
+      const progress = Math.min(
+        1,
+        Math.max(
+          0,
+          (window.scrollY - nextTrigger.current) / WITHER_SETTINGS.revealScrollDistance,
+        ),
+      );
+
+      if (progress === revealProgress.current) return;
+
+      revealProgress.current = progress;
+      setAppearance((current) =>
+        current ? { ...current, revealProgress: progress } : null,
+      );
+
+      if (progress === 1) {
+        revealComplete.current = true;
+        startHideTimer();
+      }
     };
 
     const show = () => {
@@ -91,17 +138,29 @@ export function WitherPeek() {
 
       active.current = true;
       appearances.current += 1;
+      const initialRevealProgress = Math.min(
+        1,
+        Math.max(
+          0,
+          (window.scrollY - nextTrigger.current) / WITHER_SETTINGS.revealScrollDistance,
+        ),
+      );
+      revealProgress.current = initialRevealProgress;
+      revealComplete.current = initialRevealProgress === 1;
       setAppearance({
         character: nextCharacter(),
         side: Math.random() < 0.5 ? "left" : "right",
         top: 34 + Math.floor(Math.random() * 28),
+        revealProgress: initialRevealProgress,
         leaving: false,
       });
-      hideTimer.current = window.setTimeout(hide, WITHER_SETTINGS.visibleDuration);
+
+      if (revealComplete.current) startHideTimer();
     };
 
     const handleScroll = () => {
       if (window.scrollY >= nextTrigger.current) show();
+      updateReveal();
     };
 
     const handleMotionPreferenceChange = () => {
@@ -126,6 +185,8 @@ export function WitherPeek() {
     setAppearance((current) => (current ? { ...current, leaving: true } : null));
     window.setTimeout(() => {
       active.current = false;
+      revealProgress.current = 0;
+      revealComplete.current = false;
       setAppearance(null);
       nextTrigger.current = window.scrollY + randomScrollDistance();
     }, WITHER_SETTINGS.exitDuration);
@@ -137,10 +198,11 @@ export function WitherPeek() {
     <button
       type="button"
       aria-label="Dismiss character"
-      className={`${styles.wither} ${styles[appearance.side]} ${
-        appearance.leaving ? styles.leaving : styles.entering
-      }`}
-      style={{ top: `${appearance.top}%` }}
+      className={`${styles.wither} ${styles[appearance.side]} ${appearance.leaving ? styles.leaving : ""}`}
+      style={{
+        top: `${appearance.top}%`,
+        transform: revealTransform(appearance.side, appearance.revealProgress),
+      }}
       onClick={dismiss}
     >
       <Image
@@ -148,7 +210,9 @@ export function WitherPeek() {
         alt=""
         width={appearance.character.width}
         height={appearance.character.height}
-        className={styles.image}
+        className={`${styles.image} ${
+          appearance.revealProgress === 1 ? styles.bobbing : ""
+        }`}
       />
     </button>
   );
