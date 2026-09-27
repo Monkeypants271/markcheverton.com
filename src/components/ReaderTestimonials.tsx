@@ -34,7 +34,12 @@ export function ReaderTestimonials() {
   return (
     <section
       aria-labelledby="reader-testimonials-heading"
-      className="border-y border-[var(--color-rule)] bg-[#f4efe7] py-16 md:py-20"
+      className="border-y border-[#c4d5d2] bg-[#dbe8e6] py-14 md:py-16"
+      style={{
+        backgroundImage:
+          "linear-gradient(rgba(219, 232, 230, 0.86), rgba(219, 232, 230, 0.86)), linear-gradient(rgba(30, 58, 95, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 58, 95, 0.045) 1px, transparent 1px)",
+        backgroundSize: "auto, 28px 28px, 28px 28px",
+      }}
     >
       <Container>
         <div className="mx-auto max-w-2xl text-center">
@@ -46,16 +51,16 @@ export function ReaderTestimonials() {
           </h2>
         </div>
 
-        <div className="mt-10 grid gap-4 md:auto-rows-fr md:grid-cols-2 lg:grid-cols-3 md:gap-6">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 md:gap-6 lg:grid-cols-3">
           {testimonials.map((testimonial) => (
             <figure
               key={testimonial.attribution}
-              className="flex h-full flex-col justify-between rounded-xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-6 shadow-sm"
+              className="flex h-full flex-col justify-between rounded-xl border border-white/80 bg-[var(--color-surface)] p-6 shadow-[0_10px_24px_rgba(30,58,95,0.16)]"
             >
               <blockquote className="font-display text-xl leading-relaxed text-[var(--color-primary)]">
                 &ldquo;{testimonial.quote}&rdquo;
               </blockquote>
-              <figcaption className="mt-6 text-sm font-medium text-[var(--color-ink-soft)]">
+              <figcaption className="mt-5 text-sm font-medium text-[var(--color-ink-soft)]">
                 &mdash; {testimonial.attribution}
               </figcaption>
             </figure>
