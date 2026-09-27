@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
+import { ReaderTestimonials } from "@/components/ReaderTestimonials";
 import { findBook } from "@/data/books";
 
 export default function Home() {
@@ -192,6 +193,8 @@ export default function Home() {
           </div>
         </Container>
       </section>
+
+      <ReaderTestimonials />
 
       {/* Audience paths */}
       <section className="py-16">
