@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import { Container } from "@/components/Container";
 
 const testimonials = [
@@ -31,6 +34,49 @@ const testimonials = [
 ];
 
 export function ReaderTestimonials() {
+  const landscapeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const landscape = landscapeRef.current;
+    if (!landscape) return;
+
+    const motionQuery = window.matchMedia(
+      "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+    );
+    let frame = 0;
+
+    const updatePosition = () => {
+      frame = 0;
+
+      if (!motionQuery.matches) {
+        landscape.style.transform = "";
+        return;
+      }
+
+      const { top, height } = landscape.getBoundingClientRect();
+      const distanceFromViewportCenter = window.innerHeight / 2 - (top + height / 2);
+      const offset = Math.max(-42, Math.min(42, distanceFromViewportCenter * 0.12));
+
+      landscape.style.transform = `translate3d(0, ${offset}px, 0) scale(1.35)`;
+    };
+
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updatePosition);
+    };
+
+    updatePosition();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    motionQuery.addEventListener("change", scheduleUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      motionQuery.removeEventListener("change", scheduleUpdate);
+      if (frame) window.cancelAnimationFrame(frame);
+    };
+  }, []);
+
   return (
     <section
       aria-labelledby="reader-testimonials-heading"
@@ -38,7 +84,8 @@ export function ReaderTestimonials() {
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 origin-[center_72%] scale-[1.75] bg-cover bg-[url('/images/csar-fotografie-minecraft-1006433_1920.jpg')] bg-[position:center_72%] bg-scroll bg-no-repeat md:origin-[center_68%] md:scale-[1.35] md:bg-fixed md:bg-[position:center_62%] motion-reduce:md:bg-scroll"
+        ref={landscapeRef}
+        className="pointer-events-none absolute inset-0 origin-[center_72%] scale-[1.75] bg-cover bg-[url('/images/csar-fotografie-minecraft-1006433_1920.jpg')] bg-[position:center_72%] bg-scroll bg-no-repeat will-change-transform md:origin-[center_68%] md:scale-[1.35] md:bg-[position:center_62%]"
       />
       <div
         aria-hidden="true"
