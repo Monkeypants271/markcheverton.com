@@ -2,9 +2,15 @@
 
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import {
+  randomCharacters,
+  shuffledCharacterBag,
+  type RandomCharacter,
+} from "@/data/randomCharacters";
 import styles from "./WitherPeek.module.css";
 
 type Appearance = {
+  character: RandomCharacter;
   side: "left" | "right";
   top: number;
   leaving: boolean;
@@ -27,11 +33,28 @@ function randomScrollDistance() {
 
 export function WitherPeek() {
   const [appearance, setAppearance] = useState<Appearance | null>(null);
+  const characterBag = useRef<RandomCharacter[]>([]);
+  const lastCharacterId = useRef<string | null>(null);
   const nextTrigger = useRef(0);
   const active = useRef(false);
   const appearances = useRef(0);
   const hideTimer = useRef<number | null>(null);
   const removeTimer = useRef<number | null>(null);
+
+  const nextCharacter = () => {
+    if (characterBag.current.length === 0) {
+      characterBag.current = shuffledCharacterBag(lastCharacterId.current);
+    }
+
+    const character = characterBag.current.shift();
+
+    if (!character) {
+      return randomCharacters[0];
+    }
+
+    lastCharacterId.current = character.id;
+    return character;
+  };
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: no-preference)");
@@ -69,6 +92,7 @@ export function WitherPeek() {
       active.current = true;
       appearances.current += 1;
       setAppearance({
+        character: nextCharacter(),
         side: Math.random() < 0.5 ? "left" : "right",
         top: 34 + Math.floor(Math.random() * 28),
         leaving: false,
@@ -112,7 +136,7 @@ export function WitherPeek() {
   return (
     <button
       type="button"
-      aria-label="Dismiss the Wither"
+      aria-label="Dismiss character"
       className={`${styles.wither} ${styles[appearance.side]} ${
         appearance.leaving ? styles.leaving : styles.entering
       }`}
@@ -120,10 +144,10 @@ export function WitherPeek() {
       onClick={dismiss}
     >
       <Image
-        src="/images/wither.png"
+        src={appearance.character.src}
         alt=""
-        width={1218}
-        height={1093}
+        width={appearance.character.width}
+        height={appearance.character.height}
         className={styles.image}
       />
     </button>
