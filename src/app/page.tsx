@@ -71,6 +71,21 @@ export default function Home() {
             </div>
           </div>
         </Container>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-20 md:block"
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#aebca3]/20 to-[#aebca3]/60" />
+          <div className="absolute inset-x-0 bottom-0 h-7 bg-[#aebca3]/70" />
+          <div className="absolute bottom-7 left-[3%] h-7 w-20 bg-[#aebca3]/65" />
+          <div className="absolute bottom-7 left-[11%] h-12 w-14 bg-[#bdc8b4]/60" />
+          <div className="absolute bottom-7 left-[19%] h-8 w-28 bg-[#aebca3]/70" />
+          <div className="absolute bottom-7 left-[34%] h-14 w-16 bg-[#bdc8b4]/65" />
+          <div className="absolute bottom-7 left-[45%] h-9 w-24 bg-[#aebca3]/70" />
+          <div className="absolute bottom-7 left-[61%] h-13 w-20 bg-[#bdc8b4]/65" />
+          <div className="absolute bottom-7 left-[74%] h-8 w-32 bg-[#aebca3]/70" />
+          <div className="absolute bottom-7 left-[91%] h-12 w-16 bg-[#bdc8b4]/60" />
+        </div>
       </section>
       )}
 
