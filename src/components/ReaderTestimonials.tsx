@@ -30,11 +30,11 @@ const testimonials = [
   },
 ];
 
-export function ReaderTestimonials() {
+export function ReaderTestimonials({ className = "" }: { className?: string }) {
   return (
     <section
       aria-labelledby="reader-testimonials-heading"
-      className="relative isolate overflow-hidden border-y border-[#94a286] bg-[#aebca3] bg-cover bg-[url('/images/csar-fotografie-minecraft-1006433_1920.jpg')] bg-[position:center_72%] bg-scroll bg-no-repeat py-14 md:bg-[position:center_62%] md:bg-fixed md:py-16"
+      className={`relative isolate overflow-hidden border-y border-[#94a286] bg-[#aebca3] bg-cover bg-[url('/images/csar-fotografie-minecraft-1006433_1920.jpg')] bg-[position:center_72%] bg-scroll bg-no-repeat py-14 md:bg-[position:center_62%] md:bg-fixed md:py-16 ${className}`}
     >
       <div
         aria-hidden="true"

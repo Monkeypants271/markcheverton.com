@@ -99,7 +99,7 @@ export default function Home() {
 
       {/* Featured series — Gameknight999 */}
       <section
-        className="relative overflow-hidden bg-[#243515] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed md:py-28"
+        className="gameknight-reader-fade relative overflow-hidden bg-[#243515] bg-cover bg-center bg-scroll py-20 text-white md:bg-fixed md:py-28"
         style={{ backgroundImage: "url('/images/home/minecraft-lobby.jpg')" }}
       >
         <div className="absolute inset-0 bg-[#273814]/68" />
@@ -192,20 +192,9 @@ export default function Home() {
             </Link>
           </div>
         </Container>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden h-32 bg-cover bg-no-repeat md:block"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(174, 188, 163, 0.7), rgba(174, 188, 163, 0.7)), url('/images/csar-fotografie-minecraft-1006433_1920.jpg')",
-            backgroundPosition: "center 62%",
-            maskImage: "linear-gradient(to bottom, transparent, black 72%)",
-            WebkitMaskImage: "linear-gradient(to bottom, transparent, black 72%)",
-          }}
-        />
       </section>
 
-      <ReaderTestimonials />
+      <ReaderTestimonials className="relative z-0 md:-mt-32 md:pt-48" />
 
       {/* Audience paths */}
       <section className="py-16">
