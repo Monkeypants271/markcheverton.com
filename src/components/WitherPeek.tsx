@@ -83,11 +83,18 @@ export function WitherPeek() {
     };
 
     const clearTimers = () => {
-      if (hideTimer.current) window.clearTimeout(hideTimer.current);
-      if (incompleteRevealTimer.current) {
-        window.clearTimeout(incompleteRevealTimer.current);
+      if (hideTimer.current !== null) {
+        window.clearTimeout(hideTimer.current);
+        hideTimer.current = null;
       }
-      if (removeTimer.current) window.clearTimeout(removeTimer.current);
+      if (incompleteRevealTimer.current !== null) {
+        window.clearTimeout(incompleteRevealTimer.current);
+        incompleteRevealTimer.current = null;
+      }
+      if (removeTimer.current !== null) {
+        window.clearTimeout(removeTimer.current);
+        removeTimer.current = null;
+      }
     };
 
     const hide = () => {
@@ -100,18 +107,21 @@ export function WitherPeek() {
         revealProgress.current = 0;
         revealComplete.current = false;
         overflowRevealDistance.current = 0;
+        removeTimer.current = null;
         setAppearance(null);
         scheduleNextAppearance();
       }, WITHER_SETTINGS.exitDuration);
     };
 
     const startHideTimer = () => {
-      if (hideTimer.current) return;
+      if (hideTimer.current !== null) return;
 
       hideTimer.current = window.setTimeout(hide, WITHER_SETTINGS.visibleDuration);
     };
 
     const startIncompleteRevealTimer = () => {
+      if (incompleteRevealTimer.current !== null) return;
+
       incompleteRevealTimer.current = window.setTimeout(
         hide,
         WITHER_SETTINGS.incompleteRevealDuration,
@@ -139,7 +149,7 @@ export function WitherPeek() {
 
       if (progress === 1) {
         revealComplete.current = true;
-        if (incompleteRevealTimer.current) {
+        if (incompleteRevealTimer.current !== null) {
           window.clearTimeout(incompleteRevealTimer.current);
           incompleteRevealTimer.current = null;
         }
@@ -240,16 +250,21 @@ export function WitherPeek() {
   const dismiss = () => {
     if (!active.current) return;
 
-    if (hideTimer.current) window.clearTimeout(hideTimer.current);
-    if (incompleteRevealTimer.current) {
+    if (hideTimer.current !== null) {
+      window.clearTimeout(hideTimer.current);
+      hideTimer.current = null;
+    }
+    if (incompleteRevealTimer.current !== null) {
       window.clearTimeout(incompleteRevealTimer.current);
+      incompleteRevealTimer.current = null;
     }
     setAppearance((current) => (current ? { ...current, leaving: true } : null));
-    window.setTimeout(() => {
+    removeTimer.current = window.setTimeout(() => {
       active.current = false;
       revealProgress.current = 0;
       revealComplete.current = false;
       overflowRevealDistance.current = 0;
+      removeTimer.current = null;
       setAppearance(null);
       nextTrigger.current = window.scrollY + randomScrollDistance();
     }, WITHER_SETTINGS.exitDuration);
