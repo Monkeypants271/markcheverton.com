@@ -10,10 +10,10 @@ type Appearance = {
   leaving: boolean;
 };
 
-const MAX_APPEARANCES = 3;
+const MAX_APPEARANCES = 5;
 
 function randomScrollDistance() {
-  return 900 + Math.floor(Math.random() * 1800);
+  return 450 + Math.floor(Math.random() * 1050);
 }
 
 export function WitherPeek() {
@@ -64,7 +64,7 @@ export function WitherPeek() {
         top: 34 + Math.floor(Math.random() * 28),
         leaving: false,
       });
-      hideTimer.current = window.setTimeout(hide, 4200);
+      hideTimer.current = window.setTimeout(hide, 5200);
     };
 
     const handleScroll = () => {

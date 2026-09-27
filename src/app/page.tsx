@@ -195,18 +195,15 @@ export default function Home() {
         </Container>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden h-24 md:block"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden h-24 bg-cover bg-no-repeat md:block"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(174, 188, 163, 0.7), rgba(174, 188, 163, 0.7)), url('/images/csar-fotografie-minecraft-1006433_1920.jpg')",
+            backgroundPosition: "center 62%",
+            clipPath:
+              "polygon(0 100%, 0 68%, 3% 68%, 3% 42%, 5.5% 42%, 5.5% 68%, 10% 68%, 10% 50%, 13% 50%, 13% 68%, 19% 68%, 19% 38%, 21.5% 38%, 21.5% 68%, 32% 68%, 32% 48%, 35% 48%, 35% 68%, 43% 68%, 43% 34%, 45.5% 34%, 45.5% 68%, 58% 68%, 58% 52%, 61% 52%, 61% 68%, 71% 68%, 71% 40%, 73.5% 40%, 73.5% 68%, 84% 68%, 84% 50%, 87% 50%, 87% 68%, 95% 68%, 95% 42%, 97.5% 42%, 97.5% 68%, 100% 68%, 100% 100%)",
+          }}
         >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#aebca3]/35 to-[#aebca3]/80" />
-          <div className="absolute inset-x-0 bottom-0 h-8 bg-[#aebca3]" />
-          <div className="absolute bottom-8 left-[3%] h-8 w-20 bg-[#aebca3]" />
-          <div className="absolute bottom-8 left-[11%] h-14 w-14 bg-[#bdc8b4]" />
-          <div className="absolute bottom-8 left-[19%] h-10 w-28 bg-[#aebca3]" />
-          <div className="absolute bottom-8 left-[34%] h-16 w-16 bg-[#bdc8b4]" />
-          <div className="absolute bottom-8 left-[45%] h-11 w-24 bg-[#aebca3]" />
-          <div className="absolute bottom-8 left-[61%] h-15 w-20 bg-[#bdc8b4]" />
-          <div className="absolute bottom-8 left-[74%] h-10 w-32 bg-[#aebca3]" />
-          <div className="absolute bottom-8 left-[91%] h-14 w-16 bg-[#bdc8b4]" />
         </div>
       </section>
 

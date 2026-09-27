@@ -21,11 +21,11 @@
 }
 
 .entering.left {
-  animation: peek-in-left 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: peek-in-left 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .entering.right {
-  animation: peek-in-right 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: peek-in-right 1400ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .leaving.left {
@@ -41,7 +41,7 @@
   width: 100%;
   height: auto;
   filter: drop-shadow(0 0.75rem 0.8rem rgb(8 20 10 / 0.35));
-  animation: bob 1.7s ease-in-out 700ms infinite;
+  animation: bob 1.7s ease-in-out 1400ms infinite;
 }
 
 @keyframes peek-in-left {
