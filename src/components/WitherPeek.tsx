@@ -22,7 +22,8 @@ const WITHER_SETTINGS = {
   minScrollDistance: 360,
   scrollDistanceRange: 1040,
   revealScrollDistance: 420,
-  visibleDuration: 2600,
+  visibleDuration: 1040,
+  incompleteRevealDuration: 1600,
   exitDuration: 450,
 };
 
@@ -52,9 +53,12 @@ export function WitherPeek() {
   const active = useRef(false);
   const appearances = useRef(0);
   const hideTimer = useRef<number | null>(null);
+  const incompleteRevealTimer = useRef<number | null>(null);
   const removeTimer = useRef<number | null>(null);
   const revealProgress = useRef(0);
   const revealComplete = useRef(false);
+  const overflowRevealDistance = useRef(0);
+  const touchStartY = useRef<number | null>(null);
 
   const nextCharacter = () => {
     if (characterBag.current.length === 0) {
@@ -80,6 +84,9 @@ export function WitherPeek() {
 
     const clearTimers = () => {
       if (hideTimer.current) window.clearTimeout(hideTimer.current);
+      if (incompleteRevealTimer.current) {
+        window.clearTimeout(incompleteRevealTimer.current);
+      }
       if (removeTimer.current) window.clearTimeout(removeTimer.current);
     };
 
@@ -92,6 +99,7 @@ export function WitherPeek() {
         active.current = false;
         revealProgress.current = 0;
         revealComplete.current = false;
+        overflowRevealDistance.current = 0;
         setAppearance(null);
         scheduleNextAppearance();
       }, WITHER_SETTINGS.exitDuration);
@@ -103,6 +111,13 @@ export function WitherPeek() {
       hideTimer.current = window.setTimeout(hide, WITHER_SETTINGS.visibleDuration);
     };
 
+    const startIncompleteRevealTimer = () => {
+      incompleteRevealTimer.current = window.setTimeout(
+        hide,
+        WITHER_SETTINGS.incompleteRevealDuration,
+      );
+    };
+
     const updateReveal = () => {
       if (!active.current || revealComplete.current) return;
 
@@ -110,7 +125,8 @@ export function WitherPeek() {
         1,
         Math.max(
           0,
-          (window.scrollY - nextTrigger.current) / WITHER_SETTINGS.revealScrollDistance,
+          (window.scrollY - nextTrigger.current + overflowRevealDistance.current) /
+            WITHER_SETTINGS.revealScrollDistance,
         ),
       );
 
@@ -123,8 +139,24 @@ export function WitherPeek() {
 
       if (progress === 1) {
         revealComplete.current = true;
+        if (incompleteRevealTimer.current) {
+          window.clearTimeout(incompleteRevealTimer.current);
+          incompleteRevealTimer.current = null;
+        }
         startHideTimer();
       }
+    };
+
+    const isAtPageBottom = () =>
+      window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1;
+
+    const continueRevealAtPageBottom = (distance: number) => {
+      if (!active.current || revealComplete.current || distance <= 0 || !isAtPageBottom()) {
+        return;
+      }
+
+      overflowRevealDistance.current += distance;
+      updateReveal();
     };
 
     const show = () => {
@@ -147,6 +179,7 @@ export function WitherPeek() {
       );
       revealProgress.current = initialRevealProgress;
       revealComplete.current = initialRevealProgress === 1;
+      overflowRevealDistance.current = 0;
       setAppearance({
         character: nextCharacter(),
         side: Math.random() < 0.5 ? "left" : "right",
@@ -155,12 +188,32 @@ export function WitherPeek() {
         leaving: false,
       });
 
-      if (revealComplete.current) startHideTimer();
+      if (revealComplete.current) {
+        startHideTimer();
+      } else {
+        startIncompleteRevealTimer();
+      }
     };
 
     const handleScroll = () => {
       if (window.scrollY >= nextTrigger.current) show();
       updateReveal();
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      continueRevealAtPageBottom(event.deltaY);
+    };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      touchStartY.current = event.touches[0]?.clientY ?? null;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const currentY = event.touches[0]?.clientY;
+      if (currentY === undefined || touchStartY.current === null) return;
+
+      continueRevealAtPageBottom(touchStartY.current - currentY);
+      touchStartY.current = currentY;
     };
 
     const handleMotionPreferenceChange = () => {
@@ -169,11 +222,17 @@ export function WitherPeek() {
 
     scheduleNextAppearance();
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("wheel", handleWheel, { passive: true });
+    window.addEventListener("touchstart", handleTouchStart, { passive: true });
+    window.addEventListener("touchmove", handleTouchMove, { passive: true });
     motionQuery.addEventListener("change", handleMotionPreferenceChange);
 
     return () => {
       clearTimers();
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchmove", handleTouchMove);
       motionQuery.removeEventListener("change", handleMotionPreferenceChange);
     };
   }, []);
@@ -182,11 +241,15 @@ export function WitherPeek() {
     if (!active.current) return;
 
     if (hideTimer.current) window.clearTimeout(hideTimer.current);
+    if (incompleteRevealTimer.current) {
+      window.clearTimeout(incompleteRevealTimer.current);
+    }
     setAppearance((current) => (current ? { ...current, leaving: true } : null));
     window.setTimeout(() => {
       active.current = false;
       revealProgress.current = 0;
       revealComplete.current = false;
+      overflowRevealDistance.current = 0;
       setAppearance(null);
       nextTrigger.current = window.scrollY + randomScrollDistance();
     }, WITHER_SETTINGS.exitDuration);
