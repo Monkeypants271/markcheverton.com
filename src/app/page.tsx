@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { ReaderTestimonials } from "@/components/ReaderTestimonials";
+import { WitherPeek } from "@/components/WitherPeek";
 import { findBook } from "@/data/books";
 
 export default function Home() {
@@ -71,21 +72,6 @@ export default function Home() {
             </div>
           </div>
         </Container>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 hidden h-20 md:block"
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#aebca3]/20 to-[#aebca3]/60" />
-          <div className="absolute inset-x-0 bottom-0 h-7 bg-[#aebca3]/70" />
-          <div className="absolute bottom-7 left-[3%] h-7 w-20 bg-[#aebca3]/65" />
-          <div className="absolute bottom-7 left-[11%] h-12 w-14 bg-[#bdc8b4]/60" />
-          <div className="absolute bottom-7 left-[19%] h-8 w-28 bg-[#aebca3]/70" />
-          <div className="absolute bottom-7 left-[34%] h-14 w-16 bg-[#bdc8b4]/65" />
-          <div className="absolute bottom-7 left-[45%] h-9 w-24 bg-[#aebca3]/70" />
-          <div className="absolute bottom-7 left-[61%] h-13 w-20 bg-[#bdc8b4]/65" />
-          <div className="absolute bottom-7 left-[74%] h-8 w-32 bg-[#aebca3]/70" />
-          <div className="absolute bottom-7 left-[91%] h-12 w-16 bg-[#bdc8b4]/60" />
-        </div>
       </section>
       )}
 
@@ -207,9 +193,25 @@ export default function Home() {
             </Link>
           </div>
         </Container>
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden h-24 md:block"
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#aebca3]/35 to-[#aebca3]/80" />
+          <div className="absolute inset-x-0 bottom-0 h-8 bg-[#aebca3]" />
+          <div className="absolute bottom-8 left-[3%] h-8 w-20 bg-[#aebca3]" />
+          <div className="absolute bottom-8 left-[11%] h-14 w-14 bg-[#bdc8b4]" />
+          <div className="absolute bottom-8 left-[19%] h-10 w-28 bg-[#aebca3]" />
+          <div className="absolute bottom-8 left-[34%] h-16 w-16 bg-[#bdc8b4]" />
+          <div className="absolute bottom-8 left-[45%] h-11 w-24 bg-[#aebca3]" />
+          <div className="absolute bottom-8 left-[61%] h-15 w-20 bg-[#bdc8b4]" />
+          <div className="absolute bottom-8 left-[74%] h-10 w-32 bg-[#aebca3]" />
+          <div className="absolute bottom-8 left-[91%] h-14 w-16 bg-[#bdc8b4]" />
+        </div>
       </section>
 
       <ReaderTestimonials />
+      <WitherPeek />
 
       {/* Audience paths */}
       <section className="py-16">

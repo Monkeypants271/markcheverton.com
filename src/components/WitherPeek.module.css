@@ -1,0 +1,87 @@
+.wither {
+  position: fixed;
+  z-index: 50;
+  width: clamp(10rem, 18vw, 18rem);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  touch-action: manipulation;
+  will-change: transform;
+}
+
+.left {
+  left: 0;
+  transform-origin: left center;
+}
+
+.right {
+  right: 0;
+  transform-origin: right center;
+}
+
+.entering.left {
+  animation: peek-in-left 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.entering.right {
+  animation: peek-in-right 700ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.leaving.left {
+  animation: peek-out-left 450ms ease-in forwards;
+}
+
+.leaving.right {
+  animation: peek-out-right 450ms ease-in forwards;
+}
+
+.image {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0.75rem 0.8rem rgb(8 20 10 / 0.35));
+  animation: bob 1.7s ease-in-out 700ms infinite;
+}
+
+@keyframes peek-in-left {
+  from {
+    transform: translateX(-78%) rotate(-7deg);
+  }
+  to {
+    transform: translateX(-18%) rotate(-3deg);
+  }
+}
+
+@keyframes peek-in-right {
+  from {
+    transform: translateX(78%) rotate(7deg);
+  }
+  to {
+    transform: translateX(18%) rotate(3deg);
+  }
+}
+
+@keyframes peek-out-left {
+  to {
+    transform: translateX(-78%) rotate(-7deg);
+  }
+}
+
+@keyframes peek-out-right {
+  to {
+    transform: translateX(78%) rotate(7deg);
+  }
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(-0.8rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .wither {
+    width: clamp(8rem, 42vw, 11rem);
+  }
+}
