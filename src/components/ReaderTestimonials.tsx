@@ -38,7 +38,7 @@ export function ReaderTestimonials() {
     >
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 origin-[center_72%] scale-[1.75] bg-cover bg-[url('/images/csar-fotografie-minecraft-1006433_1920.jpg')] bg-[position:center_72%] bg-no-repeat md:origin-[center_68%] md:scale-[1.35] md:bg-[position:center_62%]"
+        className="pointer-events-none absolute inset-0 origin-[center_72%] scale-[1.75] bg-cover bg-[url('/images/csar-fotografie-minecraft-1006433_1920.jpg')] bg-[position:center_72%] bg-scroll bg-no-repeat md:origin-[center_68%] md:scale-[1.35] md:bg-fixed md:bg-[position:center_62%] motion-reduce:md:bg-scroll"
       />
       <div
         aria-hidden="true"
@@ -49,7 +49,7 @@ export function ReaderTestimonials() {
         <div className="mx-auto max-w-2xl text-center">
           <h2
             id="reader-testimonials-heading"
-            className="font-display text-3xl font-semibold text-[var(--color-primary)] md:text-4xl"
+            className="font-display text-3xl font-semibold text-white drop-shadow-[0_2px_3px_rgba(30,58,95,0.45)] md:text-4xl"
           >
             What Readers Remember
           </h2>
