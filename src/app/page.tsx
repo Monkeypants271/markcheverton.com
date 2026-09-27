@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/Container";
 import { ReaderTestimonials } from "@/components/ReaderTestimonials";
-import { WitherPeek } from "@/components/WitherPeek";
 import { findBook } from "@/data/books";
 
 export default function Home() {
@@ -195,20 +194,18 @@ export default function Home() {
         </Container>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden h-24 bg-cover bg-no-repeat md:block"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-20 hidden h-32 bg-cover bg-no-repeat md:block"
           style={{
             backgroundImage:
               "linear-gradient(rgba(174, 188, 163, 0.7), rgba(174, 188, 163, 0.7)), url('/images/csar-fotografie-minecraft-1006433_1920.jpg')",
             backgroundPosition: "center 62%",
-            clipPath:
-              "polygon(0 100%, 0 68%, 3% 68%, 3% 42%, 5.5% 42%, 5.5% 68%, 10% 68%, 10% 50%, 13% 50%, 13% 68%, 19% 68%, 19% 38%, 21.5% 38%, 21.5% 68%, 32% 68%, 32% 48%, 35% 48%, 35% 68%, 43% 68%, 43% 34%, 45.5% 34%, 45.5% 68%, 58% 68%, 58% 52%, 61% 52%, 61% 68%, 71% 68%, 71% 40%, 73.5% 40%, 73.5% 68%, 84% 68%, 84% 50%, 87% 50%, 87% 68%, 95% 68%, 95% 42%, 97.5% 42%, 97.5% 68%, 100% 68%, 100% 100%)",
+            maskImage: "linear-gradient(to bottom, transparent, black 72%)",
+            WebkitMaskImage: "linear-gradient(to bottom, transparent, black 72%)",
           }}
-        >
-        </div>
+        />
       </section>
 
       <ReaderTestimonials />
-      <WitherPeek />
 
       {/* Audience paths */}
       <section className="py-16">

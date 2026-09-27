@@ -10,10 +10,19 @@ type Appearance = {
   leaving: boolean;
 };
 
-const MAX_APPEARANCES = 5;
+const WITHER_SETTINGS = {
+  maxAppearances: 6,
+  minScrollDistance: 180,
+  scrollDistanceRange: 520,
+  visibleDuration: 2600,
+  exitDuration: 450,
+};
 
 function randomScrollDistance() {
-  return 450 + Math.floor(Math.random() * 1050);
+  return (
+    WITHER_SETTINGS.minScrollDistance +
+    Math.floor(Math.random() * WITHER_SETTINGS.scrollDistanceRange)
+  );
 }
 
 export function WitherPeek() {
@@ -45,14 +54,14 @@ export function WitherPeek() {
         active.current = false;
         setAppearance(null);
         scheduleNextAppearance();
-      }, 450);
+      }, WITHER_SETTINGS.exitDuration);
     };
 
     const show = () => {
       if (
         !motionQuery.matches ||
         active.current ||
-        appearances.current >= MAX_APPEARANCES
+        appearances.current >= WITHER_SETTINGS.maxAppearances
       ) {
         return;
       }
@@ -64,7 +73,7 @@ export function WitherPeek() {
         top: 34 + Math.floor(Math.random() * 28),
         leaving: false,
       });
-      hideTimer.current = window.setTimeout(hide, 5200);
+      hideTimer.current = window.setTimeout(hide, WITHER_SETTINGS.visibleDuration);
     };
 
     const handleScroll = () => {
@@ -95,7 +104,7 @@ export function WitherPeek() {
       active.current = false;
       setAppearance(null);
       nextTrigger.current = window.scrollY + randomScrollDistance();
-    }, 450);
+    }, WITHER_SETTINGS.exitDuration);
   };
 
   if (!appearance) return null;
