@@ -34,18 +34,18 @@ export function ReaderTestimonials() {
   return (
     <section
       aria-labelledby="reader-testimonials-heading"
-      className="border-y border-[#bdc8b4] bg-[#d8dfd0] py-14 md:py-16"
-      style={{
-        backgroundImage:
-          "linear-gradient(rgba(99, 118, 84, 0.12) 0 0), linear-gradient(rgba(99, 118, 84, 0.09) 0 0), linear-gradient(rgba(245, 248, 240, 0.34) 0 0), linear-gradient(rgba(125, 142, 108, 0.13) 0 0), linear-gradient(rgba(245, 248, 240, 0.27) 0 0), linear-gradient(rgba(99, 118, 84, 0.1) 0 0), linear-gradient(rgba(125, 142, 108, 0.12) 0 0), linear-gradient(rgba(245, 248, 240, 0.3) 0 0), linear-gradient(rgba(99, 118, 84, 0.11) 0 0), linear-gradient(rgba(245, 248, 240, 0.25) 0 0), linear-gradient(rgba(125, 142, 108, 0.12) 0 0), linear-gradient(rgba(99, 118, 84, 0.08) 0 0)",
-        backgroundPosition:
-          "4% 12%, 10% 26%, 21% 8%, 27% 18%, 39% 4%, 45% 28%, 57% 14%, 64% 30%, 73% 6%, 80% 21%, 88% 11%, 94% 34%",
-        backgroundSize:
-          "72px 48px, 38px 70px, 56px 42px, 80px 54px, 44px 76px, 62px 36px, 74px 58px, 40px 64px, 58px 46px, 76px 40px, 48px 72px, 68px 52px",
-        backgroundRepeat: "no-repeat",
-      }}
+      className="relative isolate overflow-hidden border-y border-[#94a286] bg-[#aebca3] py-14 md:py-16"
     >
-      <Container>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 origin-[center_72%] scale-[1.75] bg-cover bg-[url('/images/csar-fotografie-minecraft-1006433_1920.jpg')] bg-[position:center_72%] bg-no-repeat md:origin-[center_68%] md:scale-[1.35] md:bg-[position:center_62%]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-[#aebca3]/70"
+      />
+
+      <Container className="relative z-10">
         <div className="mx-auto max-w-2xl text-center">
           <h2
             id="reader-testimonials-heading"
