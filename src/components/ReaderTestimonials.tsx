@@ -34,11 +34,15 @@ export function ReaderTestimonials() {
   return (
     <section
       aria-labelledby="reader-testimonials-heading"
-      className="border-y border-[#c4d5d2] bg-[#dbe8e6] py-14 md:py-16"
+      className="border-y border-[#bdc8b4] bg-[#d8dfd0] py-14 md:py-16"
       style={{
         backgroundImage:
-          "linear-gradient(rgba(219, 232, 230, 0.86), rgba(219, 232, 230, 0.86)), linear-gradient(rgba(30, 58, 95, 0.045) 1px, transparent 1px), linear-gradient(90deg, rgba(30, 58, 95, 0.045) 1px, transparent 1px)",
-        backgroundSize: "auto, 28px 28px, 28px 28px",
+          "linear-gradient(rgba(99, 118, 84, 0.12) 0 0), linear-gradient(rgba(99, 118, 84, 0.09) 0 0), linear-gradient(rgba(245, 248, 240, 0.34) 0 0), linear-gradient(rgba(125, 142, 108, 0.13) 0 0), linear-gradient(rgba(245, 248, 240, 0.27) 0 0), linear-gradient(rgba(99, 118, 84, 0.1) 0 0), linear-gradient(rgba(125, 142, 108, 0.12) 0 0), linear-gradient(rgba(245, 248, 240, 0.3) 0 0), linear-gradient(rgba(99, 118, 84, 0.11) 0 0), linear-gradient(rgba(245, 248, 240, 0.25) 0 0), linear-gradient(rgba(125, 142, 108, 0.12) 0 0), linear-gradient(rgba(99, 118, 84, 0.08) 0 0)",
+        backgroundPosition:
+          "4% 12%, 10% 26%, 21% 8%, 27% 18%, 39% 4%, 45% 28%, 57% 14%, 64% 30%, 73% 6%, 80% 21%, 88% 11%, 94% 34%",
+        backgroundSize:
+          "72px 48px, 38px 70px, 56px 42px, 80px 54px, 44px 76px, 62px 36px, 74px 58px, 40px 64px, 58px 46px, 76px 40px, 48px 72px, 68px 52px",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <Container>
