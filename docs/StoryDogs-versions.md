@@ -7,7 +7,7 @@
 - `/story-dogs/presenter`: server-protected presenter builder. Draft key: `markcheverton:storydogs:v1:presenter`.
 - `/story-dogs/presenter/login`: login screen; directs a valid login to the presenter builder.
 
-The public navigation's Resources button opens a native modal dialog, with keyboard focus containment, Escape/Close, focus restoration to the trigger, and scroll-position restoration. It offers a real teacher-guide PDF preview in a new tab, an explicit Download link, teaching guidance, and a discreet Presenter Login link. No missing worksheets or handouts are advertised.
+The public navigation's Resources button opens a native modal dialog, with keyboard focus containment, Escape/Close, focus restoration to the trigger, and scroll-position restoration. It offers grouped, verified teaching PDFs with previews in new tabs, explicit downloads, a download-all ZIP, and a discreet Presenter Login link. No missing worksheets or handouts are advertised.
 
 Legacy teacher-draft migration: if only the old teacher draft has answers, it is preserved and loaded into the public working draft. If both have answers, autosaving waits for a choice. Before replacement or old-key removal, both originals are stored under `markcheverton:storydogs:v1:preserved`; they remain downloadable from Resources. A backup failure prevents replacement/removal. Keeping the current public story or dismissing the choice leaves the old teacher key intact for a later choice. Reset clears the working draft, not these explicitly preserved originals; browser site-data clearing removes archives on shared devices.
 
@@ -69,19 +69,15 @@ The UI displays Adding punctuation, Undo, or a raw-text-preserving failure with 
 
 StoryDogs does not log transcripts or store audio. Browser speech recognition may separately send audio to the browser provider. OpenAI receives the dictated text, with [OpenAI's applicable data controls](https://developers.openai.com/api/docs/guides/your-data): API content is not used for training by default; abuse-monitoring retention (normally up to thirty days) may apply. `store: false` disables response application-state storage; it is not a zero-retention guarantee.
 
-## Verified teaching files and missing materials
+## Verified teaching files
 
-Inspected the repository and `/Users/markcheverton/Desktop/StoryDogs`. The Desktop folder contains the project specification (Markdown/Word) and design/reference PNGs, not classroom downloads. Those are not presented as student worksheets.
+The public Resources panel contains all 13 teaching documents exported as PDFs from the owner's Google Drive StoryDogs folder on October 4, 2026, plus the existing seven-page Printable Teacher Guide (14 PDFs total). All 24 pages of the new exports were rendered and visually inspected. Drive originals remain unchanged.
 
-Verified available download: `public/downloads/storydogs-teacher-guide.pdf`, a seven-page guide with one page per stage, scripts, discussion prompts, and a connected Pip example. Its source notes remain editable in `src/data/storyDogsHelp.ts` and `src/data/storyDogsTeacher.ts`.
+Editable titles, descriptions, and groups: `src/data/storyDogsResources.ts`. New PDFs and the all-resources ZIP: `public/downloads/storydogs/`. The existing guide retains `/downloads/storydogs-teacher-guide.pdf`. The ZIP contains all 14 PDFs. Previews open separately; explicit download links require no Google account. Some source documents retain earlier step labels; the panel explains their correspondence to current headings.
 
-Not found as separate approved downloadable files:
+Included: Start Here (20-minute lesson), Lead a Group, Seven-Step Cheat Sheet, Planning Sheet, Sentence Starters, Prompt Cards, Finished Example, K–2 Examples, Grades 3–6 Examples, From Outline to Story, Share and Celebrate, Pixar's Rule #4, and Learning Standards. Standards connections are suggested teaching guidance, not a guarantee of mastery or official endorsement.
 
-- Seven-step planning worksheet.
-- Classroom activity instructions handout (introductory instructions are retained in the guide).
-- Example plot outline (the guide has Pip examples, not a standalone outline).
-
-No broken or placeholder downloads were added.
+PDFs are snapshots: later Drive edits require re-exporting the corresponding files and rebuilding the ZIP. No credentials or authenticated Drive download URLs are included in the website.
 
 ## Verification and manual checks
 

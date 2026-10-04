@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useRef } from 'react';
 import { outlineText } from '@/data/storyDogs';
+import { storyDogsResourceGroups, storyDogsResourcesBundle } from '@/data/storyDogsResources';
 import type { PreservedDraft } from '@/lib/storydogs-draft-migration';
 export function StoryDogsResources({ archived = [] }: { archived?: PreservedDraft[] }) {
   const dialog = useRef<HTMLDialogElement>(null); const trigger = useRef<HTMLButtonElement>(null);
@@ -27,7 +28,19 @@ export function StoryDogsResources({ archived = [] }: { archived?: PreservedDraf
     <dialog id="sd-resources-panel" ref={dialog} className="sd-resources-dialog sd-no-print" aria-labelledby="sd-resources-title" onClose={restore}>
       <div className="sd-resources-dialog-header"><h2 id="sd-resources-title">StoryDogs Resources</h2><button type="button" className="sd-button" onClick={() => dialog.current?.close()}>Close Resources</button></div>
       <p>Lead a group story by projecting the questions and recording students’ choices, or let students write individual stories at their own pace. Typing works without microphone equipment.</p>
-      <article><h3>Printable Teacher Guide</h3><p>Seven pages with teaching scripts, hints, discussion prompts, and Pip’s connected example—one page for each story step.</p><div className="sd-resource-actions"><a href="/downloads/storydogs-teacher-guide.pdf" target="_blank" rel="noopener noreferrer">Preview PDF <span className="sr-only">(opens in a new tab)</span></a><a href="/downloads/storydogs-teacher-guide.pdf" download="storydogs-teacher-guide.pdf" target="_blank" rel="noopener noreferrer">Download Teacher Guide (PDF)<span className="sr-only"> (may open in a new tab)</span></a></div></article>
+      <a className="sd-button sd-gold sd-resource-bundle" href={storyDogsResourcesBundle} download="storydogs-all-resources.zip">Download All Resources (ZIP · 14 PDFs)</a>
+      <p className="sd-resource-note">Some guides also use the earlier step names: WHO = HERO, LIFE/WANT = WISH, WORSE = YIKES, CLIMAX = SHOWDOWN, and CHANGE = AFTER.</p>
+      {storyDogsResourceGroups.map((group, index) => <section key={group.title} aria-labelledby={`sd-resource-group-${index}`}>
+        <h3 id={`sd-resource-group-${index}`}>{group.title}</h3>
+        {group.resources.map(resource => <article className="sd-resource-item" key={resource.href}>
+          <h4>{resource.title}</h4>
+          <p>{resource.description} <span className="sd-resource-pages">{resource.pages} {resource.pages === 1 ? 'page' : 'pages'}.</span></p>
+          <div className="sd-resource-actions">
+            <a href={resource.href} target="_blank" rel="noopener noreferrer">Preview PDF<span className="sr-only">: {resource.title} (opens in a new tab)</span></a>
+            <a href={resource.href} download={resource.href.split('/').pop()} target="_blank" rel="noopener noreferrer">Download PDF<span className="sr-only">: {resource.title} (may open in a new tab)</span></a>
+          </div>
+        </article>)}
+      </section>)}
       {archived.length > 0 && <section aria-labelledby="sd-preserved-title"><h3 id="sd-preserved-title">Your preserved stories</h3><p>These are copies of your original public and teacher drafts from before the views were combined. Download them at any time.</p>{archived.map((item, index) => <button className="sd-button" type="button" key={index} onClick={() => downloadDraft(item)}>Download preserved {item.source === 'teacher' ? 'teacher' : 'public'} story{archived.filter(other => other.source === item.source).length > 1 ? ` (${index + 1})` : ''}</button>)}</section>}
       <p className="sd-presenter-link"><a href="/story-dogs/presenter/login">Presenter Login</a></p>
     </dialog>

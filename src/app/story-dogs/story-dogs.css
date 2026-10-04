@@ -219,3 +219,14 @@ body:has(.storydogs-page) [data-site-masthead] { display:none; }
   .sd-stage-header { grid-template-columns:minmax(0,1fr); gap:10px; }
   .sd-story-spine { margin:0; text-align:left; white-space:normal; }
 }
+
+/* Keep the close control available while browsing the teaching library. */
+.sd-resources-dialog-header {position:sticky;top:-1px;background:#fff6df;z-index:1;padding:8px 0 16px;}
+.sd-resources-dialog-header .sd-button {flex-shrink:0;}
+.sd-resource-item {padding:18px 0;border-bottom:1px solid #78526c33;}
+.sd-resources-dialog h4 {font-size:19px;line-height:1.4;font-weight:700;}
+.sd-resource-item p {margin:8px 0;}
+.sd-resource-item .sd-resource-actions {margin-top:8px;}
+.sd-resource-pages {white-space:nowrap;}
+.sd-resources-dialog .sd-resource-note {font-size:15px;}
+.sd-resource-bundle {display:inline-flex;text-decoration:none;min-height:48px;align-items:center;max-width:100%;}
