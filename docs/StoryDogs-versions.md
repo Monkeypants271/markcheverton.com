@@ -26,21 +26,26 @@ Enter the desired password twice in the interactive terminal (input is hidden). 
 
 The single account is `Mark@chevertonauthorvisits.com`, matched case insensitively. Changing the hash invalidates earlier sessions. No existing admin authentication was changed: its deterministic nonexpiring cookie was unsuitable for these requirements. This feature uses [iron-session](https://github.com/vvo/iron-session) for encrypted cookies, plus random server-recorded session IDs for revocation.
 
-Sessions last four hours, with explicit server expiry checks. Cookies are HttpOnly, SameSite=Strict, and Secure in production. Login attempts are capped at eight per fifteen-minute window globally for this one account; failures use a generic message. This global cap prevents bypass through changing email/IP, but someone can temporarily exhaust the login limit. Login, logout, and punctuation POSTs validate Origin against Host. Presenter rendering and every AI request check the session on the server; AI also rechecks expiry/revocation after the provider responds. Logout removes the server session record, so replaying its old cookie fails.
+Sessions last four hours, with explicit server expiry checks. Cookies are HttpOnly, SameSite=Strict, and Secure in production. Login attempts are capped at eight per fifteen-minute window globally for this one account, plus four per Vercel edge-provided IP; failures use a generic message. This global cap prevents bypass through changing email/IP, but someone can temporarily exhaust the login limit. Login, logout, and punctuation POSTs validate Origin against Host. Presenter rendering and every AI request check the session on the server; AI also rechecks expiry/revocation after the provider responds. Logout removes the server session record, so replaying its old cookie fails.
 
 ## Hosting and state
 
-The repository uses Next.js 16.2.6 App Router and Node runtime; no Vercel project binding or dedicated hosting configuration was found. Supabase credentials exist, but no suitable presenter authentication schema or AI provider configuration was found.
+The production site is the Vercel project `markcheverton-com` in `mark-chevertons-projects`. Production deliberately ignores the Mac's development credential JSON. Missing credentials or shared-storage configuration render “Private StoryDogs is temporarily unavailable”; development setup guidance is never rendered in production.
 
-For local review, session and rate-limit metadata live under ignored `.local/storydogs-state`. No story text or audio is saved there. Atomic writes and directory locks serialize rate counters across local processes. A server crash while holding a lock fails closed; an administrator can remove the corresponding stale lock after stopping the server. Expired session records contain metadata only and may be pruned administratively.
+Local review retains ignored `.local/storydogs-state` and atomic filesystem locks. Production always uses the server-only Upstash Redis REST adapter; `STORYDOGS_STATE_DIR` cannot enable filesystem storage in production. It stores only random session IDs, expiry metadata, and hashed rate-counter keys, never story text or audio. SET with PX expires sessions automatically; DEL revokes logout; a Lua script atomically checks and increments rate counters with window expiry across instances. Requests time out after five seconds and storage failures fail closed. Credentials and fetch responses are never logged.
 
-Before any deployment, configure private server environment variables:
+Configure these **private server environment variables** in Vercel Production, then redeploy:
 
-- `STORYDOGS_PASSWORD_HASH`: the generated hash, never plaintext.
-- `STORYDOGS_SESSION_SECRET`: the generated random encryption secret (at least 32 characters).
-- `STORYDOGS_STATE_DIR`: an absolute path on a **durable, shared filesystem** for session revocation and rate limits.
+- `STORYDOGS_PASSWORD_HASH`: the existing generated scrypt hash, not plaintext.
+- `STORYDOGS_SESSION_SECRET`: the existing generated random encryption secret (at least 32 characters).
+- `STORYDOGS_PRESENTER_EMAIL`: `Mark@chevertonauthorvisits.com`, matched case insensitively.
+- `STORYDOGS_REDIS_REST_URL` and `STORYDOGS_REDIS_REST_TOKEN`: an Upstash Redis database's REST credentials. A read-only token is insufficient.
+- `STORYDOGS_REDIS_NAMESPACE`: `production`; use a separate namespace and preferably database for preview.
+- `STORYDOGS_OPENAI_API_KEY` and `STORYDOGS_OPENAI_MODEL`: private provider configuration (current model `gpt-4.1-mini`).
 
-Production fails closed without a configured state directory. This local filesystem store is **not appropriate for stateless Vercel/serverless instances or hosts without durable shared storage**. For those hosts, replace the store adapter with a shared transactional database/Redis store before publishing. Do not point it at ephemeral `/tmp`; no deployment was attempted. Production uses server environment configuration only, never the development JSON file.
+No secret may use a NEXT_PUBLIC prefix or enter Git. Do not deploy `.local/`, pull hosting environment values over `.env.local`, or use ephemeral `/tmp` for production sessions. Environment changes require a new deployment. Rotating the hash invalidates old sessions; rotating the session secret invalidates cookies. A namespace change also invalidates session records.
+
+The adapter regression test uses simulated REST responses and concurrent calls; it is not a live Redis integration certification. Production login, session expiry/revocation, concurrent throttling and outages must be checked after the database is connected. The global login cap can still cause temporary account lockout under distributed abuse; the Vercel-specific four-attempt IP cap reduces single-source abuse, but add Vercel Firewall protection and monitor safe request metadata. Redis atomicity resolves cross-instance limits, not all denial-of-service attacks.
 
 ## Presenter-only AI punctuation
 
@@ -88,7 +93,7 @@ Real microphone input has **not** been tested. A live authenticated OpenAI test 
 
 ## Two-version consolidation verification
 
-Nineteen pure tests pass, including migration of either draft, teacher-only migration, and quota-failure preservation. Actual React DOM checks pass for the draft-choice dialog, archived downloads, Resources open/close without answer or scroll changes, Close/trigger focus, retained edits and refresh recovery. Existing outline/copy/fallback/print/download/reset flows and simulated presenter punctuation Undo/Retry/stale-response protection pass. The presenter session store and serverless deployment limitations above remain unchanged. These DOM checks simulate geometry/native browser behavior; they do not certify a mobile visual review or live microphone use.
+Nineteen pure tests pass, including migration of either draft, teacher-only migration, and quota-failure preservation. Actual React DOM checks pass for the draft-choice dialog, archived downloads, Resources open/close without answer or scroll changes, Close/trigger focus, retained edits and refresh recovery. Existing outline/copy/fallback/print/download/reset flows and simulated presenter punctuation Undo/Retry/stale-response protection pass. The production presenter store now uses shared Redis as described above; live storage verification requires private hosting configuration. These DOM checks simulate geometry/native browser behavior; they do not certify a mobile visual review or live microphone use.
 
 ## Latest discoverability and publishing review
 

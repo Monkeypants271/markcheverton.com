@@ -4,8 +4,8 @@ import { getIronSession } from 'iron-session';
 import { randomBytes, scrypt as derive, timingSafeEqual, createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { get, put, remove } from './store';
-export const presenterEmail = 'mark@chevertonauthorvisits.com';
+import { get, put, remove, storageConfigured } from './store';
+export const presenterEmail = (process.env.STORYDOGS_PRESENTER_EMAIL || 'mark@chevertonauthorvisits.com').trim().toLowerCase();
 export const sessionSeconds = 4 * 60 * 60;
 type Config = { passwordHash: string; cookieSecret: string };
 type Cookie = { sid?: string; expires?: number; fingerprint?: string };
@@ -31,11 +31,14 @@ export async function presenterSession() {
   return { session, config };
 }
 export async function authenticated() {
+  if (!storageConfigured()) return null;
   const context = await presenterSession(); if (!context) return null;
   const { session, config } = context;
   if (!session.sid || !session.expires || session.expires <= Date.now() || session.fingerprint !== createHash('sha256').update(config.passwordHash).digest('hex')) return null;
-  const record = await get<{ expires: number }>('session:' + session.sid);
-  return record && record.expires > Date.now() ? context : null;
+  try {
+    const record = await get<{ expires: number }>('session:' + session.sid);
+    return record && record.expires > Date.now() ? context : null;
+  } catch { return null; }
 }
 export async function loginSession(context: NonNullable<Awaited<ReturnType<typeof presenterSession>>>) {
   if (context.session.sid) await remove('session:' + context.session.sid);
