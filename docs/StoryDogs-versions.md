@@ -1,11 +1,16 @@
-# StoryDogs versions: local implementation notes
+# StoryDogs public and presenter versions: local implementation notes
 
 ## Routes and shared architecture
 
-- `/story-dogs`: public kids builder; no login or AI requests. It retains `markcheverton:storydogs:v1`, preserving every existing public draft.
-- `/story-dogs/teachers`: public builder plus verified teacher-guide download and teaching introduction. Draft key: `markcheverton:storydogs:v1:teachers`.
+- `/story-dogs`: shared public builder for kids, teachers, and librarians; no login or AI requests. It retains `markcheverton:storydogs:v1`.
+- `/story-dogs/teachers`: redirects to `/story-dogs`; no separate teacher builder remains.
 - `/story-dogs/presenter`: server-protected presenter builder. Draft key: `markcheverton:storydogs:v1:presenter`.
-- `/story-dogs/presenter/login`: login screen; directs a valid login to the presenter builder. No registration/student accounts.
+- `/story-dogs/presenter/login`: login screen; directs a valid login to the presenter builder.
+
+The public navigation's Resources button opens a native modal dialog, with keyboard focus containment, Escape/Close, focus restoration to the trigger, and scroll-position restoration. It offers a real teacher-guide PDF preview in a new tab, an explicit Download link, teaching guidance, and a discreet Presenter Login link. No missing worksheets or handouts are advertised.
+
+Legacy teacher-draft migration: if only the old teacher draft has answers, it is preserved and loaded into the public working draft. If both have answers, autosaving waits for a choice. Before replacement or old-key removal, both originals are stored under `markcheverton:storydogs:v1:preserved`; they remain downloadable from Resources. A backup failure prevents replacement/removal. Keeping the current public story or dismissing the choice leaves the old teacher key intact for a later choice. Reset clears the working draft, not these explicitly preserved originals; browser site-data clearing removes archives on shared devices.
+
 
 `StoryDogsExperience.tsx` provides one shared shell; `StoryDogsBuilder.tsx` and the existing editable question, suggestion, dog, help, and placeholder data drive all views. Deterministic outline generation remains unchanged. Downloads do not mutate a story; the PDF link also opens a separate tab if a browser displays it instead of downloading it. Story Prompts is the verified `/writing-resources/prompts` route. The author-visit URL remains `https://chevertonauthorvisits.com`.
 
@@ -39,7 +44,7 @@ Production fails closed without a configured state directory. This local filesys
 
 ## Presenter-only AI punctuation
 
-No provider key was present. The integration is implemented but not operational until these private server variables are configured in `.env.local`:
+A server-only provider key is configured locally, and gpt-4.1-mini passed a live authenticated punctuation test. These private variables control the integration:
 
 ```dotenv
 STORYDOGS_OPENAI_API_KEY=<private OpenAI API key>
@@ -78,4 +83,9 @@ Actual local HTTP checks passed: kids/teachers 200 without login, presenter redi
 
 Controller/word-preservation tests: `node --import tsx --test scripts/storydogs*.test.ts`. TypeScript and targeted ESLint passed. Actual shared React builder checks with simulated speech/AI passed for separate drafts, legacy-draft recovery, sending only the new passage, clean-text saving, Undo, Retry/raw preservation, edit/reset race protection, and no public AI calls. Existing suggestions, jumps, copying/fallback, print/download, outline, and confirmed reset checks passed.
 
-Real microphone input and live paid AI calls were **not** tested. The teacher desktop builder was visually inspected in Chrome, with its dogs, cream background, new placeholders, and dictation controls intact. Browser focus changed during the next inspection; mobile and login/presenter visual review remain to be completed. To test on Windows Chrome: select the USB microphone in Settings > System > Sound > Input, sign in to a preview reachable from that PC, click Dictate, allow access, wait for Listening/Speak now, speak, and Stop. Check punctuation, Undo, Retry with network disabled, edits during processing, reset during processing, and separate drafts across versions. Browser silence must return to Dictate without automatic restart. Review all three views at desktop and phone widths; print the teacher guide.
+Real microphone input has **not** been tested. A live authenticated OpenAI test passed on October 4, 2026: the invented Zorblyn passage received sentence punctuation and capitalization with every word preserved. Undo/Retry and edit/reset race protection were tested with simulated AI/speech events. The teacher desktop builder was visually inspected in Chrome, with its dogs, cream background, new placeholders, and dictation controls intact. Browser focus changed during the next inspection; mobile and login/presenter visual review remain to be completed. To test on Windows Chrome: select the USB microphone in Settings > System > Sound > Input, sign in to a preview reachable from that PC, click Dictate, allow access, wait for Listening/Speak now, speak, and Stop. Check punctuation, Undo, Retry with network disabled, edits during processing, reset during processing, and separate drafts across versions. Browser silence must return to Dictate without automatic restart. Review all three views at desktop and phone widths; print the teacher guide.
+
+
+## Two-version consolidation verification
+
+Nineteen pure tests pass, including migration of either draft, teacher-only migration, and quota-failure preservation. Actual React DOM checks pass for the draft-choice dialog, archived downloads, Resources open/close without answer or scroll changes, Close/trigger focus, retained edits and refresh recovery. Existing outline/copy/fallback/print/download/reset flows and simulated presenter punctuation Undo/Retry/stale-response protection pass. The presenter session store and serverless deployment limitations above remain unchanged. These DOM checks simulate geometry/native browser behavior; they do not certify a mobile visual review or live microphone use.

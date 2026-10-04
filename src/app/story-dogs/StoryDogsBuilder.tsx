@@ -3,6 +3,8 @@ import Image, { getImageProps } from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { preload } from "react-dom";
 import { draftKey, missingStages, outlineText, storyDogs, type StoryAnswers } from "@/data/storyDogs";
+import { readDraft, hasAnswers, teacherDraftKey, mergeTeacherDraft, preservedDrafts, type PreservedDraft } from "@/lib/storydogs-draft-migration";
+import { StoryDogsResources } from "./StoryDogsResources";
 import { answerPlaceholders } from "@/data/storyDogsPlaceholders";
 import { storyDogsStudentHelp } from "@/data/storyDogsStudentHelp";
 
@@ -16,8 +18,11 @@ import { createSuggestionRound, nextSuggestion, type SuggestionRound } from "@/l
 
 const dogSizes = "(max-width: 700px) 240px, (max-width: 1360px) 26vw, 360px";
 
-export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "teachers" | "presenter" }) {
+export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "presenter" }) {
   const storageKey = version === "kids" ? draftKey : `${draftKey}:${version}`;
+  const [archived, setArchived] = useState<PreservedDraft[]>([]);
+  const [draftChoice, setDraftChoice] = useState(false);
+  const choiceDialog = useRef<HTMLDialogElement>(null);
   const [answers, setAnswers] = useState<StoryAnswers>({});
   const [ready, setReady] = useState(false);
   const [saving, setSaving] = useState("Checking browser draft storage…");
@@ -57,25 +62,37 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "tea
   }, punctuation.complete);
   useEffect(() => {
     const timer = window.setTimeout(() => {
-    const recovered: StoryAnswers = {};
+    let recovered: StoryAnswers = {};
     try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) {
-        const draft = JSON.parse(raw);
-        if (draft?.version === 1 && draft.answers && typeof draft.answers === "object") {
-          for (const s of storyDogs) {
-            const pair = draft.answers[s.id];
-            if (Array.isArray(pair)) recovered[s.id] = s.questions.map((_, i) => typeof pair[i] === "string" ? pair[i] : "");
+      recovered = readDraft(localStorage.getItem(storageKey));
+      if (version === "kids") {
+        setArchived(preservedDrafts(localStorage));
+        const teacher = readDraft(localStorage.getItem(teacherDraftKey));
+        if (hasAnswers(teacher)) {
+          if (hasAnswers(recovered)) {
+            setAnswers(recovered); setSuggestions(createSuggestionRound()); setDraftChoice(true); return;
           }
-        } else setStatus("The saved draft format could not be recovered. You can start a new story.");
+          const migrated = mergeTeacherDraft(localStorage, "teacher");
+          recovered = migrated.answers; setArchived(migrated.archived);
+        }
       }
-    } catch { setStatus("A saved draft could not be read. You can still use the activity."); }
+    } catch { setStatus("A saved draft could not be read or preserved. Existing stored drafts have not been cleared. You can still use the activity."); }
     setAnswers(recovered);
     setSuggestions(createSuggestionRound());
     setReady(true);
     }, 0);
     return () => window.clearTimeout(timer);
-  }, [storageKey]);
+  }, [storageKey, version]);
+  useEffect(() => { if (draftChoice) choiceDialog.current?.showModal(); }, [draftChoice]);
+  function chooseDraft(source: "public" | "teacher") {
+    try {
+      const migrated = mergeTeacherDraft(localStorage, source);
+      answersRef.current = migrated.answers; setAnswers(migrated.answers); setArchived(migrated.archived);
+      setStatus(`Your ${source} story is open. Both original drafts are preserved in Resources.`);
+      setReady(true); setDraftChoice(false); choiceDialog.current?.close();
+    } catch { setStatus("The original drafts could not be backed up. Neither was intentionally cleared. Free some browser storage and try again, or keep the current public story."); }
+  }
+  function keepPublicDraft() { setReady(true); setDraftChoice(false); choiceDialog.current?.close(); }
   useEffect(() => {
     if (!ready) return;
     try {
@@ -208,8 +225,15 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "tea
     <nav ref={navigation} className="sd-navigation sd-no-print" aria-label="StoryDogs stages">
       <a className="sd-brand" href="#storydogs-builder">StoryDogs</a>
       <div className="sd-jump-links">{storyDogs.map(stage => <a key={stage.id} href={`#sd-stage-${stage.id}`} onClick={event => { event.preventDefault(); jump(stage.id); }}>{stage.label}</a>)}</div>
+      {version === "kids" && <StoryDogsResources archived={archived} />}
       <button className="sd-button sd-gold" disabled={!ready} onClick={showOutline}>Show My Plot Outline</button>
     </nav>
+    <dialog ref={choiceDialog} className="sd-resources-dialog sd-no-print" aria-labelledby="sd-draft-choice-title" onCancel={keepPublicDraft}>
+      <h2 id="sd-draft-choice-title">Which story would you like to open?</h2>
+      <p>You have a public story and a teacher story. Choose one to continue. Both original drafts will be saved as downloadable copies in Resources before either is replaced.</p>
+      <div className="sd-resource-actions"><button className="sd-button" onClick={() => chooseDraft("public")}>Open Public Story</button><button className="sd-button" onClick={() => chooseDraft("teacher")}>Open Teacher Story</button><button className="sd-button" onClick={keepPublicDraft}>Keep Current Public Story</button></div>
+      <p role="status">{status}</p>
+    </dialog>
     <header className="sd-intro sd-no-print">
       <p className="sd-eyebrow">FREE STORY PLANNING · GRADES K–5</p>
       <h1>Your ideas. Your story.</h1>

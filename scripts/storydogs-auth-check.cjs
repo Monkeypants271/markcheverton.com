@@ -9,7 +9,8 @@ const req=require('node:module').createRequire(process.cwd()+'/package.json');co
  const post=(route,body,cookie='',origin=base)=>fetch(endpoint+route,{method:'POST',headers:{Origin:origin,Cookie:cookie,'Content-Type':route==='login'?'application/x-www-form-urlencoded':'application/json'},body:route==='login'?new URLSearchParams(body):JSON.stringify(body),redirect:'manual'});
  try {
  await fs.writeFile(configFile,JSON.stringify(config),{mode:0o600});
- for(const route of ['/story-dogs','/story-dogs/teachers']){const r=await fetch(base+route);assert.equal(r.status,200);assert.ok((await r.text()).includes('sd-stage-change'));}
+ for(const route of ['/story-dogs']){const r=await fetch(base+route);assert.equal(r.status,200);assert.ok((await r.text()).includes('sd-stage-change'));}
+ const teacherRedirect=await fetch(base+'/story-dogs/teachers',{redirect:'manual'});assert.equal(teacherRedirect.status,307);assert.equal(teacherRedirect.headers.get('location'),'/story-dogs');
  let r=await fetch(base+'/story-dogs/presenter',{redirect:'manual'});assert.equal(r.status,307);assert.equal(r.headers.get('location'),'/story-dogs/presenter/login');
  assert.equal((await post('punctuate',{passage:'hello'})).status,401);
  assert.equal((await post('login',{email:'wrong@example.com',password})).status,401);
@@ -17,9 +18,9 @@ const req=require('node:module').createRequire(process.cwd()+'/package.json');co
  r=await post('login',{email:'MARK@CHEVERTONAUTHORVISITS.COM',password});assert.equal(r.status,200);
  const cookieHeader=r.headers.get('set-cookie');assert.match(cookieHeader,/HttpOnly/i);assert.match(cookieHeader,/SameSite=Strict/i);const cookie=cookieHeader.split(';')[0];
  const data=await unsealData(cookie.slice(cookie.indexOf('=')+1),{password:config.cookieSecret,ttl:14400});sid=data.sid;
- r=await fetch(base+'/story-dogs/presenter',{headers:{Cookie:cookie},redirect:'manual'});assert.equal(r.status,200);assert.ok((await r.text()).includes('AI punctuation is not configured'));
+ r=await fetch(base+'/story-dogs/presenter',{headers:{Cookie:cookie},redirect:'manual'});assert.equal(r.status,200);const presenterHTML=await r.text();const providerConfigured=presenterHTML.includes('AI punctuation is configured');assert.ok(providerConfigured||presenterHTML.includes('AI punctuation is not configured'));
  assert.equal((await post('punctuate',{passage:'hello'},cookie,'https://evil.example')).status,403);
- assert.equal((await post('punctuate',{passage:'hello'},cookie)).status,503);
+ if(!providerConfigured)assert.equal((await post('punctuate',{passage:'hello'},cookie)).status,503); // Never spend provider credit in this security regression test.
  assert.equal((await post('punctuate',{passage:'x'.repeat(3001)},cookie)).status,400);
  const expired=await sealData({...data,expires:Date.now()-1},{password:config.cookieSecret,ttl:14400});
  assert.equal((await fetch(base+'/story-dogs/presenter',{headers:{Cookie:'sd_presenter='+expired},redirect:'manual'})).status,307);
