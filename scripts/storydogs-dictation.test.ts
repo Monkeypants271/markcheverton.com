@@ -114,7 +114,7 @@ test('presenter completion receives only new finalized words after an explicit s
   assert.deepEqual(completed, [['a', 'pip finds moon seeds']]);
 });
 
-test('cancelled, switched, and naturally ended sessions never trigger paid punctuation', t => {
+test('cancelled and switched sessions never trigger punctuation; normal browser end completes finalized words', t => {
   const completed: string[] = [];
   const controller = new DictationController(RecognitionMock, () => {}, () => {}, (_target, words) => completed.push(words));
   t.after(() => controller.dispose());
@@ -125,5 +125,5 @@ test('cancelled, switched, and naturally ended sessions never trigger paid punct
     r.onend!();
     if (action === 'switch') { controller.cancel(); RecognitionMock.instances.at(-1)!.onend!(); }
   }
-  assert.deepEqual(completed, []);
+  assert.deepEqual(completed, ['raw words']);
 });

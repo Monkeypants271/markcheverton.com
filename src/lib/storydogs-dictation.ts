@@ -139,7 +139,9 @@ export class DictationController {
     };
     recognition.onend = () => {
       if (this.current !== session || this.disposed) return;
-      const passage = session.stopping && session.acceptResults && session.started ? session.words.reduce(appendTranscript, "") : "";
+      // A normal browser end (for example after silence) is also a completed
+      // passage. Cancel/switch/edit/reset explicitly disable acceptResults.
+      const passage = session.acceptResults && session.started ? session.words.reduce(appendTranscript, "") : "";
       const next = this.pending;
       this.pending = null;
       this.release(session);

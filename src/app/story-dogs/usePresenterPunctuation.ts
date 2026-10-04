@@ -23,10 +23,10 @@ export function usePresenterPunctuation(enabled: boolean, read: (target: string)
       if (typeof data.text !== 'string' || !sameWords(job.raw, data.text)) throw Error('The result changed words. Your raw transcript was kept.');
       const value = job.prefix + data.text;
       if (!callbacks.current.replace(job.target, job.expected, value)) return;
-      job.expected = value; job.phase = 'done'; job.message = 'Punctuation added. Your original words are available with Undo.'; publish();
+      job.expected = value; job.phase = 'done'; job.message = 'AI punctuation applied.'; publish();
     } catch (error) {
       if (jobs.current[job.target] !== job || job.controller.signal.aborted) return;
-      job.phase = 'failed'; job.message = error instanceof Error ? error.message : 'Punctuation failed. Your raw words are safe.'; publish();
+      job.phase = 'failed'; job.message = 'AI punctuation unavailable. Your dictated text has been kept.' + (error instanceof Error ? ` ${error.message}` : ''); publish();
     }
   }
   function complete(target: string, raw: string) {
