@@ -1,12 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
-import { PageHeader } from "@/components/PageHeader";
 import { Container } from "@/components/Container";
 
 export const metadata = { title: "Writing Resources" };
 
 const tools = [
-  { title: "StoryDogs", href: "/story-dogs", body: "Seven friendly plush dogs help young writers turn their own ideas into a plot outline.", image: "/images/story-dogs/who.webp" },
   {
     title: "Character Creator",
     href: "/writing-resources/character-creator",
@@ -42,12 +40,24 @@ const tools = [
 export default function WritingResourcesPage() {
   return (
     <>
-      <PageHeader eyebrow="Writing Resources" title="Tools for young writers.">
-        Built from my own writing process and years in the classroom — used by
-        teachers and kids in equal measure.
-      </PageHeader>
+      <h1 className="sr-only">Writing Resources</h1>
+      <Container className="py-12 sm:py-16">
+        <Link
+          href="/story-dogs"
+          aria-label="Start Your Story with StoryDogs — build your own story in seven playful steps"
+          className="mb-10 block w-full focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-[var(--color-primary)]"
+        >
+          <Image
+            src="/images/writing/storydogs-banner-adventure.png"
+            alt="StoryDogs: Build your next adventure in seven steps. Start Your Story. Two confident cape-wearing dogs use a giant pencil to bring a fantasy storybook to life while a dragon flies overhead."
+            width={2172}
+            height={724}
+            sizes="(min-width: 1152px) 1104px, calc(100vw - 48px)"
+            preload
+            className="block h-auto w-full"
+          />
+        </Link>
 
-      <Container className="py-16">
         <div className="mb-10 rounded-2xl border border-[var(--color-rule)] bg-[var(--color-surface)] p-6">
           <p className="text-lg leading-relaxed text-[var(--color-ink-soft)]">
             Have a Minecraft-loving writer at home or in your classroom? Start

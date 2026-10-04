@@ -8,6 +8,7 @@ const navLinks = [
   { href: "/minecraft-books", label: "Minecraft Books" },
   { href: "https://www.chevertonauthorvisits.com", label: "Author Visits", external: true },
   { href: "/for-educators", label: "For Educators" },
+  { href: "/story-dogs", label: "StoryDogs" },
   { href: "/writing-resources", label: "Writing Resources" },
   { href: "/fanfic", label: "Fan Fiction" },
   { href: "/blog", label: "Blog" },
@@ -41,16 +42,16 @@ export function Header() {
         </div>
       </div>
       <header className="sticky top-0 z-40 border-b border-[var(--color-rule)] bg-[var(--color-surface)]/80 backdrop-blur">
-        <div className="mx-auto max-w-6xl px-6 py-4 flex items-center justify-between gap-6">
+        <div className="mx-auto max-w-7xl px-6 py-4 flex items-center justify-between gap-6">
           <Link
             href="/"
-            className="font-display text-xl font-semibold tracking-tight text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors"
+            className="whitespace-nowrap font-display text-xl font-semibold tracking-tight text-[var(--color-primary)] hover:text-[var(--color-accent)] transition-colors"
             onClick={() => setOpen(false)}
           >
             Mark Cheverton
           </Link>
 
-          <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-[var(--color-ink-soft)]">
+          <nav className="hidden xl:flex items-center gap-4 whitespace-nowrap text-sm font-medium text-[var(--color-ink-soft)]">
             {navLinks.map((link) =>
               link.external ? (
                 <a
@@ -78,8 +79,9 @@ export function Header() {
             type="button"
             aria-label="Toggle menu"
             aria-expanded={open}
+            aria-controls="site-mobile-navigation"
             onClick={() => setOpen((v) => !v)}
-            className="lg:hidden p-2 -m-2 text-[var(--color-ink)]"
+            className="xl:hidden p-2 -m-2 text-[var(--color-ink)]"
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               {open ? (
@@ -92,7 +94,7 @@ export function Header() {
         </div>
 
         {open && (
-          <div className="lg:hidden border-t border-[var(--color-rule)] bg-[var(--color-surface)]">
+          <div id="site-mobile-navigation" className="xl:hidden border-t border-[var(--color-rule)] bg-[var(--color-surface)]">
             <nav className="mx-auto max-w-6xl px-6 py-4 flex flex-col gap-1">
               {navLinks.map((link) =>
                 link.external ? (

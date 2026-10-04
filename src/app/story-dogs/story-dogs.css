@@ -205,3 +205,9 @@ body:has(.storydogs-page) [data-site-masthead] { display:none; }
 .sd-login-setup h2 {font-size:24px;font-weight:700;}
 .sd-login-setup p {margin:16px 0;line-height:1.6;}
 .sd-login-setup pre {white-space:pre-wrap;overflow-wrap:anywhere;background:#2e1630;padding:16px;border-radius:12px;font-size:15px;}
+
+/* Always-visible version switching; drafts remain in their existing separate stores. */
+.sd-version-nav .sd-version-button { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:10px 20px; border:2px solid #eed7b0; border-radius:999px; color:#fff5d9; font-weight:700; text-decoration:none; }
+.sd-version-nav .sd-version-button[aria-current="page"] { background:#ffe09b; border-color:#ffe09b; color:#48263d; }
+.sd-version-nav .sd-version-button:focus-visible { outline:3px solid #fff5d9; outline-offset:4px; }
+@media(max-width:600px) { .sd-version-nav { gap:10px; padding:18px 12px; } .sd-version-nav .sd-version-button { flex:1; padding:10px 12px; } .sd-version-nav form { margin-left:0; } }

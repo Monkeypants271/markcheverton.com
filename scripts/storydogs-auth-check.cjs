@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports -- Standalone CommonJS Node verification script. */
 const assert=require('node:assert/strict');const fs=require('node:fs/promises');const path=require('node:path');const crypto=require('node:crypto');
 const req=require('node:module').createRequire(process.cwd()+'/package.json');const {unsealData,sealData}=req('iron-session');
 (async()=>{

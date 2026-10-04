@@ -1,11 +1,12 @@
 import localFont from 'next/font/local';
 import Link from 'next/link';
+import { StoryDogsVersionNavigation } from './StoryDogsVersionNavigation';
 import { StoryDogsBuilder } from './StoryDogsBuilder';
 import './story-dogs.css';
 const headingFont = localFont({ src: './fonts/Fredoka-Bold.ttf', weight: '700', style: 'normal', display: 'swap', variable: '--font-storydogs-heading' });
 export function StoryDogsExperience({ version = 'kids', aiConfigured = false }: { version?: 'kids' | 'presenter'; aiConfigured?: boolean }) {
   return <div className={`storydogs-page ${headingFont.variable}`}><div className="sd-shell">
-    <div className="sd-version-nav sd-no-print"><Link href="/story-dogs">Public StoryDogs</Link>{version === 'presenter' && <form action="/api/story-dogs/presenter/logout" method="post"><button className="sd-button" type="submit">Logout</button></form>}</div>
+    <StoryDogsVersionNavigation version={version} authenticated={version === 'presenter'} />
     {version === 'presenter' && <div className="sd-version-intro sd-no-print"><h2>Private Presenter StoryDogs</h2><p>Only this signed-in version can request AI punctuation after you click Stop Dictation. {aiConfigured ? 'AI punctuation is configured; service availability depends on your provider.' : 'AI punctuation is not configured yet. Dictation and typing still work; raw words stay editable.'}</p><p>When configured, OpenAI receives only the newly dictated passage, never audio or your complete story. It adds punctuation and capitalization only. <a href="https://developers.openai.com/api/docs/guides/your-data" target="_blank" rel="noopener noreferrer">OpenAI data handling (opens in a new tab)</a>: API content is not used for training by default; abuse-monitoring retention may apply. Requests use store: false. Use Undo to restore the raw passage.</p></div>}
     <StoryDogsBuilder version={version} />
     <section className="sd-resources sd-no-print" aria-labelledby="educators-title">

@@ -5,7 +5,7 @@ import { createHash, randomUUID } from 'node:crypto';
 
 function root() {
   if (process.env.NODE_ENV === 'production' && !process.env.STORYDOGS_STATE_DIR) throw Error('A durable StoryDogs state directory is required.');
-  return process.env.STORYDOGS_STATE_DIR || path.join(process.cwd(), '.local/storydogs-state');
+  return process.env.STORYDOGS_STATE_DIR || path.join(/* turbopackIgnore: true */ process.cwd(), '.local/storydogs-state');
 }
 const name = (key: string) => createHash('sha256').update(key).digest('hex');
 export async function put(key: string, value: unknown) {
@@ -14,7 +14,7 @@ export async function put(key: string, value: unknown) {
   await writeFile(temp, JSON.stringify(value), { mode: 0o600 }); await rename(temp, dest);
 }
 export async function get<T>(key: string): Promise<T | null> {
-  try { return JSON.parse(await readFile(path.join(root(), name(key)), 'utf8')); }
+  try { return JSON.parse(await readFile(/* turbopackIgnore: true */ path.join(root(), name(key)), 'utf8')); }
   catch (error) { if ((error as NodeJS.ErrnoException).code === 'ENOENT') return null; throw error; }
 }
 export async function remove(key: string) { await rm(path.join(root(), name(key)), { force: true }); }
