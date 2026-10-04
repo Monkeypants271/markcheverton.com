@@ -50,11 +50,11 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "pre
     const pair = [...(answersRef.current[id] || ["", ""])]; pair[question] = value;
     answersRef.current = { ...answersRef.current, [id]: pair }; setAnswers(answersRef.current);
     copyAttempt.current++; setCopiedForDocs(false); return true;
-  });
+  }, ready, `${storageKey}:pending-punctuation`);
   const dictation = useStoryDictation((target, words) => {
     const [id, indexText] = target.split(":"); const index = Number(indexText);
     if (!storyDogs.some(stage => stage.id === id) || (index !== 0 && index !== 1)) return;
-    punctuation.invalidate(target);
+    if (version === "presenter") { punctuation.append(target, words); return; }
     copyAttempt.current++; setCopiedForDocs(false);
     const pair = [...(answersRef.current[id] || ["", ""])];
     pair[index] = appendTranscript(pair[index] || "", words);
@@ -142,7 +142,7 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "pre
   }
   function update(id: string, index: number, value: string) {
     dictation.cancelForTarget(`${id}:${index}`);
-    punctuation.invalidate(`${id}:${index}`);
+    punctuation.invalidate(`${id}:${index}`, false);
     copyAttempt.current++;
     setCopiedForDocs(false);
     setAnswers(prev => ({ ...prev, [id]: [index === 0 ? value : prev[id]?.[0] || "", index === 1 ? value : prev[id]?.[1] || ""] }));
@@ -155,7 +155,7 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "pre
   function showOutline() {
     dictation.cancel();
     punctuation.invalidate();
-    if (missingStages(answers).length) {
+    if (missingStages(answersRef.current).length) {
       setGaps(true);
       requestAnimationFrame(() => { gapNotice.current?.scrollIntoView({ block: "start" }); gapNotice.current?.focus({ preventScroll: true }); });
     } else reveal();
@@ -191,13 +191,13 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "pre
     dictation.cancel();
     punctuation.invalidate();
     resetTrigger.current = event.currentTarget;
-    if (Object.values(answers).some(pair => pair.some(answer => answer.length > 0))) {
+    if (Object.values(answersRef.current).some(pair => pair.some(answer => answer.length > 0))) {
       resetDialog.current?.showModal();
     } else reset();
   }
   function reset() {
     dictation.cancel();
-    punctuation.invalidate();
+    punctuation.invalidate(undefined, false);
     copyAttempt.current++;
     try {
       localStorage.removeItem(storageKey);
@@ -264,11 +264,13 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "pre
             <div className="sd-fields">{stage.questions.map((question, questionIndex) => <div className="sd-field" key={`${stage.id}-${questionIndex}`}>
               <label htmlFor={`${stage.id}-${questionIndex}`}>{question}</label>
               <GrowingAnswer disabled={!ready} id={`${stage.id}-${questionIndex}`} rows={3} value={answers[stage.id]?.[questionIndex] || ""} onBeforeInput={() => dictation.cancelForTarget(`${stage.id}:${questionIndex}`)} onPaste={() => dictation.cancelForTarget(`${stage.id}:${questionIndex}`)} onChange={event => update(stage.id, questionIndex, event.target.value)} placeholder={answerPlaceholders[stage.id][questionIndex]} />
-              <DictationControl dictation={{ ...dictation, toggle: target => { punctuation.invalidate(target); dictation.toggle(target); } }} target={`${stage.id}:${questionIndex}`} fieldId={`${stage.id}-${questionIndex}`} label={`${stage.label} question ${questionIndex + 1}`} ready={ready} />
+              <DictationControl dictation={{ ...dictation, toggle: target => { if (dictation.target !== target) punctuation.begin(target); dictation.toggle(target); } }} target={`${stage.id}:${questionIndex}`} fieldId={`${stage.id}-${questionIndex}`} label={`${stage.label} question ${questionIndex + 1}`} ready={ready} />
+              {version === "presenter" && punctuation.recovered[`${stage.id}:${questionIndex}`] && <details className="sd-punctuation"><summary>Recovered dictated words</summary><p>Your answer changed after these words were saved. Copy any words you want to keep into your answer.</p><p>{punctuation.recovered[`${stage.id}:${questionIndex}`]}</p></details>}
               {version === "presenter" && punctuation.view[`${stage.id}:${questionIndex}`] && <div className="sd-punctuation">
                 <p role="status">{punctuation.view[`${stage.id}:${questionIndex}`].message}</p>
+                {punctuation.view[`${stage.id}:${questionIndex}`].raw !== punctuation.view[`${stage.id}:${questionIndex}`].appliedRaw && <p className="sd-dictation-preview"><strong>Awaiting punctuation:</strong> {punctuation.view[`${stage.id}:${questionIndex}`].raw.slice(punctuation.view[`${stage.id}:${questionIndex}`].appliedRaw.length).trim()}</p>}
                 {punctuation.view[`${stage.id}:${questionIndex}`].phase === "failed" && <button className="sd-button" onClick={() => punctuation.retry(`${stage.id}:${questionIndex}`)}>Retry Punctuation</button>}
-                {punctuation.view[`${stage.id}:${questionIndex}`].phase === "done" && <button className="sd-button" onClick={() => punctuation.undo(`${stage.id}:${questionIndex}`)}>Undo Punctuation</button>}
+                {punctuation.view[`${stage.id}:${questionIndex}`].phase === "done" && <button className="sd-button" onClick={() => { dictation.cancelForTarget(`${stage.id}:${questionIndex}`); punctuation.undo(`${stage.id}:${questionIndex}`); }}>Undo Punctuation</button>}
               </div>}
               <aside className="sd-inspiration" aria-label={`Inspiration for ${stage.label} question ${questionIndex + 1}`}>
                 <p id={`${stage.id}-${questionIndex}-idea`} aria-live="polite"><strong>Try this:</strong> {stage.suggestions[questionIndex][suggestions[`${stage.id}-${questionIndex}`]?.current ?? 0]}</p>
