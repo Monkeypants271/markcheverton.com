@@ -6,6 +6,7 @@ import { Container } from "@/components/Container";
 export const metadata = { title: "Writing Resources" };
 
 const tools = [
+  { title: "StoryDogs", href: "/story-dogs", body: "Seven friendly plush dogs help young writers turn their own ideas into a plot outline.", image: "/images/story-dogs/who.webp" },
   {
     title: "Character Creator",
     href: "/writing-resources/character-creator",

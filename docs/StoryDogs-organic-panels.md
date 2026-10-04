@@ -1,0 +1,13 @@
+# StoryDogs organic panel refinement
+
+Local preview: http://127.0.0.1:3000/story-dogs
+
+Compared the supplied current screenshot directly with StoryDogs Seven-Step Story Website structure.png. Replaced corner-radius-only desktop backgrounds with three related custom cubic SVG silhouettes, with bowed upper/lower edges, unequal ends and modest tapering. Backgrounds stretch with natural HTML height; no clipping, content rotation or fixed panel heights. The background extends 8px above/below and 6px beyond each side for extra breathing room around the headings and focus outlines. Mobile uses simpler cream rounded backgrounds.
+
+Widened the route shell from 1248 to 1360px and reduced the dog column from 30% to 26%; at 1440px the content width is 1312px and the writing panel is approximately 951px. Retained readable typography and initially three-line expanding answers, with less padding. Removed stage subtitles and separate inspiration labels; suggestions use inline “Try this:” and adjacent buttons. Connection reminders now live inside expandable help.
+
+Removed StoryTrail.tsx, its import/render, desktop glow/path, mobile vertical line, and trail-only spacing. Stage gaps are consistently 32px on desktop. Gold outline buttons and approved dog assets remain.
+
+Verification: TypeScript and affected-file ESLint pass; four suggestion/asset tests pass. Actual React components tested in jsdom with simulated geometry/browser methods: fourteen inputs, independent suggestions, long-answer growth, jumps, full/partial outline, copy success/failure, edit links, download/print calls, draft restoration and keep/clear/empty reset. HTTP checks confirm /story-dogs 200, seven decorative silhouettes, no trail/subtitles/old labels, fourteen suggestion controls, seven distinct loading dogs, and all nineteen scripts/styles load.
+
+Native Chrome access became available and the served page was visually inspected at the available desktop window width (1350px screenshot). WORSE and CLIMAX show bowed backgrounds, adjacent idea controls, large inward dogs, no trail, and restored user answers. Short-answer panels are substantially shallower but closer to 3:1 with the full question wording and three-line inputs; 4:1 remains an approximate reference target, not a forced ratio. The SVG silhouettes were also rendered independently and inspected. A mobile rendered-page check, an exact 1440px viewport comparison, and a complete sticky/jump visual sweep were not completed because user activity interrupted browser automation. Simulated DOM tests are not substitutes for those visual checks. No existing browser answers were edited or reset. Nothing published.

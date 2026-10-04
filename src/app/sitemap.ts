@@ -13,6 +13,7 @@ const staticRoutes: { path: string; priority: number }[] = [
   { path: "/author-visits", priority: 0.7 },
   { path: "/for-educators", priority: 0.6 },
   { path: "/writing-resources", priority: 0.7 },
+  { path: "/story-dogs", priority: 0.7 },
   { path: "/writing-resources/plot", priority: 0.6 },
   { path: "/writing-resources/tips", priority: 0.6 },
   { path: "/writing-resources/prompts", priority: 0.6 },

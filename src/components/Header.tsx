@@ -21,6 +21,7 @@ export function Header() {
   return (
     <>
       <div
+        data-site-masthead
         className="relative min-h-36 overflow-hidden bg-[var(--color-primary)] bg-cover bg-center px-6 py-8 text-white sm:min-h-44 md:min-h-56 lg:min-h-64"
         style={{ backgroundImage: "url('/images/home/homepage-header-no-text.webp')" }}
       >

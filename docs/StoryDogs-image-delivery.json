@@ -1,0 +1,58 @@
+[
+  {
+    "id": "who",
+    "sourceBytes": 90516,
+    "deliveredBytes": 59554,
+    "firstMs": 81,
+    "cachedMs": 2,
+    "cache": "HIT"
+  },
+  {
+    "id": "life-want",
+    "sourceBytes": 102338,
+    "deliveredBytes": 64308,
+    "firstMs": 75,
+    "cachedMs": 2,
+    "cache": "HIT"
+  },
+  {
+    "id": "uh-oh",
+    "sourceBytes": 68034,
+    "deliveredBytes": 48364,
+    "firstMs": 83,
+    "cachedMs": 2,
+    "cache": "HIT"
+  },
+  {
+    "id": "trouble",
+    "sourceBytes": 103618,
+    "deliveredBytes": 67644,
+    "firstMs": 80,
+    "cachedMs": 2,
+    "cache": "HIT"
+  },
+  {
+    "id": "worse",
+    "sourceBytes": 102396,
+    "deliveredBytes": 67068,
+    "firstMs": 84,
+    "cachedMs": 4,
+    "cache": "HIT"
+  },
+  {
+    "id": "climax",
+    "sourceBytes": 108288,
+    "deliveredBytes": 75776,
+    "firstMs": 118,
+    "cachedMs": 1,
+    "cache": "HIT"
+  },
+  {
+    "id": "change",
+    "sourceBytes": 87224,
+    "deliveredBytes": 59642,
+    "firstMs": 85,
+    "cachedMs": 1,
+    "cache": "HIT"
+  }
+]
