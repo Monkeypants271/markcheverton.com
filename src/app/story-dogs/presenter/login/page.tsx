@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { authenticated, configuration, presenterEmail } from '@/lib/storydogs-server/auth';
 import { redirect } from 'next/navigation';
 import { StoryDogsVersionNavigation } from '../../StoryDogsVersionNavigation';
-import { storageConfigured } from '@/lib/storydogs-server/store';
 import { LoginForm } from './LoginForm';
 import '../../story-dogs.css';
 export const runtime = 'nodejs';
@@ -10,7 +9,7 @@ export const dynamic = 'force-dynamic';
 export const metadata = { title: 'StoryDogs Presenter Login', robots: { index: false, follow: false } };
 export default async function Page() {
   if (await authenticated()) redirect('/story-dogs/presenter');
-  const configured = Boolean(await configuration()) && storageConfigured();
+  const configured = Boolean(await configuration());
   return <div className="storydogs-page">
     <div className="sd-shell"><StoryDogsVersionNavigation version="presenter" /></div>
     <div className="sd-login">

@@ -2,13 +2,13 @@ import { isIP } from 'node:net';
 import { boundedBody } from '@/lib/storydogs-server/request';
 import { NextResponse } from 'next/server';
 import { presenterEmail, presenterSession, verifyPassword, loginSession, sameOrigin, privateHeaders } from '@/lib/storydogs-server/auth';
-import { allowed, storageConfigured } from '@/lib/storydogs-server/store';
+import { allowed } from '@/lib/storydogs-server/throttle';
 export const runtime = 'nodejs';
 export async function POST(request: Request) {
   if (!sameOrigin(request)) return NextResponse.json({ error: 'Request not allowed.' }, { status: 403, headers: privateHeaders });
   if (Number(request.headers.get('content-length') || 0) > 4096) return new Response(null, { status: 413 });
   try {
-    if (!storageConfigured() || !await presenterSession()) return NextResponse.json({ error: 'Private StoryDogs is temporarily unavailable.' }, { status: 503, headers: privateHeaders });
+    if (!await presenterSession()) return NextResponse.json({ error: 'Private StoryDogs is temporarily unavailable.' }, { status: 503, headers: privateHeaders });
     // Trust only Vercel's edge-provided identity, never arbitrary proxy headers on other hosts.
     if (process.env.VERCEL === '1') {
       const ip = (request.headers.get('x-vercel-forwarded-for') || '').split(',')[0].trim();

@@ -24,28 +24,31 @@ npm run storydogs:setup
 
 Enter the desired password twice in the interactive terminal (input is hidden). Minimum length is twelve characters. The command stores only a salted scrypt hash (N=32768, r=8, p=3) and a random encryption secret in `.local/storydogs-presenter.json`, with file mode 0600 inside a 0700 directory. `.local/` is ignored by Git. Password setup cannot take a password via arguments, environment variables, or pipes. Never paste a password into chat or a source file.
 
-The single account is `Mark@chevertonauthorvisits.com`, matched case insensitively. Changing the hash invalidates earlier sessions. No existing admin authentication was changed: its deterministic nonexpiring cookie was unsuitable for these requirements. This feature uses [iron-session](https://github.com/vvo/iron-session) for encrypted cookies, plus random server-recorded session IDs for revocation.
+The single account is `Mark@chevertonauthorvisits.com`, matched case insensitively. Rotate the session secret when changing the password if all existing sessions should also end. No existing admin authentication was changed: its deterministic nonexpiring cookie was unsuitable for these requirements. This feature uses [iron-session](https://github.com/vvo/iron-session) for encrypted cookies, plus random server-recorded session IDs for revocation.
 
-Sessions last four hours, with explicit server expiry checks. Cookies are HttpOnly, SameSite=Strict, and Secure in production. Login attempts are capped at eight per fifteen-minute window globally for this one account, plus four per Vercel edge-provided IP; failures use a generic message. This global cap prevents bypass through changing email/IP, but someone can temporarily exhaust the login limit. Login, logout, and punctuation POSTs validate Origin against Host. Presenter rendering and every AI request check the session on the server; AI also rechecks expiry/revocation after the provider responds. Logout removes the server session record, so replaying its old cookie fails.
+Sessions last **eight hours** with an absolute server-side expiry check on every private page and AI request. The established `iron-session` library cryptographically authenticates and encrypts the cookie. Its small payload contains the account email, version, issued-at and expiry timestamps; never a password, password hash, story text or API key. Cookies are HttpOnly, SameSite=Strict, and Secure in production. Authentication version 2 rejects old server-recorded-session cookies.
 
-## Hosting and state
+Logout clears this browser's cookie. **Stateless logout cannot revoke a previously copied token before its expiration.** Replacing `STORYDOGS_SESSION_SECRET` and redeploying invalidates all old tokens once all traffic reaches the new deployment; do not retain the old secret as a fallback key. Changing the password hash alone does not revoke existing cookies. Login, logout and punctuation validate Origin against Host. Presenter rendering and every AI endpoint authenticate on the server, with expiry checked again after the provider response.
 
-The production site is the Vercel project `markcheverton-com` in `mark-chevertons-projects`. Production deliberately ignores the Mac's development credential JSON. Missing credentials or shared-storage configuration render “Private StoryDogs is temporarily unavailable”; development setup guidance is never rendered in production.
+## Hosting and private configuration
 
-Local review retains ignored `.local/storydogs-state` and atomic filesystem locks. Production always uses the server-only Upstash Redis REST adapter; `STORYDOGS_STATE_DIR` cannot enable filesystem storage in production. It stores only random session IDs, expiry metadata, and hashed rate-counter keys, never story text or audio. SET with PX expires sessions automatically; DEL revokes logout; a Lua script atomically checks and increments rate counters with window expiry across instances. Requests time out after five seconds and storage failures fail closed. Credentials and fetch responses are never logged.
+Production runs on the Vercel project `markcheverton-com` in `mark-chevertons-projects`. No database, Redis, subscription, filesystem session state, or `.local/storydogs-state` is required. Production never reads the Mac's development credentials. If private configuration is missing, it shows “Private StoryDogs is temporarily unavailable” without local commands or paths.
 
-Configure these **private server environment variables** in Vercel Production, then redeploy:
+Configure these **server-only sensitive Production environment variables**, then redeploy:
 
-- `STORYDOGS_PASSWORD_HASH`: the existing generated scrypt hash, not plaintext.
-- `STORYDOGS_SESSION_SECRET`: the existing generated random encryption secret (at least 32 characters).
-- `STORYDOGS_PRESENTER_EMAIL`: `Mark@chevertonauthorvisits.com`, matched case insensitively.
-- `STORYDOGS_REDIS_REST_URL` and `STORYDOGS_REDIS_REST_TOKEN`: an Upstash Redis database's REST credentials. A read-only token is insufficient.
-- `STORYDOGS_REDIS_NAMESPACE`: `production`; use a separate namespace and preferably database for preview.
-- `STORYDOGS_OPENAI_API_KEY` and `STORYDOGS_OPENAI_MODEL`: private provider configuration (current model `gpt-4.1-mini`).
+- `STORYDOGS_PRESENTER_EMAIL`: `Mark@chevertonauthorvisits.com`, case insensitive.
+- `STORYDOGS_PASSWORD_HASH`: generated salted scrypt hash, never plaintext.
+- `STORYDOGS_SESSION_SECRET`: private random sealing secret, at least 32 characters.
+- `STORYDOGS_OPENAI_API_KEY`: existing OpenAI key.
+- `STORYDOGS_OPENAI_MODEL`: `gpt-4.1-mini`, verified with the owner's account.
 
-No secret may use a NEXT_PUBLIC prefix or enter Git. Do not deploy `.local/`, pull hosting environment values over `.env.local`, or use ephemeral `/tmp` for production sessions. Environment changes require a new deployment. Rotating the hash invalidates old sessions; rotating the session secret invalidates cookies. A namespace change also invalidates session records.
+`node scripts/storydogs-vercel-config.cjs` transfers the existing ignored local configuration directly to this project's private Vercel Production settings using the owner's saved CLI authorization, verifies variable names/types and prints no values. It never pulls environment files, creates a database, or provisions services. It is a Mac configuration-transfer helper, not production page content. Nothing may use a NEXT_PUBLIC prefix or be committed as a secret. Preview credentials are not automatically configured; use a separate sealing secret for previews.
 
-The adapter regression test uses simulated REST responses and concurrent calls; it is not a live Redis integration certification. Production login, session expiry/revocation, concurrent throttling and outages must be checked after the database is connected. The global login cap can still cause temporary account lockout under distributed abuse; the Vercel-specific four-attempt IP cap reduces single-source abuse, but add Vercel Firewall protection and monitor safe request metadata. Redis atomicity resolves cross-instance limits, not all denial-of-service attacks.
+## Abuse protection without an additional service
+
+Vercel's platform DDoS protection is included automatically. A published free WAF deny rule rejects foreign-origin POSTs to StoryDogs login, logout and punctuation on the canonical site domains before server execution; it does not prevent bots that spoof a valid Origin. Free IP blocks can supplement it; normal hosting usage still applies to accepted traffic. The current Pro team's WAF **rate-limit** feature is usage-billed, so it is not enabled by this task. No paid plan, service or database is provisioned.
+
+Application counters provide **best-effort per-process throttling only**: eight login attempts/15 minutes, four per Vercel edge-provided IP/15 minutes, twenty punctuation requests/minute, and 300/day. Cold starts reset them and independent serverless instances do not share them; they are neither dependable global abuse protection nor a hard provider spending cap. Memory is bounded and full counters fail closed within the affected process. Origin checks, generic login errors, strong scrypt passwords, bounded request bodies, finite provider timeouts and server-only paid API access remain enforced. Monitor login/API abuse and use provider spending limits; distributed abuse remains a limitation of this no-storage design. Redis is optional for a future policy change, never a prerequisite.
 
 ## Presenter-only AI punctuation
 
@@ -60,7 +63,7 @@ Restart the development server after adding those values. None may use a `NEXT_P
 
 After an explicit Stop Dictation, the controller waits for the browser's end event and includes all finalized new chunks. Only that new passage is sent; preceding context is not needed or sent. A naturally ended, cancelled, edited, or switched session does not automatically incur an AI request. The raw transcript is already in the draft before processing. Interim words remain unsaved previews.
 
-The private endpoint `/api/story-dogs/presenter/punctuate` sends text to OpenAI's Responses API with `store: false`, a punctuation-only instruction, a 20-second timeout, and at most 1,600 output tokens. Input is capped at 3,000 characters, the streamed HTTP body at 16 KB, requests at twenty/minute and 300/day globally. The output is limited to twice the input length plus 200 characters. Unicode word-sequence comparison rejects added, removed, reordered, or replaced words; only punctuation and capitalization are accepted. Character names and invented words therefore remain intact apart from capitalization.
+The private endpoint `/api/story-dogs/presenter/punctuate` sends text to OpenAI's Responses API with `store: false`, a punctuation-only instruction, a 20-second timeout, and at most 1,600 output tokens. Input is capped at 3,000 characters, the streamed HTTP body at 16 KB, best-effort per-process requests at twenty/minute and 300/day (not global quotas). The output is limited to twice the input length plus 200 characters. Unicode word-sequence comparison rejects added, removed, reordered, or replaced words; only punctuation and capitalization are accepted. Character names and invented words therefore remain intact apart from capitalization.
 
 The UI displays Adding punctuation, Undo, or a raw-text-preserving failure with Retry. Each request is tied to an exact answer snapshot and job identity. Editing, another dictation in the field, outline/reset actions, and unmount invalidate jobs; stale results cannot replace later text, another field, or a cleared story. Cleanup only changes the just-dictated suffix, never prior answers.
 
@@ -84,7 +87,7 @@ No broken or placeholder downloads were added.
 
 Earlier local HTTP checks (before two-version consolidation) passed: kids/teachers 200 without login, presenter redirect without session, login with mixed-case email, cookie flags, forged-origin rejection, private AI rejection without authentication, explicit 503 when provider is absent, request-size limit, session expiry, logout/replayed-cookie rejection, and login throttling. Random temporary test credentials were removed after verification; the real account has since been configured privately by the owner.
 
-`node scripts/storydogs-auth-check.cjs` repeats those HTTP tests against the running local server **only before private account setup**. It refuses to replace an existing configuration. It creates a temporary hash/secret and removes them and its session/rate records afterward. Do not run this test against a shared or production server.
+`node scripts/storydogs-auth-check.cjs` now delegates to the isolated built-production test with temporary environment credentials. It never replaces the owner’s private configuration. Stateless tests verify eight-hour expiry, cookie-clearing logout, continued validity of a copied cookie until expiry, and secret rotation.
 
 Controller/word-preservation tests: `node --import tsx --test scripts/storydogs*.test.ts`. TypeScript and targeted ESLint passed. Actual shared React builder checks with simulated speech/AI passed for separate drafts, legacy-draft recovery, sending only the new passage, clean-text saving, Undo, Retry/raw preservation, edit/reset race protection, and no public AI calls. Existing suggestions, jumps, copying/fallback, print/download, outline, and confirmed reset checks passed.
 
@@ -93,7 +96,7 @@ Real microphone input has **not** been tested. A live authenticated OpenAI test 
 
 ## Two-version consolidation verification
 
-Nineteen pure tests pass, including migration of either draft, teacher-only migration, and quota-failure preservation. Actual React DOM checks pass for the draft-choice dialog, archived downloads, Resources open/close without answer or scroll changes, Close/trigger focus, retained edits and refresh recovery. Existing outline/copy/fallback/print/download/reset flows and simulated presenter punctuation Undo/Retry/stale-response protection pass. The production presenter store now uses shared Redis as described above; live storage verification requires private hosting configuration. These DOM checks simulate geometry/native browser behavior; they do not certify a mobile visual review or live microphone use.
+Nineteen pure tests pass, including migration of either draft, teacher-only migration, and quota-failure preservation. Actual React DOM checks pass for the draft-choice dialog, archived downloads, Resources open/close without answer or scroll changes, Close/trigger focus, retained edits and refresh recovery. Existing outline/copy/fallback/print/download/reset flows and simulated presenter punctuation Undo/Retry/stale-response protection pass. Authentication is now stateless as described above; no shared store is required. These DOM checks simulate geometry/native browser behavior; they do not certify a mobile visual review or live microphone use.
 
 ## Latest discoverability and publishing review
 

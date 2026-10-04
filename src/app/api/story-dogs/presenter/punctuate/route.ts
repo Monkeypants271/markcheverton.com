@@ -1,7 +1,7 @@
 import { punctuationProviderError } from '@/lib/storydogs-provider-errors';
 import { boundedBody } from '@/lib/storydogs-server/request';
 import { authenticated, sameOrigin, privateHeaders } from '@/lib/storydogs-server/auth';
-import { allowed } from '@/lib/storydogs-server/store';
+import { allowed } from '@/lib/storydogs-server/throttle';
 import { sameWords } from '@/lib/storydogs-punctuation';
 export const runtime = 'nodejs';
 export async function POST(request: Request) {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     const data = await response.json();
     const text = (data.output || []).flatMap((item: { content?: { type: string; text?: string }[] }) => item.content || []).filter((item: { type: string }) => item.type === 'output_text').map((item: { text: string }) => item.text).join('').trim();
     if (data.status !== 'completed' || !text || text.length > raw.length * 2 + 200 || !sameWords(raw, text)) return respond('The result changed words or was incomplete, so your raw transcript was kept. Please retry or edit it yourself.', 502);
-    // Recheck revocation/expiry after the provider responds.
+    // Recheck cookie validity and absolute expiry after the provider responds.
     if (!await authenticated()) return respond('Your session ended. Your raw words are safe.', 401);
     return Response.json({ text }, { headers: privateHeaders });
   } catch { return respond('Punctuation is unavailable. Your raw words are safe. Please retry.', 503); }

@@ -1,18 +1,18 @@
 import 'server-only';
 import { cookies } from 'next/headers';
 import { getIronSession } from 'iron-session';
-import { randomBytes, scrypt as derive, timingSafeEqual, createHash } from 'node:crypto';
+import { scrypt as derive, timingSafeEqual } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { get, put, remove, storageConfigured } from './store';
 export const presenterEmail = (process.env.STORYDOGS_PRESENTER_EMAIL || 'mark@chevertonauthorvisits.com').trim().toLowerCase();
-export const sessionSeconds = 4 * 60 * 60;
+export const sessionSeconds = 8 * 60 * 60;
 type Config = { passwordHash: string; cookieSecret: string };
-type Cookie = { sid?: string; expires?: number; fingerprint?: string };
+type Cookie = { version?: number; email?: string; issuedAt?: number; expires?: number };
 function validConfig(config: Config): Config | null {
   return typeof config?.passwordHash === "string" && /^scrypt-32768-8-3\$[a-f0-9]{32}\$[a-f0-9]{128}$/.test(config.passwordHash) && typeof config.cookieSecret === "string" && config.cookieSecret.length >= 32 ? config : null;
 }
 export async function configuration(): Promise<Config | null> {
+  if (process.env.NODE_ENV === 'production' && !process.env.STORYDOGS_PRESENTER_EMAIL?.trim()) return null;
   if (process.env.STORYDOGS_PASSWORD_HASH && process.env.STORYDOGS_SESSION_SECRET) return validConfig({ passwordHash: process.env.STORYDOGS_PASSWORD_HASH, cookieSecret: process.env.STORYDOGS_SESSION_SECRET });
   if (process.env.NODE_ENV === 'production') return null;
   try { return validConfig(JSON.parse(await readFile(path.join(process.cwd(), '.local/storydogs-presenter.json'), 'utf8'))); }
@@ -31,24 +31,28 @@ export async function presenterSession() {
   return { session, config };
 }
 export async function authenticated() {
-  if (!storageConfigured()) return null;
   const context = await presenterSession(); if (!context) return null;
-  const { session, config } = context;
-  if (!session.sid || !session.expires || session.expires <= Date.now() || session.fingerprint !== createHash('sha256').update(config.passwordHash).digest('hex')) return null;
-  try {
-    const record = await get<{ expires: number }>('session:' + session.sid);
-    return record && record.expires > Date.now() ? context : null;
-  } catch { return null; }
+  const { session } = context;
+  const now = Date.now();
+  if (session.version !== 2 || session.email !== presenterEmail ||
+      !Number.isSafeInteger(session.issuedAt) || !Number.isSafeInteger(session.expires) ||
+      session.issuedAt! > now || session.expires! <= now ||
+      session.expires! <= session.issuedAt! || session.expires! > session.issuedAt! + sessionSeconds * 1000) return null;
+  return context;
 }
 export async function loginSession(context: NonNullable<Awaited<ReturnType<typeof presenterSession>>>) {
-  if (context.session.sid) await remove('session:' + context.session.sid);
-  context.session.sid = randomBytes(32).toString('hex'); context.session.expires = Date.now() + sessionSeconds * 1000;
-  context.session.fingerprint = createHash('sha256').update(context.config.passwordHash).digest('hex');
-  await put('session:' + context.session.sid, { expires: context.session.expires }); await context.session.save();
+  // Discard legacy payload fields and mint a new sealed session after every login.
+  for (const key of Object.keys(context.session)) delete (context.session as Record<string, unknown>)[key];
+  context.session.version = 2;
+  context.session.email = presenterEmail;
+  context.session.issuedAt = Date.now();
+  context.session.expires = context.session.issuedAt + sessionSeconds * 1000;
+  await context.session.save();
 }
 export async function logoutSession() {
   const context = await presenterSession();
-  if (context) { if (context.session.sid) await remove('session:' + context.session.sid); context.session.destroy(); }
+  if (context) context.session.destroy();
+  else (await cookies()).set('sd_presenter', '', { httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'strict', path: '/', maxAge: 0 });
 }
 export function sameOrigin(request: Request) {
   try {
