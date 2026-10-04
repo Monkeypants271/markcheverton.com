@@ -69,7 +69,7 @@ Recommended first release:
 1. Show seven flowing story passages, each beginning with its bold narrative lead. Put the matching StoryDogs label in smaller secondary text immediately above the passage.
 2. Place each nonblank student answer after the lead, preserving its internal line breaks and order. Use a line break between the two answers so punctuation is not required to connect them.
 3. Students may have written full sentences, fragments, or multiple paragraphs. Use the lead on its own short line when needed, rather than forcing a grammatical join such as “Once upon a time there was Bea is a bear.” This is an honest story plan that the student can revise into smooth prose.
-4. Do not automatically change pronouns, tense, names, spelling, capitalization, or meaning. Do not invent causal links, infer missing answers, or use AI to rewrite the report. The example handout demonstrates a human-written narrative version; it does not authorize automatic rewriting of student text.
+4. Do not automatically change pronouns, tense, names, spelling, capitalization, or meaning. Do not invent causal links, infer missing answers, or use AI to rewrite the report. The example handout demonstrates a finished narrative version; it does not authorize automatic rewriting of student text.
 5. Trim only to detect empty input. Preserve the original nonblank text. Do not silently deduplicate repeated words or discard an answer because it resembles a sentence lead.
 6. Remove the fourteen question sentences from the finished report. Keep the builder and “Show our answers” view available for reviewing questions and editing answers.
 
