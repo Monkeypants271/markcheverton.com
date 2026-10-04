@@ -2,7 +2,7 @@
 import Image, { getImageProps } from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { preload } from "react-dom";
-import { draftKey, missingStages, outlineText, storyDogs, type StoryAnswers } from "@/data/storyDogs";
+import { draftKey, missingStages, outlineText, storyDogs, storySpineStarters, type StoryAnswers } from "@/data/storyDogs";
 import { readDraft, hasAnswers, teacherDraftKey, mergeTeacherDraft, preservedDrafts, type PreservedDraft } from "@/lib/storydogs-draft-migration";
 import { StoryDogsResources } from "./StoryDogsResources";
 import { answerPlaceholders } from "@/data/storyDogsPlaceholders";
@@ -257,7 +257,10 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "pre
           </div>
           <div className="sd-panel">
             <PanelSilhouette />
-            <h2 id={`sd-heading-${stage.id}`} tabIndex={-1} style={{ color: stageHeadingColors[stageIndex] }}><span className="sd-stage-name">{stage.label}</span>{" "}<span className="sd-stage-description">-{"\u00a0"}{stage.title}</span></h2>
+            <div className="sd-stage-header">
+              <h2 id={`sd-heading-${stage.id}`} tabIndex={-1} style={{ color: stageHeadingColors[stageIndex] }}><span className="sd-stage-name">{stage.label}</span>{" "}<span className="sd-stage-description">-{"\u00a0"}{stage.title}</span></h2>
+              <p className="sd-story-spine">PIXAR - {storySpineStarters[stage.id]}</p>
+            </div>
             <div className="sd-fields">{stage.questions.map((question, questionIndex) => <div className="sd-field" key={`${stage.id}-${questionIndex}`}>
               <label htmlFor={`${stage.id}-${questionIndex}`}>{question}</label>
               <GrowingAnswer disabled={!ready} id={`${stage.id}-${questionIndex}`} rows={3} value={answers[stage.id]?.[questionIndex] || ""} onBeforeInput={() => dictation.cancelForTarget(`${stage.id}:${questionIndex}`)} onPaste={() => dictation.cancelForTarget(`${stage.id}:${questionIndex}`)} onChange={event => update(stage.id, questionIndex, event.target.value)} placeholder={answerPlaceholders[stage.id][questionIndex]} />

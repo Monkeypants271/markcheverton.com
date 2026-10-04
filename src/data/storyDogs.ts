@@ -238,3 +238,14 @@ export function missingStages(answers: StoryAnswers) {
 export function outlineText(answers: StoryAnswers) {
   return `${missingStages(answers).length ? "My StoryDogs Plot Outline (partial)" : "My StoryDogs Plot Outline"}\n\n` + storyDogs.map(s => `${s.label} — ${s.cue}\n${s.questions.map((q, i) => `${q}\n${answers[s.id]?.[i]?.trim() ? answers[s.id][i] : "[Not answered yet]"}`).join("\n\n")}`).join("\n\n");
 }
+
+// Instructional header labels only; never stored as student answers.
+export const storySpineStarters: Record<string, string> = {
+  who: "Once upon a time…",
+  "life-want": "Every day…",
+  "uh-oh": "One day…",
+  trouble: "Because of that…",
+  worse: "Because of that…",
+  climax: "Until finally…",
+  change: "Ever since then…",
+};
