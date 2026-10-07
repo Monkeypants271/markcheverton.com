@@ -5,12 +5,12 @@ import test from "node:test";
 import { storyDogs } from "../src/data/storyDogs";
 import { createSuggestionRound, newSuggestionDeck, nextSuggestion } from "../src/lib/story-dogs";
 
-test("every response has a distinct bank of at least twelve suggestions", () => {
+test("every response has a distinct bank of at least twenty-four suggestions", () => {
   assert.equal(storyDogs.length, 7);
   const banks = storyDogs.flatMap(stage => stage.suggestions);
   assert.equal(banks.length, 14);
   for (const bank of banks) {
-    assert.ok(bank.length >= 12);
+    assert.ok(bank.length >= 24);
     assert.equal(new Set(bank).size, bank.length);
     assert.ok(bank.every(idea => idea.trim().length > 0));
   }
@@ -22,18 +22,19 @@ test("shuffle consumes every idea before repeating and avoids the cycle boundary
   for (let seed = 1; seed < 30; seed++) {
     let state = seed;
     const random = () => ((state = (state * 16807) % 2147483647) - 1) / 2147483646;
-    let deck = newSuggestionDeck(12, undefined, random);
+    const bankLength = storyDogs[0].suggestions[0].length;
+    let deck = newSuggestionDeck(bankLength, undefined, random);
     for (let cycle = 0; cycle < 4; cycle++) {
       const seen = new Set<number>();
-      for (let n = 0; n < 12; n++) {
+      for (let n = 0; n < bankLength; n++) {
         seen.add(deck.current);
         const before = structuredClone(deck);
-        const next = nextSuggestion(deck, 12, random);
+        const next = nextSuggestion(deck, bankLength, random);
         assert.deepEqual(deck, before, "rotation must not mutate its previous state");
         assert.notEqual(next.current, deck.current);
         deck = next;
       }
-      assert.equal(seen.size, 12);
+      assert.equal(seen.size, bankLength);
     }
   }
 });
@@ -46,7 +47,9 @@ test("a new story refreshes all fourteen decks without changing the previous rou
   assert.deepEqual(first, before);
   for (const key of Object.keys(next)) {
     assert.notEqual(first[key].current, next[key].current);
-    assert.equal(next[key].remaining.length, 11);
+    const stage = storyDogs.find(stage => key.startsWith(`${stage.id}-`))!;
+    const questionIndex = Number(key.slice(key.lastIndexOf("-") + 1));
+    assert.equal(next[key].remaining.length, stage.suggestions[questionIndex].length - 1);
   }
 });
 

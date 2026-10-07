@@ -14,6 +14,7 @@ import { useStoryDictation } from "./useStoryDictation";
 import { DictationControl } from "./DictationControl";
 import { PanelSilhouette } from "./PanelSilhouette";
 import { GrowingAnswer } from "./GrowingAnswer";
+import { DogCompletion } from "./DogCompletion";
 import { createSuggestionRound, nextSuggestion, type SuggestionRound } from "@/lib/story-dogs";
 
 const dogSizes = "(max-width: 700px) 240px, (max-width: 1360px) 26vw, 360px";
@@ -264,6 +265,7 @@ export function StoryDogsBuilder({ version = "kids" }: { version?: "kids" | "pre
             <div className="sd-fields">{stage.questions.map((question, questionIndex) => <div className="sd-field" key={`${stage.id}-${questionIndex}`}>
               <label htmlFor={`${stage.id}-${questionIndex}`}>{question}</label>
               <GrowingAnswer disabled={!ready} id={`${stage.id}-${questionIndex}`} rows={3} value={answers[stage.id]?.[questionIndex] || ""} onBeforeInput={() => dictation.cancelForTarget(`${stage.id}:${questionIndex}`)} onPaste={() => dictation.cancelForTarget(`${stage.id}:${questionIndex}`)} onChange={event => update(stage.id, questionIndex, event.target.value)} placeholder={answerPlaceholders[stage.id][questionIndex]} />
+              {questionIndex === 1 && ready && <DogCompletion complete={Boolean(answers[stage.id]?.[0]?.trim() && answers[stage.id]?.[1]?.trim())} stageId={stage.id} nextId={storyDogs[stageIndex + 1]?.id} />}
               <DictationControl dictation={{ ...dictation, toggle: target => { if (dictation.target !== target) punctuation.begin(target); dictation.toggle(target); } }} target={`${stage.id}:${questionIndex}`} fieldId={`${stage.id}-${questionIndex}`} label={`${stage.label} question ${questionIndex + 1}`} ready={ready} />
               {version === "presenter" && punctuation.recovered[`${stage.id}:${questionIndex}`] && <details className="sd-punctuation"><summary>Recovered dictated words</summary><p>Your answer changed after these words were saved. Copy any words you want to keep into your answer.</p><p>{punctuation.recovered[`${stage.id}:${questionIndex}`]}</p></details>}
               {version === "presenter" && punctuation.view[`${stage.id}:${questionIndex}`] && punctuation.view[`${stage.id}:${questionIndex}`].phase !== "done" && <div className="sd-punctuation">

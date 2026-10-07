@@ -230,3 +230,25 @@ body:has(.storydogs-page) [data-site-masthead] { display:none; }
 .sd-resource-pages {white-space:nowrap;}
 .sd-resources-dialog .sd-resource-note {font-size:15px;}
 .sd-resource-bundle {display:inline-flex;text-decoration:none;min-height:48px;align-items:center;max-width:100%;}
+
+/* Picture-book paws and a collectible story sticker in the transition gap. */
+.sd-outline-action { position:relative; }
+.sd-forward-celebration { position:absolute; left:50%; width:min(340px,calc(100vw - 28px)); height:120px; transform:translate(-50%,-50%); z-index:5; pointer-events:none; }
+.sd-paw-trail { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.sd-scampering-paw { opacity:0; transform-box:fill-box; transform-origin:center; animation:sd-paw-scamper 850ms ease-out var(--paw-delay) both; }
+.sd-story-sticker { position:absolute; top:0; left:50%; width:82%; height:78px; display:grid; place-items:center; color:#702044; font-family:var(--font-storydogs-heading),"Arial Rounded MT Bold",sans-serif; font-weight:600; font-size:clamp(19px,3vw,24px); text-align:center; filter:drop-shadow(2px 4px 0 #58264255); animation:sd-sticker-pop 1500ms ease-out both; }
+.sd-sticker-paper { position:absolute; inset:0; width:100%; height:100%; overflow:visible; }
+.sd-story-sticker span { position:relative; padding:0 19px; line-height:1.1; }
+@keyframes sd-paw-scamper {
+  0% { opacity:0; transform:translateY(7px) scale(.65); }
+  18% { opacity:1; transform:translateY(0) scale(1.08); }
+  35%,65% { opacity:1; transform:scale(1); }
+  100% { opacity:0; transform:translateY(-3px) scale(.92); }
+}
+@keyframes sd-sticker-pop {
+  0%,12% { opacity:0; transform:translateX(-50%) rotate(-5deg) scale(.5); }
+  28% { opacity:1; transform:translateX(-50%) rotate(2deg) scale(1.06); }
+  40%,78% { opacity:1; transform:translateX(-50%) rotate(-2deg) scale(1); }
+  100% { opacity:0; transform:translate(-50%,5px) rotate(-2deg) scale(.97); }
+}
+@media (prefers-reduced-motion:reduce) { .sd-forward-celebration { display:none; } }
