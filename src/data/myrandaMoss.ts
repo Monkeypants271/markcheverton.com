@@ -641,7 +641,7 @@ export const myrandaStories: MyrandaStory[] = [
     "slug": "mountain-beneath-the-mountain",
     "chapter": 14,
     "title": "Mountain Beneath the Mountain",
-    "image": "/images/myranda-moss/chapter-14.png",
+    "image": "/images/myranda-moss/mountain-beneath-the-mountain.png",
     "paragraphs": [
       "The crack beside FlintBloom’s garden widened as it spat a pebble into the air before he finished packing it with soil. It landed with a rude little plink, then bounced and tumbled away as if the mountain had rejected it.",
       "FlintBloom glanced at the other gargoyles. They were all frantically repairing the damage to their gardens from this last batch of cracks spreading across the ClatterCliff Mountains. Many flew down to the lowlands on gray wings, bucket clenched in a clawed hand, seeking more soil to patch the cracks. But it was clear to FlintBloom… that wasn’t the answer.",
